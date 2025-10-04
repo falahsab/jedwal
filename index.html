@@ -22,16 +22,16 @@
     .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%}
     .matches-section{margin-bottom:16px}
     .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:8px}
-    .match-card{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;border-radius:10px;margin-bottom:8px;border:1px solid rgba(0,0,0,0.05);background:#fdfdfd}
-    .teams{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:150px}
-    .team{display:flex;flex-direction:column;align-items:center;font-weight:600}
-    .meta{display:flex;flex-direction:column;gap:4px;color:#555;font-size:13px;text-align:center}
+    .match-card{display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:10px;margin-bottom:8px;border:1px solid rgba(0,0,0,0.05);background:#fdfdfd}
+    .teams{display:flex;align-items:center;gap:10px;min-width:320px}
+    .team{display:flex;align-items:center;gap:6px;font-weight:600}
+    .meta{display:flex;flex-direction:column;gap:4px;color:#555;font-size:13px;text-align:left}
     #downloadLink{display:none}
   </style>
 </head>
 <body>
   <div class="container">
-    <header>⚽3 جدول مباريات اليوم</header>
+    <header>⚽2 جدول مباريات اليوم</header>
 
     <div class="grid">
       <div class="card form">
@@ -94,11 +94,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded',()=>{
-      // ضع هنا روابط ملفات CSV الخاصة بك
       const leaguesCSV = 'csv/leagues.csv';
       const commentatorsCSV = 'csv/commentators.csv';
       const channelsCSV = 'csv/channels.csv';
-      const teamsCSVFolder = 'https://falahsab.github.io/jedwal/teams/'; // يجب أن يكون اسم كل ملف فرق <leagueCode>_teams.csv
+      const teamsCSVFolder = 'https://falahsab.github.io/jedwal/teams/';
 
       let leagues=[], teams={}, commentators=[], channels=[];
 
@@ -193,7 +192,7 @@
         const finalWindow=window.open('','_blank');
         if(finalWindow){
           finalWindow.onload=()=>{
-            finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>جدول المباريات النهائي</title><style>body{font-family:'Cairo',Tahoma,sans-serif;padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc;display:flex;flex-direction:column;align-items:center}.teams{display:flex;flex-direction:column;align-items:center;gap:6px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
+            finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>جدول المباريات النهائي</title><style>body{font-family:'Cairo',Tahoma,sans-serif;padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc;display:flex;align-items:center;justify-content:space-between}.teams{display:flex;align-items:center;gap:10px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
             finalWindow.document.close();
           };
         }else{alert('تعذر فتح نافذة جديدة.');}
@@ -210,9 +209,4 @@
     });
   </script>
 </body>
-
 </html>
-
-
-
-
