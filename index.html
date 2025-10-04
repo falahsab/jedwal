@@ -25,7 +25,16 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .match-card{display:flex;flex-direction:column;border-radius:10px;margin-bottom:10px;border:1px solid rgba(0,0,0,0.05);background:#fdfdfd;padding:10px}
 .match-top{display:flex;justify-content:space-between;align-items:center}
 .teams{display:flex;align-items:center;gap:8px;min-width:300px}
-.team{display:flex;align-items:center;gap:6px;font-weight:600}
+.team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  max-width: 120px; /* عرض ثابت لكل اسم فريق */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* إظهار … للنص الطويل */
+}
 .meta{display:flex;justify-content:center;gap:16px;color:#555;font-size:13px;margin-top:6px}
 .actions{display:flex;gap:6px;justify-content:center;margin-top:6px}
 .action-btn{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-weight:600}
@@ -36,7 +45,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 </head>
 <body>
 <div class="container">
-<header>⚽ جدول مباريات اليوم</header>
+<header>⚽ 2جدول مباريات اليوم</header>
 
 <div class="grid">
 <div class="card form">
@@ -191,11 +200,12 @@ function render(){
       leagueMatches.forEach((m,i)=>{
         const card=document.createElement('div'); card.className='match-card';
         card.innerHTML=`
-          <div class="match-top">
-            <div class="team">${m.home}<div class="logo"><img src="${m.homeImg}"/></div></div>
-            <div>⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div>
-            <div class="team"><div class="logo"><img src="${m.awayImg}"/></div>${m.away}</div>
-          </div>
+<div class="match-top">
+  <div class="team" title="${m.home}">${m.home}<div class="logo"><img src="${m.homeImg}"/></div></div>
+  <div>⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div>
+  <div class="team" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div>${m.away}</div>
+</div>
+
           <div class="meta">🎙️ ${m.comm} &nbsp; | &nbsp; 📺 ${m.chan}</div>
           <div class="actions">
             <button class="action-btn edit-btn" onclick="editMatch(${matches.indexOf(m)})">تعديل</button>
@@ -273,3 +283,4 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
