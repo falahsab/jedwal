@@ -22,16 +22,16 @@
     .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%}
     .matches-section{margin-bottom:16px}
     .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:8px}
-    .match-card{display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:10px;margin-bottom:8px;border:1px solid rgba(0,0,0,0.05);background:#fdfdfd}
-    .teams{display:flex;align-items:center;gap:10px;min-width:320px}
-    .team{display:flex;align-items:center;gap:6px;font-weight:600}
+    .match-card{display:flex;align-items:center;justify-content:flex-start;padding:10px;border-radius:10px;margin-bottom:8px;border:1px solid rgba(0,0,0,0.05);background:#fdfdfd;gap:20px}
+    .team{display:flex;flex-direction:column;align-items:center;font-weight:600;min-width:80px}
+    .time{display:flex;flex-direction:column;align-items:center;font-weight:700;min-width:60px;font-size:14px}
     .meta{display:flex;flex-direction:column;gap:4px;color:#555;font-size:13px;text-align:left}
     #downloadLink{display:none}
   </style>
 </head>
 <body>
   <div class="container">
-    <header>⚽2 جدول مباريات اليوم</header>
+    <header>⚽ جدول مباريات اليوم</header>
 
     <div class="grid">
       <div class="card form">
@@ -178,9 +178,23 @@
             const header=document.createElement('div'); header.className='section-header';
             header.innerHTML=`<img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
             section.appendChild(header);
-            leagueMatches.forEach(m=>{
+            const timeColumnPositions = [];
+            leagueMatches.forEach((m,index)=>{
               const card=document.createElement('div'); card.className='match-card';
-              card.innerHTML=`<div class='teams'><div class='team'>${m.home}<div class='logo'><img src='${m.homeImg}'/></div></div><div>⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div><div class='team'><div class='logo'><img src='${m.awayImg}'/></div>${m.away}</div></div><div class='meta'><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>`;
+              card.style.display='flex';
+              card.style.alignItems='center';
+              card.style.justifyContent='flex-start';
+
+              const homeDiv=document.createElement('div'); homeDiv.className='team'; homeDiv.innerHTML=`${m.home}<div class='logo'><img src='${m.homeImg}'/></div>`;
+              const timeDiv=document.createElement('div'); timeDiv.className='time'; timeDiv.innerText=new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+              if(timeColumnPositions[index-1]){
+                timeDiv.style.minWidth=timeColumnPositions[index-1].offsetWidth + 'px';
+              }
+              timeColumnPositions.push(timeDiv);
+              const awayDiv=document.createElement('div'); awayDiv.className='team'; awayDiv.innerHTML=`<div class='logo'><img src='${m.awayImg}'/></div>${m.away}`;
+              const metaDiv=document.createElement('div'); metaDiv.className='meta'; metaDiv.innerHTML=`<div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div>`;
+
+              card.appendChild(homeDiv); card.appendChild(timeDiv); card.appendChild(awayDiv); card.appendChild(metaDiv);
               section.appendChild(card);
             });
             matchesContainer.appendChild(section);
@@ -192,7 +206,7 @@
         const finalWindow=window.open('','_blank');
         if(finalWindow){
           finalWindow.onload=()=>{
-            finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>جدول المباريات النهائي</title><style>body{font-family:'Cairo',Tahoma,sans-serif;padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc;display:flex;align-items:center;justify-content:space-between}.teams{display:flex;align-items:center;gap:10px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
+            finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>جدول المباريات النهائي</title><style>body{font-family:'Cairo',Tahoma,sans-serif;padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc;display:flex;align-items:center;justify-content:flex-start;gap:20px}.team{display:flex;flex-direction:column;align-items:center;min-width:80px}.time{display:flex;flex-direction:column;align-items:center;min-width:60px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
             finalWindow.document.close();
           };
         }else{alert('تعذر فتح نافذة جديدة.');}
