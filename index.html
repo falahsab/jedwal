@@ -25,15 +25,20 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .match-card{display:flex;flex-direction:column;border-radius:10px;border:1px solid rgba(0,0,0,0.05);background:#fdfdfd;padding:10px;margin-bottom:8px}
 .match-top{display:flex;align-items:center;justify-content:space-between}
 .team-left,.team-right{
-  max-width:120px;
   flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
+  font-weight:600;
+}
+
+.team-left .team-name,
+.team-right .team-name {
+  flex:1;
   text-align:center;
 }
 .center{display:flex;align-items:center;gap:6px;flex-shrink:0;justify-content:center;flex:0 0 auto}
@@ -180,18 +185,27 @@ document.addEventListener('DOMContentLoaded',()=>{
         leagueMatches.forEach((m,i)=>{
           const card=document.createElement('div'); card.className='match-card';
           card.innerHTML=`
-          <div class="match-top">
-            <div class="team-left" title="${m.home}">${m.home}</div>
-            <div class="center">
-              <div class="logo"><img src="${m.homeImg}"/></div>
-              ⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}
-              <div class="logo"><img src="${m.awayImg}"/></div>
-            </div>
-            <div class="team-right" title="${m.away}">${m.away}</div>
-          </div>
-          <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
-          <div class="action-btns"><button onclick="editMatch(${i})">✏️ تعديل</button><button onclick="deleteMatch(${i})">🗑️ حذف</button></div>`;
-          section.appendChild(card);
+card.innerHTML=`
+  <div class="match-top">
+    <div class="team-left" title="${m.home}">
+      <span class="team-name">${m.home}</span>
+      <div class="logo"><img src="${m.homeImg}"/></div>
+    </div>
+    <div class="center">
+      ⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}
+    </div>
+    <div class="team-right" title="${m.away}">
+      <div class="logo"><img src="${m.awayImg}"/></div>
+      <span class="team-name">${m.away}</span>
+    </div>
+  </div>
+  <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
+  <div class="action-btns">
+    <button onclick="editMatch(${i})">✏️ تعديل</button>
+    <button onclick="deleteMatch(${i})">🗑️ حذف</button>
+  </div>
+`;
+section.appendChild(card);
         });
         matchesContainer.appendChild(section);
       }
@@ -220,3 +234,4 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
