@@ -35,35 +35,6 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 #downloadLink{display:none}
 .matches-wrapper{margin-top:12px}
 @media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll {display:none !important;}}
-/* --- قسم الواتساب أسفل كل دوري --- */
-.whatsapp-section {
-  display: flex;
-  align-items: center;
-  gap: 6px;          /* المسافة بين الإيقونة والنص */
-  margin-top: 8px;    /* مسافة من البطاقة */
-  font-size: 14px;    /* حجم النص */
-  font-weight: 600;   /* وزن النص */
-  color: #222;        /* لون النص */
-}
-
-.whatsapp-section img {
-  width: 20px;       /* حجم أيقونة واتساب */
-  height: 20px;
-  object-fit: contain;
-}
-
-.whatsapp-section span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* تغيير اللون عند المرور */
-.whatsapp-section:hover {
-  cursor: pointer;
-  opacity: 0.8;
-}
-
 </style>
 </head>
 <body>
@@ -164,18 +135,13 @@ function render(){
   leagues.forEach(l=>{
     const leagueMatches=matches.filter(m=>m.league===l.code);
     if(leagueMatches.length>0){
-      const section=document.createElement('div'); 
-      section.className='matches-section';
-      
-      const header=document.createElement('div'); 
-      header.className='section-header';
+      const section=document.createElement('div'); section.className='matches-section';
+      const header=document.createElement('div'); header.className='section-header';
       const extraLogo=l.extraLogo||l.extra;
       header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
-
       leagueMatches.forEach((m,i)=>{
-        const card=document.createElement('div'); 
-        card.className='match-card';
+        const card=document.createElement('div'); card.className='match-card';
         card.style.background=l.color||'#fdfdfd';
         const d=new Date(m.time);
         const hours=d.getHours()%12||12;
@@ -184,7 +150,7 @@ function render(){
         card.innerHTML=`
           <div class="match-top">
             <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
-            <div class="center">${hours}:${minutes} <span class="ampm">${ampm}</span></div>
+            <div class="center"><span class="ampm">${ampm}</span>${hours}:${minutes} </div>
             <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
           </div>
           <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
@@ -195,16 +161,10 @@ function render(){
         `;
         section.appendChild(card);
       });
-
-      // إضافة قسم الواتساب أسفل كل دوري
-      const whatsappDiv=document.createElement('div');
-      whatsappDiv.style.display='flex';
-      whatsappDiv.style.alignItems='center';
-      whatsappDiv.style.gap='6px';
-      whatsappDiv.style.marginTop='8px';
-      whatsappDiv.innerHTML=`<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:20px;height:20px"/> <span>738092209</span>`;
-      section.appendChild(whatsappDiv);
-
+      <div class="extra-logo-header">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"/>
+  <span>738092209</span>
+</div>
       matchesContainer.appendChild(section);
     }
   });
