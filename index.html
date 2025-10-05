@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         section.appendChild(header);
         leagueMatches.forEach((m,i)=>{
           const card=document.createElement('div'); card.className='match-card';
-          card.innerHTML=`
+        
 card.innerHTML=`
   <div class="match-top">
     <div class="team-left" title="${m.home}">
@@ -234,4 +234,5 @@ section.appendChild(card);
 </script>
 </body>
 </html>
+
 
