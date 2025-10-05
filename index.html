@@ -57,12 +57,6 @@ select,input[type="datetime-local"]{border:1px solid #ccc;border-radius:8px;padd
 @media print {
   .action-btns,#downloadTable,#finalView,#toggleBtns,#deleteAll,.form{display:none!important;}
 }
-/* 🎨 ألوان الدوريات */
-.league-1 {background:#eaf7ff;}
-.league-2 {background:#fff3e6;}
-.league-3 {background:#e9f9ec;}
-.league-4 {background:#f9e9f2;}
-.league-5 {background:#f4f4ff;}
 </style>
 </head>
 <body>
@@ -140,7 +134,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     fetchCSV(leaguesCSV,data=>{
       leagues=data;
       const leagueSelect=document.getElementById('leagueSelect');
-      leagueSelect.innerHTML=data.map(l=>`<option value='${l.code}' data-logo='${l.logo}'>${l.name}</option>`).join('');
+      leagueSelect.innerHTML=data.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color}'>${l.name}</option>`).join('');
       loadTeams(leagueSelect.value);
     });
   }
@@ -183,7 +177,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   function render(){
     const cont=document.getElementById('matchesContainer');
     cont.innerHTML='';
-    leagues.forEach((l,i)=>{
+    leagues.forEach((l)=>{
       const lm=matches.filter(m=>m.league===l.code);
       if(lm.length){
         const sec=document.createElement('div');sec.className='matches-section';
@@ -192,7 +186,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         sec.appendChild(head);
         lm.forEach((m,idx)=>{
           const card=document.createElement('div');
-          card.className=`match-card league-${(i%5)+1}`;
+          card.className='match-card';
+          card.style.background=l.color || '#fdfdfd';
           const timeStr=new Date(m.time).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
           card.innerHTML=`
             <div class="match-top">
