@@ -49,7 +49,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 </head>
 <body>
 <div class="container">
-  <header>⚽4 جدول مباريات اليوم</header>
+  <header>⚽ جدول مباريات اليوم</header>
 
   <div class="grid">
     <div class="card form">
@@ -139,6 +139,13 @@ document.getElementById('addMatch').onclick=()=>{
   document.getElementById('matchTime').value='';
 };
 
+function adjustTeamNameSize(el){
+  const parentWidth=el.parentElement.offsetWidth - 50; // المساحة المتاحة
+  let fontSize=16;
+  el.style.fontSize=fontSize+'px';
+  while(el.scrollWidth>parentWidth && fontSize>10){ fontSize--; el.style.fontSize=fontSize+'px'; }
+}
+
 function render(){
   const matchesContainer=document.getElementById('matchesContainer');
   matchesContainer.innerHTML='';
@@ -175,6 +182,9 @@ function render(){
           </div>
         `;
         section.appendChild(card);
+        // ضبط حجم أسماء الفرق
+        adjustTeamNameSize(card.querySelector('.team-left .team-name'));
+        adjustTeamNameSize(card.querySelector('.team-right .team-name'));
       });
       matchesContainer.appendChild(section);
     }
