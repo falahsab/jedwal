@@ -18,7 +18,7 @@ header{background:#3498db;color:#fff;padding:12px 16px;border-radius:8px;margin-
 select,input[type="datetime-local"]{background:transparent;border:1px solid rgba(0,0,0,0.12);padding:8px;border-radius:8px;color:#222;width:100%}
 label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .logo{width:40px;height:40px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.logo img{width:100%;height:100%;object-fit:contain}
+.logo img{width:100%;height:100%;object-fit:contain;transition:width 0.3s,height 0.3s}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%}
 .matches-section{margin-bottom:16px}
 .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:8px;position:relative;padding-left:40px;padding-right:40px}
@@ -26,9 +26,9 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .match-card{display:flex;flex-direction:column;border-radius:10px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:8px;position:relative}
 .match-top{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:center}
 .team-left,.team-right{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
-.team-left .team-name,.team-right .team-name{flex:1;text-align:center}
-.center{display:flex;align-items:center;gap:6px;flex-shrink:0;justify-content:center;flex:0 0 auto;font-weight:700}
-.center .ampm{margin-left:6px;font-weight:400}
+.team-left .team-name,.team-right .team-name{flex:1;text-align:center;font-size:clamp(12px,1.8vw,18px)}
+.center{display:flex;align-items:center;gap:6px;flex-shrink:0;justify-content:center;flex:0 0 auto;font-weight:700;font-size:clamp(14px,2vw,20px)}
+.center .ampm{display:block;font-size:10px;margin-top:2px;font-weight:400}
 .meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
@@ -39,7 +39,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 </head>
 <body>
 <div class="container">
-  <header>⚽9 جدول مباريات اليوم</header>
+  <header>⚽ جدول مباريات اليوم</header>
 
   <div class="grid">
     <div class="card form">
@@ -105,6 +105,7 @@ function loadTeams(leagueCode){
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{document.getElementById('channel').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function updatePreview(selectEl,previewId){const s=selectEl.selectedOptions[0];const img=s.dataset.img;document.getElementById(previewId).innerHTML=img?`<img src='${img}'/>`:'⚽';}
+
 populateLeagues(); fetchCommentators(); fetchChannels();
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
@@ -189,7 +190,7 @@ document.getElementById('finalView').addEventListener('click',()=>{
   const finalWindow=window.open('','_blank');
   if(finalWindow){
     finalWindow.onload=()=>{
-      finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between}.center{display:flex;align-items:center;gap:6px;justify-content:center;font-weight:700}.ampm{margin-left:6px;font-weight:400}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
+      finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between}.center{display:flex;align-items:center;gap:6px;justify-content:center;font-weight:700}.ampm{display:block;font-size:10px;margin-top:2px;font-weight:400}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
       finalWindow.document.close();
     };
   }else{alert('تعذر فتح نافذة جديدة.');}
