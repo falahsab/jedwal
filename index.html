@@ -24,17 +24,56 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:8px}
 .match-card{display:flex;flex-direction:column;border-radius:10px;border:1px solid rgba(0,0,0,0.05);background:#fdfdfd;padding:10px;margin-bottom:8px}
 .match-top{display:flex;align-items:center;justify-content:space-between}
-.team-left,.team-right{max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
-.center{display:flex;align-items:center;gap:6px;flex-shrink:0;justify-content:center}
+.team-left,.team-right{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex:1;
+  min-width:0;
+}
+.team-left span.team-name{
+  flex:1;
+  text-align:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-weight:600;
+}
+.team-right span.team-name{
+  flex:1;
+  text-align:right;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-weight:600;
+}
+.center{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  flex-shrink:0;
+  width:160px;
+  text-align:center;
+  font-weight:700;
+  color:#333;
+}
 .meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
+.action-btns button:nth-child(1){background:#3498db;color:#fff}
+.action-btns button:nth-child(2){background:#e74c3c;color:#fff}
 #downloadLink{display:none}
+
+/* إخفاء الأزرار عند التصوير أو الطباعة */
+@media print {
+  .action-btns, #downloadTable, #finalView { display:none !important; }
+}
 </style>
 </head>
 <body>
 <div class="container">
-  <header>⚽ جدول مباريات اليوم</header>
+  <header>⚽ 5جدول مباريات اليوم</header>
 
   <div class="grid">
     <div class="card form">
@@ -153,7 +192,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
   document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
 
-  let matches=[]; if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
+  let matches=[]; 
+  if(localStorage.getItem('matches')){
+    matches=JSON.parse(localStorage.getItem('matches')); 
+    render();
+  }
 
   document.getElementById('addMatch').onclick=()=>{
     const league=document.getElementById('leagueSelect').value;
@@ -177,23 +220,28 @@ document.addEventListener('DOMContentLoaded',()=>{
     leagues.forEach(l=>{
       const leagueMatches=matches.filter(m=>m.league===l.code);
       if(leagueMatches.length>0){
-        const section=document.createElement('div'); section.className='matches-section';
-        const header=document.createElement('div'); header.className='section-header';
+        const section=document.createElement('div'); 
+        section.className='matches-section';
+        const header=document.createElement('div'); 
+        header.className='section-header';
         header.innerHTML=`<img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
         section.appendChild(header);
 
         leagueMatches.forEach((m,i)=>{
-          const card=document.createElement('div'); card.className='match-card';
+          const card=document.createElement('div'); 
+          card.className='match-card';
 
           card.innerHTML=`
             <div class="match-top">
-              <div class="team-left" title="${m.home}">${m.home} <div class="logo"><img src="${m.homeImg}"/></div></div>
-              <div class="center">
+              <div class="team-left" title="${m.home}">
+                <span class="team-name">${m.home}</span>
                 <div class="logo"><img src="${m.homeImg}"/></div>
-                ⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}
-                <div class="logo"><img src="${m.awayImg}"/></div>
               </div>
-              <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div> ${m.away}</div>
+              <div class="center">⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div>
+              <div class="team-right" title="${m.away}">
+                <div class="logo"><img src="${m.awayImg}"/></div>
+                <span class="team-name">${m.away}</span>
+              </div>
             </div>
             <div class="meta">
               <div>🎙️ ${m.comm}</div>
@@ -242,18 +290,36 @@ document.addEventListener('DOMContentLoaded',()=>{
     const finalWindow=window.open('','_blank');
     if(finalWindow){
       finalWindow.onload=()=>{
-        finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>جدول المباريات النهائي</title><style>body{font-family:'Cairo',Tahoma,sans-serif;padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc;display:flex;flex-direction:column}.match-top{display:flex;align-items:center;justify-content:space-between}.team-left,.team-right{max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}.center{display:flex;align-items:center;gap:6px;flex-shrink:0;justify-content:center}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
+        finalWindow.document.write(`
+          <html lang='ar' dir='rtl'>
+          <head><meta charset='utf-8'>
+          <meta name='viewport' content='width=device-width,initial-scale=1'>
+          <title>الجدول النهائي</title>
+          <style>
+            body{font-family:'Cairo',sans-serif;padding:16px;}
+            .match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc;display:flex;flex-direction:column;}
+            .match-top{display:flex;align-items:center;justify-content:space-between;}
+            .team-left,.team-right{display:flex;align-items:center;justify-content:space-between;flex:1;}
+            .team-name{text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+            .center{display:flex;align-items:center;justify-content:center;gap:6px;font-weight:bold;}
+            .meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px;}
+            .logo img{width:32px;height:32px;}
+          </style></head>
+          <body>${document.getElementById('matchesContainer').innerHTML}</body></html>
+        `);
         finalWindow.document.close();
       };
-    }else{alert('تعذر فتح نافذة جديدة.');}
+    } else alert('تعذر فتح نافذة جديدة.');
   });
 
   document.getElementById('downloadTable').addEventListener('click',()=>{
+    document.querySelectorAll('.action-btns').forEach(e=>e.style.display='none');
     html2canvas(document.getElementById('matchesContainer')).then(canvas=>{
       const downloadLink=document.getElementById('downloadLink');
       downloadLink.href=canvas.toDataURL('image/png');
       downloadLink.download='matches.png';
       downloadLink.click();
+      document.querySelectorAll('.action-btns').forEach(e=>e.style.display='');
     });
   });
 
@@ -261,5 +327,3 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
-
-
