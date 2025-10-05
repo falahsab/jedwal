@@ -22,38 +22,88 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%}
 .matches-section{margin-bottom:16px}
 .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:8px}
-.match-card{display:flex;flex-direction:column;border-radius:10px;border:1px solid rgba(0,0,0,0.05);background:#fdfdfd;padding:10px;margin-bottom:8px}
-.match-top{display:flex;align-items:center;justify-content:space-between}
+
+/* بطاقات المباريات */
+.match-card{
+  display:flex;
+  flex-direction:column;
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,0.05);
+  background:#fdfdfd;
+  padding:10px;
+  margin-bottom:8px;
+  transition:transform .2s;
+}
+.match-card:hover{transform:scale(1.01)}
+
+.match-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
 .team-left,.team-right{
   flex:1;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:8px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  font-weight:600;
 }
-
-.team-left .team-name,
-.team-right .team-name {
+.team-name{
   flex:1;
   text-align:center;
+  font-weight:600;
+  font-size:14px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
-.center{display:flex;align-items:center;gap:6px;flex-shrink:0;justify-content:center;flex:0 0 auto}
-.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}
-.action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center}
-.action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
+.center{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  justify-content:center;
+  flex:0 0 100px;
+  font-weight:700;
+  color:#000;
+}
+.meta{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  font-size:13px;
+  color:#555;
+  margin-top:6px;
+}
+.action-btns{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+  justify-content:center;
+}
+.action-btns button{
+  padding:4px 8px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  background:#eee;
+}
 #downloadLink{display:none}
 
-/* ✅ جعل بطاقات المباريات في الأسفل */
-.matches-wrapper{
-  margin-top:auto;
-}
+/* بطاقات الدوريات بألوان مختلفة */
+.league-1 .match-card{background:linear-gradient(135deg,#4b0082,#8a2be2);color:#fff;}
+.league-2 .match-card{background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;}
+.league-3 .match-card{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;}
+.league-4 .match-card{background:linear-gradient(135deg,#1abc9c,#16a085);color:#fff;}
+.league-5 .match-card{background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;}
 
+/* ✅ جعل بطاقات المباريات في الأسفل */
+.matches-wrapper{margin-top:auto;text-align:center}
+
+/* عند الطباعة أو حفظ الصورة */
 @media print {
-  .action-btns, #downloadTable, #finalView, .form {display:none !important;}
+  .action-btns, #downloadTable, #finalView, .form, #deleteAll {display:none !important;}
 }
 </style>
 </head>
@@ -113,7 +163,8 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
     </div>
   </div>
 
-  <button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
+  <button id="deleteAll" class="btn" style="margin-top:12px;background:#e74c3c;">🗑️ حذف جميع البطاقات</button>
+  <button id="finalView" class="btn" style="margin-top:8px;">🔗 عرض الجدول النهائي</button>
   <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
   <a id="downloadLink"></a>
 </div>
@@ -127,7 +178,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   const channelsCSV='csv/channels.csv';
   const teamsCSVFolder='https://falahsab.github.io/jedwal/teams/';
   let leagues=[], teams={}, commentators=[], channels=[];
-
   function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
   function populateLeagues(){
     fetchCSV(leaguesCSV,data=>{
@@ -175,25 +225,25 @@ document.addEventListener('DOMContentLoaded',()=>{
   function render(){
     const matchesContainer=document.getElementById('matchesContainer');
     matchesContainer.innerHTML='';
-    leagues.forEach(l=>{
+    leagues.forEach((l,idx)=>{
       const leagueMatches=matches.filter(m=>m.league===l.code);
       if(leagueMatches.length>0){
-        const section=document.createElement('div'); section.className='matches-section';
-        const header=document.createElement('div'); header.className='section-header';
+        const section=document.createElement('div'); 
+        section.className=`matches-section league-${idx+1}`;
+        const header=document.createElement('div'); 
+        header.className='section-header';
         header.innerHTML=`<img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
         section.appendChild(header);
         leagueMatches.forEach((m,i)=>{
-          const card=document.createElement('div'); card.className='match-card';
-        
-card.innerHTML=`
+          const card=document.createElement('div'); 
+          card.className='match-card';
+          card.innerHTML=`
   <div class="match-top">
     <div class="team-left" title="${m.home}">
       <span class="team-name">${m.home}</span>
       <div class="logo"><img src="${m.homeImg}"/></div>
     </div>
-    <div class="center">
-      ⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}
-    </div>
+    <div class="center">⏰ ${new Date(m.time).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div>
     <div class="team-right" title="${m.away}">
       <div class="logo"><img src="${m.awayImg}"/></div>
       <span class="team-name">${m.away}</span>
@@ -203,9 +253,8 @@ card.innerHTML=`
   <div class="action-btns">
     <button onclick="editMatch(${i})">✏️ تعديل</button>
     <button onclick="deleteMatch(${i})">🗑️ حذف</button>
-  </div>
-`;
-section.appendChild(card);
+  </div>`;
+          section.appendChild(card);
         });
         matchesContainer.appendChild(section);
       }
@@ -228,11 +277,10 @@ section.appendChild(card);
     },100);
   };
   window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1);localStorage.setItem('matches',JSON.stringify(matches));render();}};
+  document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف جميع المباريات؟')){matches=[];localStorage.removeItem('matches');render();}});
   document.getElementById('finalView').addEventListener('click',()=>{const finalWindow=window.open('','_blank');if(finalWindow){finalWindow.onload=()=>{finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between}.center{display:flex;align-items:center;gap:6px;justify-content:center}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);finalWindow.document.close();};}else{alert('تعذر فتح نافذة جديدة.');}});
   document.getElementById('downloadTable').addEventListener('click',()=>{document.querySelectorAll('.action-btns').forEach(btn=>btn.style.display='none');html2canvas(document.getElementById('matchesContainer')).then(canvas=>{const link=document.getElementById('downloadLink');link.href=canvas.toDataURL('image/png');link.download='matches.png';link.click();document.querySelectorAll('.action-btns').forEach(btn=>btn.style.display='');});});
 });
 </script>
 </body>
 </html>
-
-
