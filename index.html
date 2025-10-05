@@ -17,17 +17,18 @@ header{background:#3498db;color:#fff;padding:12px 16px;border-radius:8px;margin-
 .row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
 select,input[type="datetime-local"]{background:transparent;border:1px solid rgba(0,0,0,0.12);padding:8px;border-radius:8px;color:#222;width:100%}
 label{font-size:13px;color:#555;display:block;margin-bottom:4px}
-.logo{width:40px;height:40px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition: all 0.3s ease;}
-.logo img{width:100%;height:100%;object-fit:contain;transition: all 0.3s ease;}
+.logo{width:40px;height:40px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition: all 0.3s ease}
+.logo img{width:100%;height:100%;object-fit:contain;transition: all 0.3s ease}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%}
 .matches-section{margin-bottom:16px}
 .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:8px;position:relative;padding-left:40px;padding-right:40px}
 .extra-logo-header{position:absolute;left:0;top:50%;transform:translateY(-50%);width:32px;height:32px}
 .match-card{display:flex;flex-direction:column;border-radius:10px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:8px;position:relative}
 .match-top{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:center}
-.team-left,.team-right{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
-.team-left .team-name,.team-right .team-name{flex-shrink:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;font-size:1rem;transition: font-size 0.3s ease}
-.center{display:flex;flex-direction:column;align-items:center;flex-shrink:0;justify-content:center;flex:0 0 auto;font-weight:700;font-size:1rem;transition: font-size 0.3s ease}
+.team-left,.team-right{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.team-left .team-name,.team-right .team-name{flex:1;text-align:center;font-size:1rem;transition: font-size 0.3s ease;}
+.center{display:flex;flex-direction:column;align-items:center;flex-shrink:0;justify-content:center;flex:0 0 auto;font-weight:700}
+.center .time{font-size:1rem}
 .center .ampm{font-size:0.7rem;margin-top:2px;font-weight:400}
 .meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center}
@@ -37,19 +38,13 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 @media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll {display:none !important;}}
 
 /* استجابة للشاشات الصغيرة */
-@media(max-width:700px){
-  .team-left .team-name, .team-right .team-name{font-size:0.9rem;}
-  .logo{width:28px;height:28px;}
-}
-@media(max-width:500px){
-  .team-left .team-name, .team-right .team-name{font-size:0.8rem;}
-  .logo{width:22px;height:22px;}
-}
+@media(max-width:700px){.team-left .team-name, .team-right .team-name{font-size:0.9rem;}.logo{width:28px;height:28px;}}
+@media(max-width:500px){.team-left .team-name, .team-right .team-name{font-size:0.8rem;}.logo{width:22px;height:22px;}}
 </style>
 </head>
 <body>
 <div class="container">
-  <header>⚽ جدول مباريات اليوم</header>
+  <header>⚽22 جدول مباريات اليوم</header>
 
   <div class="grid">
     <div class="card form">
@@ -139,8 +134,9 @@ document.getElementById('addMatch').onclick=()=>{
   document.getElementById('matchTime').value='';
 };
 
+// دالة ضبط حجم اسم الفريق تلقائيًا
 function adjustTeamNameSize(el){
-  const parentWidth=el.parentElement.offsetWidth - 50; // المساحة المتاحة
+  const parentWidth=el.parentElement.offsetWidth - 50;
   let fontSize=16;
   el.style.fontSize=fontSize+'px';
   while(el.scrollWidth>parentWidth && fontSize>10){ fontSize--; el.style.fontSize=fontSize+'px'; }
@@ -154,7 +150,8 @@ function render(){
     if(leagueMatches.length>0){
       const section=document.createElement('div'); section.className='matches-section';
       const header=document.createElement('div'); header.className='section-header';
-      header.innerHTML=`<img src='${l.extraLogo||l.extra}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+      const extraLogo=l.extraLogo||l.extra;
+      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
       leagueMatches.forEach((m,i)=>{
         const card=document.createElement('div'); card.className='match-card';
@@ -165,15 +162,9 @@ function render(){
         const ampm=d.getHours()>=12?'PM':'AM';
         card.innerHTML=`
           <div class="match-top">
-            <div class="team-left" title="${m.home}">
-              <span class="team-name">${m.home}</span>
-              <div class="logo"><img src="${m.homeImg}"/></div>
-            </div>
-            <div class="center">${hours}:${minutes}<span class="ampm">${ampm}</span></div>
-            <div class="team-right" title="${m.away}">
-              <div class="logo"><img src="${m.awayImg}"/></div>
-              <span class="team-name">${m.away}</span>
-            </div>
+            <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
+            <div class="center"><span class="time">${hours}:${minutes}</span><span class="ampm">${ampm}</span></div>
+            <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
           </div>
           <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
           <div class="action-btns" style="display:${showBtns?'flex':'none'}">
@@ -182,7 +173,7 @@ function render(){
           </div>
         `;
         section.appendChild(card);
-        // ضبط حجم أسماء الفرق
+        // ضبط حجم أسماء الفرق تلقائيًا
         adjustTeamNameSize(card.querySelector('.team-left .team-name'));
         adjustTeamNameSize(card.querySelector('.team-right .team-name'));
       });
@@ -215,7 +206,7 @@ document.getElementById('finalView').addEventListener('click',()=>{
   const finalWindow=window.open('','_blank');
   if(finalWindow){
     finalWindow.onload=()=>{
-      finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between;gap:4px;text-align:center}.center{display:flex;flex-direction:column;align-items:center;font-weight:700}.ampm{font-size:0.7rem;margin-top:2px;font-weight:400}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
+      finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between}.center{display:flex;flex-direction:column;align-items:center;font-weight:700}.ampm{font-size:0.7rem;margin-top:2px;font-weight:400}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
       finalWindow.document.close();
     };
   }else{alert('تعذر فتح نافذة جديدة.');}
