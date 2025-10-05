@@ -17,7 +17,7 @@ header{background:#3498db;color:#fff;padding:12px 16px;border-radius:8px;margin-
 .row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
 select,input[type="datetime-local"]{background:transparent;border:1px solid rgba(0,0,0,0.12);padding:8px;border-radius:8px;color:#222;width:100%}
 label{font-size:13px;color:#555;display:block;margin-bottom:4px}
-.logo{width:40px;height:40px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo{width:40px;height:40px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition: all 0.3s ease;}
 .logo img{width:100%;height:100%;object-fit:contain;transition: all 0.3s ease;}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%}
 .matches-section{margin-bottom:16px}
@@ -27,8 +27,8 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .match-top{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:center}
 .team-left,.team-right{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .team-left .team-name,.team-right .team-name{flex-shrink:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;font-size:1rem;transition: font-size 0.3s ease}
-.center{display:flex;align-items:center;gap:4px;flex-shrink:0;justify-content:center;flex:0 0 auto;font-weight:700;font-size:1rem;transition: font-size 0.3s ease}
-.center .ampm{margin-left:6px;font-weight:400}
+.center{display:flex;flex-direction:column;align-items:center;flex-shrink:0;justify-content:center;flex:0 0 auto;font-weight:700;font-size:1rem;transition: font-size 0.3s ease}
+.center .ampm{font-size:0.7rem;margin-top:2px;font-weight:400}
 .meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
@@ -39,17 +39,17 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 /* استجابة للشاشات الصغيرة */
 @media(max-width:700px){
   .team-left .team-name, .team-right .team-name{font-size:0.9rem;}
-  .logo{width:30px;height:30px;}
+  .logo{width:28px;height:28px;}
 }
 @media(max-width:500px){
   .team-left .team-name, .team-right .team-name{font-size:0.8rem;}
-  .logo{width:0;height:0;overflow:hidden;}
+  .logo{width:22px;height:22px;}
 }
 </style>
 </head>
 <body>
 <div class="container">
-  <header>⚽ جدول مباريات اليوم</header>
+  <header>⚽4 جدول مباريات اليوم</header>
 
   <div class="grid">
     <div class="card form">
@@ -162,7 +162,7 @@ function render(){
               <span class="team-name">${m.home}</span>
               <div class="logo"><img src="${m.homeImg}"/></div>
             </div>
-            <div class="center">${hours}:${minutes} <span class="ampm">${ampm}</span></div>
+            <div class="center">${hours}:${minutes}<span class="ampm">${ampm}</span></div>
             <div class="team-right" title="${m.away}">
               <div class="logo"><img src="${m.awayImg}"/></div>
               <span class="team-name">${m.away}</span>
@@ -205,7 +205,7 @@ document.getElementById('finalView').addEventListener('click',()=>{
   const finalWindow=window.open('','_blank');
   if(finalWindow){
     finalWindow.onload=()=>{
-      finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between;gap:4px;text-align:center}.center{display:flex;align-items:center;gap:6px;justify-content:center;font-weight:700}.ampm{margin-left:6px;font-weight:400}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
+      finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between;gap:4px;text-align:center}.center{display:flex;flex-direction:column;align-items:center;font-weight:700}.ampm{font-size:0.7rem;margin-top:2px;font-weight:400}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
       finalWindow.document.close();
     };
   }else{alert('تعذر فتح نافذة جديدة.');}
@@ -217,7 +217,6 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
     const link=document.getElementById('downloadLink'); link.href=canvas.toDataURL('image/png'); link.download='matches.png'; link.click();
     actionBtns.forEach(b=>b.style.display=showBtns?'flex':'none');
   });
-});
 });
 </script>
 </body>
