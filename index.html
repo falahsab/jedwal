@@ -35,6 +35,35 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 #downloadLink{display:none}
 .matches-wrapper{margin-top:12px}
 @media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll {display:none !important;}}
+/* --- قسم الواتساب أسفل كل دوري --- */
+.whatsapp-section {
+  display: flex;
+  align-items: center;
+  gap: 6px;          /* المسافة بين الإيقونة والنص */
+  margin-top: 8px;    /* مسافة من البطاقة */
+  font-size: 14px;    /* حجم النص */
+  font-weight: 600;   /* وزن النص */
+  color: #222;        /* لون النص */
+}
+
+.whatsapp-section img {
+  width: 20px;       /* حجم أيقونة واتساب */
+  height: 20px;
+  object-fit: contain;
+}
+
+.whatsapp-section span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* تغيير اللون عند المرور */
+.whatsapp-section:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
 </style>
 </head>
 <body>
@@ -168,12 +197,12 @@ function render(){
       });
 
       // إضافة قسم الواتساب أسفل كل دوري
-      const whatsappDiv=document.createElement('div');
-      whatsappDiv.style.display='flex';
-      whatsappDiv.style.alignItems='center';
-      whatsappDiv.style.gap='6px';
-      whatsappDiv.style.marginTop='8px';
-      whatsappDiv.innerHTML=`<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:20px;height:20px"/> <span>738092209</span>`;
+      const whatsappDiv = document.createElement('div');
+      whatsappDiv.className = 'whatsapp-section';
+      whatsappDiv.innerHTML = `
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"/>
+        <span>738092209</span>
+      `;
       section.appendChild(whatsappDiv);
 
       matchesContainer.appendChild(section);
@@ -222,6 +251,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
 
 
