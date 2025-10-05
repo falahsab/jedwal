@@ -197,12 +197,12 @@ function render(){
       });
 
       // إضافة قسم الواتساب أسفل كل دوري
-      const whatsappDiv = document.createElement('div');
-      whatsappDiv.className = 'whatsapp-section';
-      whatsappDiv.innerHTML = `
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"/>
-        <span>738092209</span>
-      `;
+      const whatsappDiv=document.createElement('div');
+      whatsappDiv.style.display='flex';
+      whatsappDiv.style.alignItems='center';
+      whatsappDiv.style.gap='6px';
+      whatsappDiv.style.marginTop='8px';
+      whatsappDiv.innerHTML=`<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:20px;height:20px"/> <span>738092209</span>`;
       section.appendChild(whatsappDiv);
 
       matchesContainer.appendChild(section);
@@ -251,13 +251,3 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
