@@ -129,19 +129,24 @@ document.getElementById('addMatch').onclick=()=>{
   document.getElementById('matchTime').value='';
 };
 
-function render(){
+function render(){function render(){
   const matchesContainer=document.getElementById('matchesContainer');
   matchesContainer.innerHTML='';
   leagues.forEach(l=>{
     const leagueMatches=matches.filter(m=>m.league===l.code);
     if(leagueMatches.length>0){
-      const section=document.createElement('div'); section.className='matches-section';
-      const header=document.createElement('div'); header.className='section-header';
+      const section=document.createElement('div'); 
+      section.className='matches-section';
+      
+      const header=document.createElement('div'); 
+      header.className='section-header';
       const extraLogo=l.extraLogo||l.extra;
       header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
+
       leagueMatches.forEach((m,i)=>{
-        const card=document.createElement('div'); card.className='match-card';
+        const card=document.createElement('div'); 
+        card.className='match-card';
         card.style.background=l.color||'#fdfdfd';
         const d=new Date(m.time);
         const hours=d.getHours()%12||12;
@@ -150,7 +155,7 @@ function render(){
         card.innerHTML=`
           <div class="match-top">
             <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
-            <div class="center"><span class="ampm">${ampm}</span>${hours}:${minutes} </div>
+            <div class="center">${hours}:${minutes} <span class="ampm">${ampm}</span></div>
             <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
           </div>
           <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
@@ -161,9 +166,21 @@ function render(){
         `;
         section.appendChild(card);
       });
+
+      // إضافة قسم الواتساب أسفل كل دوري
+      const whatsappDiv=document.createElement('div');
+      whatsappDiv.style.display='flex';
+      whatsappDiv.style.alignItems='center';
+      whatsappDiv.style.gap='6px';
+      whatsappDiv.style.marginTop='8px';
+      whatsappDiv.innerHTML=`<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:20px;height:20px"/> <span>📲 اشترك الآن عبر واتساب: 00967XXXXXXXX</span>`;
+      section.appendChild(whatsappDiv);
+
       matchesContainer.appendChild(section);
     }
   });
+}
+
 }
 
 window.editMatch=(index)=>{
@@ -207,6 +224,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
 
 
