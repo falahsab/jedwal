@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       canvas.getContext('2d').drawImage(img,0,0);
       callback(canvas.toDataURL());
     };
-    img.onerror = () => callback(''); // في حالة فشل التحويل
+    img.onerror = () => callback('');
     img.src = url;
   }
 
@@ -169,17 +169,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     const chan=document.getElementById('channel').value;
     let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
     let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
-
     if(!time){alert('ادخل وقت المباراة');return;}
-    if(matches.some(m=>m.home===home && m.away===away && m.time===time)){
-      alert('هذه المباراة موجودة بالفعل!'); return;
-    }
-
-    // تحويل الصور إلى Base64 قبل الإضافة
-    toBase64(homeImg, homeB64 => {
-      toBase64(awayImg, awayB64 => {
-        const newMatch={league,home,away,time,comm,chan,homeImg:homeB64,awayImg:awayB64,nextDay:isNextDay};
-        if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
+    
+    // تحويل الصور إلى Base64 قبل التخزين
+    toBase64(homeImg,b64Home=>{
+      homeImg=b64Home;
+      toBase64(awayImg,b64Away=>{
+        awayImg=b64Away;
+        const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,nextDay:isNextDay};
+        if(editIndex!==null){
+          matches.splice(editIndex,0,newMatch);
+          editIndex=null;
+        } else matches.push(newMatch);
         localStorage.setItem('matches',JSON.stringify(matches));
         render();
         document.getElementById('matchTime').value='';
@@ -191,9 +192,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     const matchesContainer=document.getElementById('matchesContainer');
     matchesContainer.innerHTML='';
     leagues.forEach(l=>{
-      let leagueMatches=matches.filter(m=>m.league===l.code);
+      const leagueMatches=matches.filter(m=>m.league===l.code);
       if(leagueMatches.length>0){
-        leagueMatches.sort((a,b)=>new Date(a.time)-new Date(b.time));
         const section=document.createElement('div'); section.className='matches-section';
         const header=document.createElement('div'); header.className='section-header';
         const extraLogo=l.extraLogo||l.extra;
@@ -203,19 +203,21 @@ document.addEventListener('DOMContentLoaded',()=>{
           const card=document.createElement('div'); card.className='match-card';
           card.style.background=l.color||'#fdfdfd';
           const d=new Date(m.time);
-          const hours=('0'+d.getHours()).slice(-2);
+          const hours=('0'+(d.getHours()%12||12)).slice(-2);
           const minutes=('0'+d.getMinutes()).slice(-2);
+          const ampm=d.getHours()>=12?'م':'ص';
           card.innerHTML=`
             <div class="match-top">
               <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
-              <div class="center">${hours}:${minutes}${m.nextDay ? "<div class='next-day-label'>اليوم التالي</div>" : ""}</div>
+              <div class="center">${ampm} ${hours}:${minutes}${m.nextDay ? "<div class='next-day-label'>اليوم التالي</div>" : ""}</div>
               <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
             </div>
             <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
             <div class="action-btns" style="display:${showBtns?'flex':'none'}">
               <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
               <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-            </div>`;
+            </div>
+          `;
           section.appendChild(card);
         });
         matchesContainer.appendChild(section);
@@ -255,6 +257,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       link.click();
     });
   });
+
 });
 </script>
 </body>
