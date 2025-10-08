@@ -19,11 +19,10 @@ header{
   text-align:center;
   font-size:22px;
   font-weight:700;
-  position:sticky;
-  top:0;
-  z-index:1000;
-}
-.grid{display:grid;grid-template-columns:1fr 400px;gap:14px}
+  position:sticky; /* 🔹 يجعله ثابت */
+  top:0;            /* 🔹 يثبته في أعلى الصفحة */
+  z-index:1000;     /* 🔹 حتى يبقى فوق باقي العناصر */
+}.grid{display:grid;grid-template-columns:1fr 400px;gap:14px}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08)}
 .row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
@@ -39,25 +38,47 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .match-top{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:center}
 .team-left,.team-right{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .team-left .team-name,.team-right .team-name{flex:1;text-align:center;font-size:clamp(12px,1.8vw,18px)}
-.center{display:flex;align-items:center;gap:6px;flex-shrink:0;justify-content:center;flex:0 0 auto;font-weight:700;font-size:clamp(14px,2vw,20px);flex-direction:column}
+.center{display:flex;align-items:center;gap:6px;flex-shrink:0;justify-content:center;flex:0 0 auto;font-weight:700;font-size:clamp(14px,2vw,20px)}
 .center .ampm{display:block;font-size:10px;margin-top:2px;font-weight:400}
-.nextday-label{font-size:9px;color:#007bff;margin-top:2px;} /* اليوم التالي بلون أزرق */
 .meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}
-
-
-  .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center}
+.action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
 #downloadLink{display:none}
 .matches-wrapper{margin-top:12px}
 @media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll {display:none !important;}}
+
+/* الصورة المائية */
+  .match-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.match-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url('https://falahsab.github.io/jedwal/img/yemen-sat.png'); /* 🖼️ ضع رابط الصورة هنا */
+  background-repeat: repeat;       /* تتوزع على كامل البطاقة */
+  background-size: 60px auto;     /* حجم كل شعار مائي */
+  opacity: 0.04;                   /* شفافية العلامة المائية */
+  pointer-events: none;            /* حتى لا تؤثر على النقر */
+  z-index: 0;
+}
+
+.match-card > * {
+  position: relative;
+  z-index: 1; /* لضمان ظهور المحتوى فوق العلامة المائية */
+}
+
 </style>
 </head>
 <body>
 <div class="container">
-  <header>
-    ⚽ جدول مباريات اليوم
-    <div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
-  </header>
+<header>
+  ⚽ جدول مباريات اليوم
+  <div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
+</header>
 
   <div class="grid">
     <div class="card form">
@@ -77,19 +98,14 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
         <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
         <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
       </div>
-
-      <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
-        <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
-      </div>
-
+      <button id="addMatch" class="btn">➕ إضافة المباراة</button>
       <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
       <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
     </div>
   </div>
 
   <div class="matches-wrapper">
-    <div class="card"><div id="matchesContainer"></div></div>
+    <div class="card"><div id="matchesContainer"></div> <center>www.yemensat.com</center></div>
   </div>
 
   <button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
@@ -101,22 +117,19 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
-
-  // ✅ عرض اليوم والتاريخ الحالي فقط
+  // عرض اليوم والتاريخ الحالي فقط (بدون الوقت)
   const dateEl = document.getElementById('todayDate');
   const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
   const now = new Date();
   const dayName = days[now.getDay()];
   const dateStr = `${dayName} ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
   dateEl.textContent = dateStr;
-
+  
 const leaguesCSV='csv/leagues.csv';
 const commentatorsCSV='csv/commentators.csv';
 const channelsCSV='csv/channels.csv';
 const teamsCSVFolder='https://falahsab.github.io/jedwal/teams/';
 let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
-let editIndex = null;
-let isNextDay = false;
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
 function populateLeagues(){
@@ -147,12 +160,6 @@ document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(
 
 let matches=[]; if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
 
-// ✅ زر اليوم التالي
-document.getElementById('nextDayBtn').onclick = ()=>{
-  isNextDay = !isNextDay;
-  document.getElementById('nextDayState').textContent = isNextDay ? '✅' : '❌';
-};
-
 document.getElementById('addMatch').onclick=()=>{
   const league=document.getElementById('leagueSelect').value;
   const home=document.getElementById('homeTeam').value;
@@ -163,16 +170,7 @@ document.getElementById('addMatch').onclick=()=>{
   const homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
   const awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
   if(!time){alert('ادخل وقت المباراة');return;}
-
-  const newMatch = {league,home,away,time,comm,chan,homeImg,awayImg,nextDay:isNextDay};
-
-  if(editIndex !== null){
-    matches.splice(editIndex, 0, newMatch);
-    editIndex = null;
-  } else {
-    matches.push(newMatch);
-  }
-
+  matches.push({league,home,away,time,comm,chan,homeImg,awayImg});
   localStorage.setItem('matches',JSON.stringify(matches));
   render();
   document.getElementById('matchTime').value='';
@@ -199,7 +197,7 @@ function render(){
         card.innerHTML=`
           <div class="match-top">
             <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
-            <div class="center"><span class="ampm">${ampm}</span>${hours}:${minutes}${m.nextDay ? "<div class='nextday-label'>اليوم التالي</div>" : ""}</div>
+            <div class="center"><span class="ampm">${ampm}</span>${hours}:${minutes} </div>
             <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
           </div>
           <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
@@ -209,6 +207,7 @@ function render(){
           </div>
         `;
         section.appendChild(card);
+
       });
       matchesContainer.appendChild(section);
     }
@@ -227,10 +226,7 @@ window.editMatch=(index)=>{
     document.getElementById('channel').value=m.chan;
     updatePreview(document.getElementById('homeTeam'),'homePreview');
     updatePreview(document.getElementById('awayTeam'),'awayPreview');
-    editIndex = index;
-    matches.splice(index,1);
-    localStorage.setItem('matches',JSON.stringify(matches));
-    render();
+    matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();
   },100);
 };
 window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1);localStorage.setItem('matches',JSON.stringify(matches));render();}};
@@ -242,7 +238,7 @@ document.getElementById('finalView').addEventListener('click',()=>{
   const finalWindow=window.open('','_blank');
   if(finalWindow){
     finalWindow.onload=()=>{
-      finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between}.center{display:flex;align-items:center;gap:6px;justify-content:center;font-weight:700;flex-direction:column}.ampm{display:block;font-size:10px;margin-top:2px;font-weight:400}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}.nextday-label{font-size:11px;color:#007bff;margin-top:2px;}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
+      finalWindow.document.write(`<html lang='ar' dir='rtl'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>الجدول النهائي</title><style>body{font-family:'Cairo';padding:16px}.match-card{margin-bottom:12px;padding:10px;border-radius:8px;border:1px solid #ccc}.match-top{display:flex;align-items:center;justify-content:space-between}.center{display:flex;align-items:center;gap:6px;justify-content:center;font-weight:700}.ampm{display:block;font-size:10px;margin-top:2px;font-weight:400}.meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:#555;margin-top:6px}.logo img{width:32px;height:32px}}</style></head><body>${document.getElementById('matchesContainer').innerHTML}</body></html>`);
       finalWindow.document.close();
     };
   }else{alert('تعذر فتح نافذة جديدة.');}
@@ -259,7 +255,3 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 </script>
 </body>
 </html>
-
-
-
-
