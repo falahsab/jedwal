@@ -43,7 +43,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 }
 
 .next-day-label {
-  font-size: 12px;
+  font-size: 10px;
   color: #007bff;
   margin-top: 0; /* إزالة المسافة فوق */
   line-height: 1; /* يضبط النص مباشرة أسفل الوقت */
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           card.innerHTML=`
             <div class="match-top">
               <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
-                <div class="center">${hours}:${minutes} ${ampm}${m.nextDay ? "<div class='next-day-label'>اليوم التالي</div>" : ""}</div>
+                <div class="center">${hours}:${minutes} ${ampm}${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</div>
               <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
             </div>
             <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
@@ -277,6 +277,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
 
 
 
