@@ -235,11 +235,17 @@ document.addEventListener('DOMContentLoaded',()=>{
           const ampm = d.getHours() >= 12 ? 'م' : 'ص';
 
           card.innerHTML=`
-            <div class="match-top">
-              <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
-                <div class="center">${hours}:${minutes} ${ampm}${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</div>
-              <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
-            </div>
+<div class="match_row d-flex py-3 px-2">
+    <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">${m.home}</span>
+        <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
+    </div>
+    <div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"> <span class="hometeam">0</span> - <span class="awayteam">0</span> </span>
+        <div class="match_time"><span class="the_time">${hours}:${minutes} ${ampm}${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span></div>
+    </div>
+    <div class="team awayteam cell col d-flex align-items-center">
+        <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
+</div>
+
             <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
             <div class="action-btns" style="display:${showBtns?'flex':'none'}">
               <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
@@ -290,5 +296,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
 
 
