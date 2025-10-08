@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             <div class="match-top">
              
               <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
-              <div class="center"><span class="ampm">${ampm}</span>${hours}:${minutes} ${m.nextDay ? "<div class='next-day-label'>اليوم التالي</div>" : ""}</div>
+              <div class="center"><span class="ampm">${ampm}</span>${hours}:${minutes} <br/>${m.nextDay ? "<div class='next-day-label'>اليوم التالي</div>" : ""}</div>
               <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
             </div>
             <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
@@ -239,5 +239,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
 
 
