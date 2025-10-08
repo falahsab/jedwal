@@ -57,7 +57,9 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 </head>
 <body>
 <div class="container">
-<header>
+<link rel="stylesheet" href="https://jdwel.com/wp-content/themes/jdwel_3.0/css/framework.min.css?ver=4.4.1.1">
+  <link rel="stylesheet" href="https://jdwel.com/wp-content/themes/jdwel_3.0/style.css?ver=3.5.8">
+  <header>
   ⚽ جدول مباريات اليوم
   <div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
 </header>
@@ -94,7 +96,18 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 <div class="matches-wrapper">
   <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
 </div>
+<div class="match_row d-flex py-3 px-2">
+    <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">الولايات المتحدة</span>
+        <div style="position:relative"> <img src="https://jdwel.com/image/teams/flag_united_states.png" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
+    </div>
+    <div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"> <span class="hometeam">0</span> - <span class="awayteam">0</span> </span>
+        <div class="match_time"> <span class="the_otime hidden">2025-10-09 22:30</span> <span class="the_time">10:30 م</span></div>
+    </div>
+    <div class="team awayteam cell col d-flex align-items-center">
+        <div style="position:relative"> <img src="https://jdwel.com/image/teams/56.png" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">إيطاليا</span></div>
+</div>
 
+  
 <button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
 <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
 <a id="downloadLink"></a>
@@ -277,3 +290,4 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
