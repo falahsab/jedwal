@@ -203,13 +203,14 @@ document.addEventListener('DOMContentLoaded',()=>{
           const card=document.createElement('div'); card.className='match-card';
           card.style.background=l.color||'#fdfdfd';
           const d=new Date(m.time);
-          const hours=('0'+(d.getHours()%12||12)).slice(-2);
-          const minutes=('0'+d.getMinutes()).slice(-2);
-          const ampm=d.getHours()>=12?'م':'ص';
+          const hours = d.getHours() % 12 || 12; // بدون إضافة صفر بادئ
+          const minutes = ('0'+d.getMinutes()).slice(-2); // نترك الصفر البادئ للدقائق فقط
+          const ampm = d.getHours() >= 12 ? 'م' : 'ص';
+
           card.innerHTML=`
             <div class="match-top">
               <div class="team-left" title="${m.home}"><span class="team-name">${m.home}</span><div class="logo"><img src="${m.homeImg}"/></div></div>
-              <div class="center">${hours}:${minutes} ${ampm}${m.nextDay ? "<div class='next-day-label'>اليوم التالي</div>" : ""}</div>
+                <div class="center">${hours}:${minutes} ${ampm}${m.nextDay ? "<div class='next-day-label'>اليوم التالي</div>" : ""}</div>
               <div class="team-right" title="${m.away}"><div class="logo"><img src="${m.awayImg}"/></div><span class="team-name">${m.away}</span></div>
             </div>
             <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
@@ -262,5 +263,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
 
 
