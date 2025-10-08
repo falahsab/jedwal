@@ -75,7 +75,10 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 </head>
 <body>
 <div class="container">
-  <header>⚽ جدول مباريات اليوم</header>
+<header>
+  ⚽ جدول مباريات اليوم
+  <div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
+</header>
 
   <div class="grid">
     <div class="card form">
@@ -114,6 +117,14 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
+  // عرض اليوم والتاريخ الحالي فقط (بدون الوقت)
+  const dateEl = document.getElementById('todayDate');
+  const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const now = new Date();
+  const dayName = days[now.getDay()];
+  const dateStr = `${dayName} ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
+  dateEl.textContent = dateStr;
+  
 const leaguesCSV='csv/leagues.csv';
 const commentatorsCSV='csv/commentators.csv';
 const channelsCSV='csv/channels.csv';
@@ -244,6 +255,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
 
 
