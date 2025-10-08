@@ -1,12 +1,80 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <link rel="stylesheet" href="https://jdwel.com/wp-content/themes/jdwel_3.0/css/framework.min.css?ver=4.4.1.1">
+ 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>جدول مباريات اليوم - لوحة التحكم</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
+  /* البطاقة الرئيسية */
+.matches-wrapper {
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.matches-wrapper .card {
+    background: #fff; /* أو أي لون حسب التصميم */
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 15px;
+    text-align: center;
+}
+
+/* الصف الخاص بالمباراة */
+.match_row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* فرق الفريقين */
+.match_row .team {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.match_row .hometeam {
+    justify-content: flex-end;
+}
+
+.match_row .awayteam {
+    justify-content: flex-start;
+}
+
+.match_row .the_team {
+    margin: 0 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* الشعار */
+.match_row .team_logo {
+    width: 27px;
+    height: 27px;
+}
+
+/* العمود الأوسط للوقت والنتيجة */
+.match_row .middle_column {
+    flex: 0 0 auto;
+    text-align: center;
+}
+
+.match_row .match_time {
+    font-size: 13px;
+    color: #333;
+}
+
+.match_row .match_score {
+    font-weight: bold;
+    display: block;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
 *{box-sizing:border-box;font-family:'Cairo',Tahoma,system-ui,Segoe UI,Arial}
 body{margin:0;padding:18px;background:#f9f9f9;color:#222;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-start}
@@ -58,7 +126,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 </head>
 <body>
 <div class="container">
-<link rel="stylesheet" href="css/datepicker.css">
+<link rel="stylesheet" href="css/datepicker1.css">
 
   <header>
   ⚽ جدول مباريات اليوم
@@ -297,6 +365,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
 
 
 
