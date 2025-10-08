@@ -46,6 +46,26 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 #downloadLink{display:none}
 .matches-wrapper{margin-top:12px}
 @media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll {display:none !important;}}
+
+/* الصورة المائية */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://jdwel.com/image/comp-logo/19.png"); /* ← غيّرها إلى رابط صورتك */
+  background-repeat: repeat;
+  background-size: 180px; /* حجم تكرار العلامة المائية */
+  background-position: center;
+  opacity: 0.08; /* شفافية العلامة المائية (يمكن تعديلها بين 0.05 إلى 0.15) */
+  pointer-events: none; /* حتى لا تمنع النقر على المحتوى */
+  z-index: 0;
+}
+
+/* تأكد أن المحتوى فوق العلامة المائية */
+.card > * {
+  position: relative;
+  z-index: 1;
+}
 </style>
 </head>
 <body>
@@ -219,6 +239,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
 
 
