@@ -10,8 +10,19 @@
 *{box-sizing:border-box;font-family:'Cairo',Tahoma,system-ui,Segoe UI,Arial}
 body{margin:0;padding:18px;background:#f9f9f9;color:#222;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between}
 .container{max-width:1100px;margin:0 auto;width:100%}
-header{background:#3498db;color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:18px;text-align:center;font-size:22px;font-weight:700}
-.grid{display:grid;grid-template-columns:1fr 400px;gap:14px}
+header{
+  background:#3498db;
+  color:#fff;
+  padding:12px 16px;
+  border-radius:8px;
+  margin-bottom:18px;
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  position:sticky; /* 🔹 يجعله ثابت */
+  top:0;            /* 🔹 يثبته في أعلى الصفحة */
+  z-index:1000;     /* 🔹 حتى يبقى فوق باقي العناصر */
+}.grid{display:grid;grid-template-columns:1fr 400px;gap:14px}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08)}
 .row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
@@ -208,6 +219,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
 
 
