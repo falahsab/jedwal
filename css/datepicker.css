@@ -1,4 +1,75 @@
 @import url("https://fonts.googleapis.com/css?family=Tajawal:400,500&subset=arabic&display=swap");
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.admin-bar .fixed-top {
+  top: 32px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Tajawal", tahoma;
+  font-weight: 500;
+}
+ul {
+  padding: 0;
+}
+label {
+  font-family: "Tajawal", tahoma;
+}
+.focus,
+:focus {
+  outline: none;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+.nav-tabs .nav-link {
+  color: purple;
+  font-family: "Tajawal", tahoma;
+}
+a:hover {
+  color: #969696;
+  text-decoration: none;
+}
+.btn,
+button {
+  font-family: "Tajawal", tahoma;
+}
+button .fa-check {
+  margin: 0 0 0 8px;
+}
+ul {
+  list-style: none;
+}
+.wpcf7-submit:focus,
+button:active,
+button:focus {
+  outline: none !important;
+}
+.fonthead {
+  font-family: "Tajawal", tahoma;
+}
+.fonthead2 {
+  font-family: Tajawal, sans-serif, tahoma;
+}
+.center {
+  text-align: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
 .left {
   float: left;
 }
