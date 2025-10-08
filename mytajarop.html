@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         <div class="match_time"><span class="the_time">${hours}:${minutes} ${ampm}${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span></div>
     </div>
     <div class="team awayteam cell col d-flex align-items-center">
-        <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
+        <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
 </div>
 
             <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
@@ -297,6 +297,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
 
 
 
