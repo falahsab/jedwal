@@ -33,7 +33,6 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .team-left,.team-right{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .team-left .team-name,.team-right .team-name{flex:1;text-align:center;font-size:clamp(12px,1.8vw,18px)}
 .center{display:flex;align-items:center;gap:6px;flex-direction:column;justify-content:center;flex:0 0 auto;font-weight:700;font-size:clamp(14px,2vw,20px)}
-.center .ampm{font-size:10px;font-weight:400;margin-top:2px}
 .meta{display:flex;justify-content:center;gap:40px;font-size:13px;color:#555;margin-top:6px;font-weight:500;flex-wrap:wrap}
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
@@ -104,6 +103,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   let matches=[], editIndex=null, isNextDay=false;
 
   function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
+  
   function populateLeagues(){
     fetchCSV(leaguesCSV,data=>{
       leagues=data;
@@ -112,18 +112,41 @@ document.addEventListener('DOMContentLoaded',()=>{
       loadTeams(leagueSelect.value);
     });
   }
+
+  function toBase64(url, callback){
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      canvas.getContext('2d').drawImage(img,0,0);
+      callback(canvas.toDataURL());
+    };
+    img.onerror = () => callback(''); // في حالة فشل التحويل
+    img.src = url;
+  }
+
   function loadTeams(leagueCode){
     fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
       teams[leagueCode]=data;
       const homeTeam=document.getElementById('homeTeam');
       const awayTeam=document.getElementById('awayTeam');
       homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
-      updatePreview(homeTeam,'homePreview'); updatePreview(awayTeam,'awayPreview');
+      updatePreview(homeTeam,'homePreview'); 
+      updatePreview(awayTeam,'awayPreview');
     });
   }
+
   function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
   function fetchChannels(){fetchCSV(channelsCSV,data=>{document.getElementById('channel').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
-  function updatePreview(selectEl,previewId){const s=selectEl.selectedOptions[0];const img=s.dataset.img;document.getElementById(previewId).innerHTML=img?`<img src='${img}'/>`:'⚽';}
+  function updatePreview(selectEl,previewId){
+    const s=selectEl.selectedOptions[0];
+    const img=s.dataset.img;
+    if(img){
+      toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`);
+    } else document.getElementById(previewId).innerHTML='⚽';
+  }
 
   populateLeagues(); fetchCommentators(); fetchChannels();
   document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
@@ -144,28 +167,24 @@ document.addEventListener('DOMContentLoaded',()=>{
     const time=document.getElementById('matchTime').value;
     const comm=document.getElementById('commentator').value;
     const chan=document.getElementById('channel').value;
-    const homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
-    const awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
+    let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
+    let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
+
     if(!time){alert('ادخل وقت المباراة');return;}
-    
-    // منع تكرار المباراة
     if(matches.some(m=>m.home===home && m.away===away && m.time===time)){
-      alert('هذه المباراة موجودة بالفعل!');
-      return;
+      alert('هذه المباراة موجودة بالفعل!'); return;
     }
 
-    const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,nextDay:isNextDay};
-
-    if(editIndex!==null){
-      matches.splice(editIndex,0,newMatch);
-      editIndex=null;
-    } else {
-      matches.push(newMatch);
-    }
-
-    localStorage.setItem('matches',JSON.stringify(matches));
-    render();
-    document.getElementById('matchTime').value='';
+    // تحويل الصور إلى Base64 قبل الإضافة
+    toBase64(homeImg, homeB64 => {
+      toBase64(awayImg, awayB64 => {
+        const newMatch={league,home,away,time,comm,chan,homeImg:homeB64,awayImg:awayB64,nextDay:isNextDay};
+        if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
+        localStorage.setItem('matches',JSON.stringify(matches));
+        render();
+        document.getElementById('matchTime').value='';
+      });
+    });
   };
 
   function render(){
@@ -228,15 +247,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns;render();});
   document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[];localStorage.setItem('matches','[]');render();}});
 
-  // تحميل الجدول كصورة
-  document.getElementById('downloadTable').onclick = () => {
-    html2canvas(document.querySelector('.matches-wrapper')).then(canvas => {
-      const link = document.getElementById('downloadLink');
-      link.href = canvas.toDataURL('image/png');
-      link.download = 'matches.png';
+  document.getElementById('downloadTable').addEventListener('click',()=>{
+    html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
+      const link=document.getElementById('downloadLink');
+      link.href=canvas.toDataURL('image/png');
+      link.download='matches.png';
       link.click();
     });
-  };
+  });
 });
 </script>
 </body>
