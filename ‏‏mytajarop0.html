@@ -186,8 +186,45 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
   font-size: clamp(14px, 2vw, 20px);
 }
 
-.meta{display:flex;justify-content:center;align-items: center; gap:40px;font-size:12px;color:#636566;margin-top:6px;font-weight:500;flex-wrap:wrap}
-.action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
+.meta {
+  margin-top: 8px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding-top: 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.meta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  font-size: clamp(12px, 1.5vw, 13px);
+  font-weight: 500;
+  color: #555;
+}
+
+.meta-inner .icons {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+}
+
+.meta-inner .comm-name {
+  text-align: right;
+  direction: rtl;
+}
+
+.meta-inner .chan-name {
+  text-align: left;
+  direction: rtl;
+}
+
+
+ .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
 .matches-wrapper{margin-top:12px}
 @media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn {display:none !important;}}
@@ -342,67 +379,61 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   };
 
- function render(){
-  const matchesContainer=document.getElementById('matchesContainer');
-  matchesContainer.innerHTML='';
-  leagues.forEach(l=>{
-    const leagueMatches=matches.filter(m=>m.league===l.code);
-    if(leagueMatches.length>0){
-      const section=document.createElement('div'); section.className='matches-section';
-      const header=document.createElement('div'); header.className='section-header';
-      const extraLogo=l.extraLogo||l.extra;
-      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
-      section.appendChild(header);
+function render(showBtns = false) {
+  const container = document.getElementById("matchesContainer");
+  container.innerHTML = "";
 
-      leagueMatches.forEach((m)=>{
-        const card=document.createElement('div');
-        card.className='match-card';
-        card.style.background=l.color||'#fdfdfd';
+  matches.forEach((m, i) => {
+    const card = document.createElement("div");
+    card.className = "match-card";
 
-        const d=new Date(m.time);
-        const hours=d.getHours() % 12 || 12;
-        const minutes=d.getMinutes().toString().padStart(2,'0');
-        const ampm=d.getHours() >= 12 ? 'م' : 'ص';
+    // تنسيق الوقت
+    let date = new Date(m.time);
+    let hours = date.getHours();
+    let minutes = date.getMinutes().toString().padStart(2, "0");
+    let ampm = hours >= 12 ? "م" : "ص";
+    hours = hours % 12 || 12;
+    if (hours < 10) hours = parseInt(hours); // إزالة الصفر الزائد
 
-card.innerHTML=`
-  <div class="match_row">
-    <div class="team hometeam">
-      <span class="the_team">${m.home}</span>
-      <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
-    </div>
+    // إنشاء بطاقة المباراة
+    card.innerHTML = `
+      <div class="match_row">
+        <div class="team hometeam">
+          <span class="the_team">${m.home}</span>
+          <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+        </div>
 
-    <div class="middle_column">
-      <div class="the_time">
-        <span>${hours}:${minutes}</span>
-        <span>${ampm}</span>
+        <div class="middle_column">
+          <div class="the_time">
+            <span>${hours}:${minutes}</span>
+            <span>${ampm}</span>
+          </div>
+          ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+        </div>
+
+        <div class="team awayteam">
+          <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+          <span class="the_team">${m.away}</span>
+        </div>
       </div>
-      ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
-    </div>
 
-    <div class="team awayteam">
-      <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-      <span class="the_team">${m.away}</span>
-    </div>
-  </div>
+      <div class="meta">
+        <div class="meta-inner">
+          <span class="comm-name">${m.comm}</span>
+          <span class="icons">🎙️&nbsp;&nbsp;📺</span>
+          <span class="chan-name">${m.chan}</span>
+        </div>
+      </div>
 
-  <div class="meta">
-    <div>🎙️ ${m.comm}</div>
-    <div>📺 ${m.chan}</div>
-  </div>
+      <div class="action-btns" style="display:${showBtns ? 'flex' : 'none'}">
+        <button onclick="editMatch(${i})">✏️ تعديل</button>
+        <button onclick="deleteMatch(${i})">🗑️ حذف</button>
+      </div>
+    `;
 
-  <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-    <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-    <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-  </div>
-`;
-        section.appendChild(card);
-      });
-
-      matchesContainer.appendChild(section);
-    }
+    container.appendChild(card);
   });
 }
-
 
   window.editMatch=(index)=>{
     const m=matches[index];
@@ -441,3 +472,4 @@ card.innerHTML=`
 </script>
 </body>
 </html>
+
