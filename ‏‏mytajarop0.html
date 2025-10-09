@@ -47,50 +47,46 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 
 .matches-wrapper{margin-top:12px}
 
-/* ====== تصميم بطاقات المباريات الحديثة ====== */
+/* ====== تصميم بطاقات المباريات jdwel style ====== */
 .match-card {
   display:flex;
   flex-direction:column;
-  border-radius:16px;
+  border-radius:10px;
   border:1px solid rgba(0,0,0,0.08);
-  padding:12px;
+  padding:10px 12px;
   margin-bottom:12px;
   position:relative;
   overflow:hidden;
+  background:#fff;
   transition: transform 0.2s, box-shadow 0.2s;
-  background: linear-gradient(135deg, #fff, #fdfdfd);
 }
 .match-card:hover {
-  transform: translateY(-4px);
-  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+  box-shadow:0 6px 15px rgba(0,0,0,0.1);
 }
-.match-card::before{
-  content:"";
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat.png');
-  background-repeat:repeat;
-  background-size:60px auto;
-  opacity:0.03;
-  pointer-events:none;
-  z-index:0;
-}
-.match-card>*{position:relative; z-index:1;}
 
-/* صف الفريقين والوقت */
-.match_top{
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+/* شعار الدوري الزاوية العلوية */
+.league-logo {
+  position:absolute;
+  top:8px; left:8px;
+  width:24px; height:24px;
+  z-index:2;
 }
-.team-left, .team-right{
-  display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;flex:1;
+
+/* صف الفريقين + الوقت */
+.match_row{
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
 }
-.team-left{justify-content:flex-end;}
-.team-right{justify-content:flex-start;}
+.team{
+  display:flex; flex:1; align-items:center; gap:6px; overflow:hidden; white-space:nowrap;
+}
+.team.hometeam{justify-content:flex-end;}
+.team.awayteam{justify-content:flex-start;}
 .team-logo{
   width:clamp(30px,6vw,45px);
   height:clamp(30px,6vw,45px);
   object-fit:contain;
-  border-radius:8px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  border-radius:6px;
 }
 .team-name{
   font-size:clamp(13px,2vw,18px);
@@ -99,8 +95,6 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-
-/* العمود الأوسط للوقت */
 .center{
   display:flex;
   flex-direction:column;
@@ -114,7 +108,6 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .the_time span{font-size:clamp(12px,1.5vw,16px);}
 .next-day-label{font-size:10px;color:#007bff;margin-top:0;line-height:1;}
 
-/* بيانات المعلق والقناة */
 .meta{
   display:flex;
   justify-content:center;
@@ -126,8 +119,6 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
   font-weight:500;
   flex-wrap:wrap;
 }
-
-/* أزرار التعديل والحذف */
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
 
@@ -199,16 +190,6 @@ let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
 let matches=[], editIndex=null, isNextDay=false;
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
-
-function populateLeagues(){
-  fetchCSV(leaguesCSV,data=>{
-    leagues=data;
-    const leagueSelect=document.getElementById('leagueSelect');
-    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
-    loadTeams(leagueSelect.value);
-  });
-}
-
 function toBase64(url, callback){
   const img = new Image();
   img.crossOrigin = 'Anonymous';
@@ -221,6 +202,15 @@ function toBase64(url, callback){
   };
   img.onerror = () => callback('');
   img.src = url;
+}
+
+function populateLeagues(){
+  fetchCSV(leaguesCSV,data=>{
+    leagues=data;
+    const leagueSelect=document.getElementById('leagueSelect');
+    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-extra='${l.extraLogo||""}' data-color='${l.color||"#fdfdfd"}'>${l.name}</option>`).join('');
+    loadTeams(leagueSelect.value);
+  });
 }
 
 function loadTeams(leagueCode){
@@ -236,6 +226,7 @@ function loadTeams(leagueCode){
 
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{document.getElementById('channel').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
+
 function updatePreview(selectEl,previewId){
   const s=selectEl.selectedOptions[0];
   const img=s.dataset.img;
@@ -250,11 +241,7 @@ document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(
 document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
 
 if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
-
-document.getElementById('nextDayBtn').onclick=()=>{
-  isNextDay=!isNextDay;
-  document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';
-};
+document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
 
 document.getElementById('addMatch').onclick=()=>{
   const league=document.getElementById('leagueSelect').value;
@@ -266,14 +253,11 @@ document.getElementById('addMatch').onclick=()=>{
   let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
   let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
   if(!time){alert('ادخل وقت المباراة');return;}
-  
-  toBase64(homeImg,b64Home=>{
-    homeImg=b64Home;
+  toBase64(homeImg,b64Home=>{homeImg=b64Home;
     toBase64(awayImg,b64Away=>{
       awayImg=b64Away;
       const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,nextDay:isNextDay};
-      if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} 
-      else matches.push(newMatch);
+      if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
       localStorage.setItem('matches',JSON.stringify(matches));
       render();
       document.getElementById('matchTime').value='';
@@ -289,52 +273,44 @@ function render(){
     if(leagueMatches.length>0){
       const section=document.createElement('div'); section.className='matches-section';
       const header=document.createElement('div'); header.className='section-header';
-      const extraLogo=l.extraLogo||l.extra;
-      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+      header.innerHTML=`<img src='${l.extraLogo||""}' class='league-logo'> <img src='${l.logo}' style='width:24px;height:24px;margin-left:4px'> ${l.name}`;
       section.appendChild(header);
 
-      leagueMatches.forEach((m)=>{
+      leagueMatches.forEach(m=>{
         const card=document.createElement('div');
         card.className='match-card';
-        card.style.background=l.color||'#fdfdfd';
-
+        card.style.background=l.color||'#fff';
         const d=new Date(m.time);
-        const hours=d.getHours() % 12 || 12;
+        const hours=d.getHours()%12||12;
         const minutes=d.getMinutes().toString().padStart(2,'0');
-        const ampm=d.getHours() >= 12 ? 'م' : 'ص';
+        const ampm=d.getHours()>=12?'م':'ص';
 
         card.innerHTML=`
-          <div class="match_top">
-            <div class="team-left">
-              <span class="team-name">${m.home}</span>
-              <img src="${m.homeImg}" class="team-logo" alt="${m.home}">
-            </div>
-            <div class="center">
-              <div class="the_time">
-                <span>${hours}:${minutes}</span>
-                <span>${ampm}</span>
-              </div>
-              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
-            </div>
-            <div class="team-right">
-              <img src="${m.awayImg}" class="team-logo" alt="${m.away}">
-              <span class="team-name">${m.away}</span>
-            </div>
+        <div class="match_row">
+          <div class="team hometeam">
+            <span class="team-name">${m.home}</span>
+            <img src="${m.homeImg}" class="team-logo" alt="${m.home}">
           </div>
-
-          <div class="meta">
-            <div>🎙️ ${m.comm}</div>
-            <div>📺 ${m.chan}</div>
+          <div class="center">
+            <div class="the_time"><span>${hours}:${minutes}</span><span>${ampm}</span></div>
+            ${m.nextDay?`<div class="next-day-label">(اليوم التالي)</div>`:''}
           </div>
-
-          <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-            <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-            <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+          <div class="team awayteam">
+            <img src="${m.awayImg}" class="team-logo" alt="${m.away}">
+            <span class="team-name">${m.away}</span>
           </div>
+        </div>
+        <div class="meta">
+          <div>🎙️ ${m.comm}</div>
+          <div>📺 ${m.chan}</div>
+        </div>
+        <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+          <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+          <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+        </div>
         `;
         section.appendChild(card);
       });
-
       matchesContainer.appendChild(section);
     }
   });
@@ -360,10 +336,8 @@ window.editMatch=(index)=>{
 };
 
 window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1);localStorage.setItem('matches',JSON.stringify(matches));render();}};
-
 document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns;render();});
 document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[];localStorage.setItem('matches','[]');render();}});
-
 document.getElementById('downloadTable').addEventListener('click',()=>{
   html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
     const link=document.getElementById('downloadLink');
