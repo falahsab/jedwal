@@ -361,7 +361,13 @@ document.addEventListener('DOMContentLoaded',()=>{
     <div class="team awayteam cell col d-flex align-items-center">
         <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
 </div>
-
+<div class="middle_column">
+  <div class="the_time">
+    <span>9:45</span>
+    <span>م</span>
+  </div>
+  <div class="next-day-label">(اليوم التالي)</div>
+</div>
             <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
             <div class="action-btns" style="display:${showBtns?'flex':'none'}">
               <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
@@ -413,5 +419,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 </body>
 
 </html>
+
 
 
