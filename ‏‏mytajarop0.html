@@ -314,34 +314,24 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   };
 
-  card.innerHTML = `
-  <div class="match_row">
-    <div class="team hometeam">
-      <span class="the_team">${m.home}</span>
-      <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+           card.innerHTML=`
+<div class="match_row d-flex py-3 px-2">
+    <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">${m.home}</span>
+        <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
     </div>
-
-    <div class="middle_column">
-      <div class="the_time">${hours}:${minutes} ${ampm}</div>
-      ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+    <div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"></span>
+        <div class="match_time"><span class="the_time"> ${hours}:${minutes} ${ampm} ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span></div>
     </div>
+    <div class="team awayteam cell col d-flex align-items-center">
+        <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
+</div>
 
-    <div class="team awayteam">
-      <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-      <span class="the_team">${m.away}</span>
-    </div>
-  </div>
-
-  <div class="meta">
-    <div>${m.comm}</div>
-    <div>${m.chan}</div>
-  </div>
-
-  <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-    <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-    <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-  </div>
-`;
+            <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
+            <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+              <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+              <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+            </div>
+          `;
           section.appendChild(card);
         });
         matchesContainer.appendChild(section);
@@ -388,6 +378,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </body>
 
 </html>
+
 
 
 
