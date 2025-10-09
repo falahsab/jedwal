@@ -93,20 +93,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-weight: 700;
+  font-size: clamp(15px, 2vw, 22px);
+  line-height: 1.1;
 }
 
 .the_time {
-  font-weight: 700;
-  font-size: clamp(15px, 2vw, 22px);
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 4px;
+}
+.the_time span {
+  font-size: clamp(12px, 1.5vw, 16px);
 }
 
 .next-day-label {
-  font-size: 11px;
-  color: #007bff; /* يمكنك تغييره حسب التصميم */
-  margin-top: 2px;
-  line-height: 1.1;
+  font-size: 10px;
+  color: #007bff;
+  margin-top: 0;
+  line-height: 1;
 }
 
 .meta {
@@ -186,72 +192,14 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
   font-size: clamp(14px, 2vw, 20px);
 }
 
-.meta {
-  margin-top: 8px;
-  border-top: 1px solid rgba(0,0,0,0.05);
-  padding-top: 6px;
-  display: flex;
-  justify-content: center;
+.next-day-label {
+  font-size: 10px;
+  color: #a8adb1;
+  margin-top: 0; /* إزالة المسافة فوق */
+  line-height: 1; /* يضبط النص مباشرة أسفل الوقت */
 }
-
-.meta-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  max-width: 320px;
-  text-align: center;
-  color: #444;
-}
-
-.meta-inner .icons {
-  flex-shrink: 0;
-  font-size: clamp(13px, 2vw, 16px);
-  text-align: center;
-}
-
-.comm-name,
-.chan-name {
-  flex: 1;
-  min-width: 0;
-  text-align: center;
-  font-weight: 500;
-  font-size: clamp(11px, 1.6vw, 13px);
-  color: #555;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  direction: rtl;
-}
-
-.text-trim {
-  display: inline-block;
-  max-width: 100%;
-}
-
-.action-btns {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.action-btns button {
-  background: #f4f4f4;
-  border: none;
-  border-radius: 8px;
-  padding: 4px 10px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: 0.2s;
-}
-
-.action-btns button:hover {
-  background: #ddd;
-}
-
- .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
+.meta{display:flex;justify-content:center;align-items: center; gap:40px;font-size:12px;color:#636566;margin-top:6px;font-weight:500;flex-wrap:wrap}
+.action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
 .matches-wrapper{margin-top:12px}
 @media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn {display:none !important;}}
@@ -406,61 +354,68 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   };
 
-function render(showBtns = false) {
-  const container = document.getElementById("matchesContainer");
-  container.innerHTML = "";
+ function render(){
+  const matchesContainer=document.getElementById('matchesContainer');
+  matchesContainer.innerHTML='';
+  leagues.forEach(l=>{
+    const leagueMatches=matches.filter(m=>m.league===l.code);
+    if(leagueMatches.length>0){
+      const section=document.createElement('div'); section.className='matches-section';
+      const header=document.createElement('div'); header.className='section-header';
+      const extraLogo=l.extraLogo||l.extra;
+      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+      section.appendChild(header);
 
-  matches.forEach((m, i) => {
-    const card = document.createElement("div");
-    card.className = "match-card";
+      leagueMatches.forEach((m)=>{
+        const card=document.createElement('div');
+        card.className='match-card';
+        card.style.background=l.color||'#fdfdfd';
 
-    // تنسيق الوقت
-    const date = new Date(m.time);
-    let hours = date.getHours();
-    let minutes = date.getMinutes().toString().padStart(2, "0");
-    let ampm = hours >= 12 ? "م" : "ص";
-    hours = hours % 12 || 12;
-    if (hours < 10) hours = parseInt(hours); // إزالة الصفر الزائد
+        const d=new Date(m.time);
+        const hours=d.getHours() % 12 || 12;
+        const minutes=d.getMinutes().toString().padStart(2,'0');
+        const ampm=d.getHours() >= 12 ? 'م' : 'ص';
 
-    // البطاقة
-    card.innerHTML = `
-      <div class="match_row">
-        <div class="team hometeam">
-          <span class="the_team">${m.home}</span>
-          <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
-        </div>
+        card.innerHTML=`
+          <div class="match_row">
+            <div class="team hometeam">
+              <span class="the_team">${m.home}</span>
+              <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+            </div>
 
-        <div class="middle_column">
-          <div class="the_time">
-            <span>${hours}:${minutes}</span>
-            <span>${ampm}</span>
+            <div class="middle_column">
+              <div class="the_time"
+                 <span>${hours}:${minutes}</span>
+                 <span>${ampm}</span>
+              </div>
+              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+            </div>
+
+            <div class="team awayteam">
+              <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+              <span class="the_team">${m.away}</span>
+            </div>
           </div>
-          ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
-        </div>
 
-        <div class="team awayteam">
-          <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-          <span class="the_team">${m.away}</span>
-        </div>
-      </div>
+          <div class="meta">
+            <div>🎙️ ${m.comm}</div>
+            <div>📺 ${m.chan}</div>
+          </div>
 
-      <div class="meta">
-        <div class="meta-inner">
-          <div class="comm-name text-trim">${m.comm}</div>
-          <div class="icons">🎙️&nbsp;&nbsp;📺</div>
-          <div class="chan-name text-trim">${m.chan}</div>
-        </div>
-      </div>
+          <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+            <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+            <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+          </div>
+        `;
+        section.appendChild(card);
+      });
 
-      <div class="action-btns" style="display:${showBtns ? 'flex' : 'none'}">
-        <button class="edit-btn" onclick="editMatch(${i})">✏️ تعديل</button>
-        <button class="delete-btn" onclick="deleteMatch(${i})">🗑️ حذف</button>
-      </div>
-    `;
-
-    container.appendChild(card);
+      matchesContainer.appendChild(section);
+    }
   });
 }
+
+
   window.editMatch=(index)=>{
     const m=matches[index];
     document.getElementById('leagueSelect').value=m.league;
@@ -498,5 +453,3 @@ function render(showBtns = false) {
 </script>
 </body>
 </html>
-
-
