@@ -5,27 +5,43 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>جدول مباريات اليوم - لوحة التحكم</title>
+
+ <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+ 
 <style>
-  /* البطاقة الرئيسية */
-/* بطاقة مباراة على نمط موقع جدول */
-/* بطاقة مباراة على نمط جدول */
+ html, body, * {
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+  -webkit-text-size-adjust: 100%; /* لمنع تصغير الخط في Safari */
+}
+@font-face {
+  font-family: 'Tajawal';
+  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff2') format('woff2'),
+       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tajawal';
+  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff2') format('woff2'),
+       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* تنسيق بطاقة المباراة الحديثة */
 .match-card {
-  position: relative;
   background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-  overflow: hidden;
+  border-radius: 12px;
   padding: 10px 12px;
   margin-bottom: 10px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
 }
-
-.match-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-}
-
 .match-card::before {
   content: "";
   position: absolute;
@@ -33,9 +49,9 @@
   background-image: url('https://falahsab.github.io/jedwal/img/yemen-sat.png');
   background-repeat: repeat;
   background-size: 60px auto;
-  opacity: 0.035;
-  z-index: 0;
+  opacity: 0.04;
   pointer-events: none;
+  z-index: 0;
 }
 .match-card > * { position: relative; z-index: 1; }
 
@@ -43,8 +59,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
   flex-wrap: nowrap;
+  gap: 8px;
   text-align: center;
 }
 
@@ -54,21 +70,22 @@
   gap: 6px;
   flex: 1;
   min-width: 0;
-  font-weight: 700;
-  font-size: clamp(13px, 2vw, 17px);
 }
-
 .team.hometeam { justify-content: flex-end; text-align: right; }
 .team.awayteam { justify-content: flex-start; text-align: left; }
 
 .team_logo {
-  width: clamp(32px, 5vw, 44px);
-  height: clamp(32px, 5vw, 44px);
+  width: clamp(25px, 4vw, 38px);
+  height: clamp(25px, 4vw, 38px);
   object-fit: contain;
-  background: #f8f8f8;
-  border-radius: 50%;
-  box-shadow: 0 0 4px rgba(0,0,0,0.1);
-  padding: 3px;
+}
+
+.the_team {
+  font-weight: 700;
+  font-size: clamp(13px, 2vw, 17px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .middle_column {
@@ -76,21 +93,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  line-height: 1.1;
 }
 
 .the_time {
-  font-size: clamp(18px, 3vw, 22px);
-  color: #2c3e50;
+  font-weight: 700;
+  font-size: clamp(15px, 2vw, 22px);
+  display: flex;
+  gap: 4px;
 }
 
 .next-day-label {
-  display: block;
-  margin-top: 2px;
   font-size: 11px;
-  color: #999; /* رمادي فاتح */
-  font-weight: 500;
+  color: #007bff; /* يمكنك تغييره حسب التصميم */
+  margin-top: 2px;
   line-height: 1.1;
 }
 
@@ -99,28 +114,46 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
-  font-size: clamp(12px, 1.5vw, 13px);
+  font-size: 13px;
   color: #555;
+  margin-top: 6px;
   font-weight: 500;
-  margin-top: 8px;
-  border-top: 1px solid rgba(0,0,0,0.05);
-  padding-top: 6px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.action-btns {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  justify-content: center;
   flex-wrap: wrap;
 }
-
-.meta div {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.action-btns button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
 }
 
-.meta div:first-child::before { content: "🎙️"; }
-.meta div:last-child::before { content: "📺"; }
+ 
+* {
+  box-sizing: border-box;
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+body {
+  margin: 0;
+  padding: 18px;
+  background: #f9f9f9;
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif;
+}
 
-@importurl("https://fonts.googleapis.com/css?family=Tajawal:400,500&subset=arabic&display=swap");
-*{box-sizing:border-box;font-family:'Tajawal',Tahoma,system-ui,Segoe UI,Arial}
-body{margin:0;padding:18px;background:#f9f9f9;color:#222;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-start}
-.container{max-width:1100px;margin:0 auto;width:100%}
 header{
   background:#3498db;color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:18px;
   text-align:center;font-size:22px;font-weight:700;position:sticky;top:0;z-index:1000;
@@ -153,18 +186,13 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
   font-size: clamp(14px, 2vw, 20px);
 }
 
-.next-day-label {
-  font-size: 10px;
-  color: #007bff;
-  margin-top: 0; /* إزالة المسافة فوق */
-  line-height: 1; /* يضبط النص مباشرة أسفل الوقت */
-}
-.meta{display:flex;justify-content:center;align-items: center; gap:40px;font-size:13px;color:#555;margin-top:6px;font-weight:500;flex-wrap:wrap}
+.meta{display:flex;justify-content:center;align-items: center; gap:40px;font-size:12px;color:#636566;margin-top:6px;font-weight:500;flex-wrap:wrap}
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
 .matches-wrapper{margin-top:12px}
 @media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn {display:none !important;}}
 </style>
+
 </head>
 <body>
 <div class="container">
@@ -314,30 +342,66 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   };
 
-           card.innerHTML=`
-<div class="match_row d-flex py-3 px-2">
-    <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">${m.home}</span>
-        <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
-    </div>
-    <div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"></span>
-        <div class="match_time"><span class="the_time"> ${hours}:${minutes} ${ampm} ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span></div>
-    </div>
-    <div class="team awayteam cell col d-flex align-items-center">
-        <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
-</div>
+ function render(){
+  const matchesContainer=document.getElementById('matchesContainer');
+  matchesContainer.innerHTML='';
+  leagues.forEach(l=>{
+    const leagueMatches=matches.filter(m=>m.league===l.code);
+    if(leagueMatches.length>0){
+      const section=document.createElement('div'); section.className='matches-section';
+      const header=document.createElement('div'); header.className='section-header';
+      const extraLogo=l.extraLogo||l.extra;
+      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+      section.appendChild(header);
 
-            <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
-            <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-              <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-              <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-            </div>
-          `;
-          section.appendChild(card);
-        });
-        matchesContainer.appendChild(section);
-      }
-    });
-  }
+      leagueMatches.forEach((m)=>{
+        const card=document.createElement('div');
+        card.className='match-card';
+        card.style.background=l.color||'#fdfdfd';
+
+        const d=new Date(m.time);
+        const hours=d.getHours() % 12 || 12;
+        const minutes=d.getMinutes().toString().padStart(2,'0');
+        const ampm=d.getHours() >= 12 ? 'م' : 'ص';
+
+card.innerHTML=`
+  <div class="match_row">
+    <div class="team hometeam">
+      <span class="the_team">${m.home}</span>
+      <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+    </div>
+
+    <div class="middle_column">
+      <div class="the_time">
+        <span>${hours}:${minutes}</span>
+        <span>${ampm}</span>
+      </div>
+      ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+    </div>
+
+    <div class="team awayteam">
+      <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+      <span class="the_team">${m.away}</span>
+    </div>
+  </div>
+
+  <div class="meta">
+    <div>🎙️ ${m.comm}</div>
+    <div>📺 ${m.chan}</div>
+  </div>
+
+  <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+    <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+    <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+  </div>
+`;
+        section.appendChild(card);
+      });
+
+      matchesContainer.appendChild(section);
+    }
+  });
+}
 
 
   window.editMatch=(index)=>{
@@ -376,17 +440,4 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
