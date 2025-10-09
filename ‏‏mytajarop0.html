@@ -8,71 +8,128 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
   /* البطاقة الرئيسية */
-.matches-wrapper {
-    width: 100%;
-    margin: 0 auto;
-    padding: 10px;
+.match-card {
+  position: relative;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff, #f8f9fb);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  margin-bottom: 14px;
+  padding: 14px 18px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.matches-wrapper .card {
-    background: #fff; /* أو أي لون حسب التصميم */
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    padding: 15px;
-    text-align: center;
+.match-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* الصف الخاص بالمباراة */
+.match-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('https://falahsab.github.io/jedwal/img/yemen-sat.png');
+  background-repeat: repeat;
+  background-size: 70px auto;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .match_row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 12px 8px;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
 }
 
-/* فرق الفريقين */
-.match_row .team {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
+.team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
 }
 
-.match_row .hometeam {
-    justify-content: flex-end;
+.team_logo {
+  width: clamp(36px, 6vw, 50px);
+  height: clamp(36px, 6vw, 50px);
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f2f2f2;
+  padding: 4px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
 }
 
-.match_row .awayteam {
-    justify-content: flex-start;
+.the_team {
+  font-weight: 700;
+  font-size: clamp(14px, 2vw, 18px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.match_row .the_team {
-    margin: 0 8px;
-    font-weight: bold;
-    font-size: 14px;
+.middle_column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 22px);
+  color: #222;
 }
 
-/* الشعار */
-.match_row .team_logo {
-    width: 27px;
-    height: 27px;
+.the_time {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: clamp(18px, 3vw, 24px);
+  color: #2c3e50;
 }
 
-/* العمود الأوسط للوقت والنتيجة */
-.match_row .middle_column {
-    flex: 0 0 auto;
-    text-align: center;
+.the_time span:last-child {
+  font-size: clamp(12px, 1.5vw, 14px);
+  color: #555;
 }
 
-.match_row .match_time {
-    font-size: 13px;
-    color: #333;
+.next-day-label {
+  font-size: 11px;
+  color: #007bff;
+  margin-top: 2px;
+  font-weight: 500;
 }
 
-.match_row .match_score {
-    font-weight: bold;
-    display: block;
+.meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  font-size: clamp(12px, 1.6vw, 14px);
+  color: #444;
+  margin-top: 8px;
+  font-weight: 500;
+  flex-wrap: wrap;
+}
+
+.meta div {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meta div::before {
+  font-family: "Segoe UI Emoji";
+}
+
+.meta div:first-child::before {
+  content: "🎙️";
+}
+
+.meta div:last-child::before {
+  content: "📺";
 }
 
 @importurl("https://fonts.googleapis.com/css?family=Tajawal:400,500&subset=arabic&display=swap");
@@ -352,4 +409,5 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 </body>
+
 </html>
