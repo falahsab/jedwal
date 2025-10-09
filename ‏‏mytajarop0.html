@@ -355,9 +355,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">${m.home}</span>
         <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
     </div>
-<div class="middle_column"><div class="the_time"><span>${hours}:${minutes}</span><span>${ampm}</span>
- ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span>
+<div class="middle_column cell col-2 col-md-1">
+  <span class="match_score" hidden="hidden"></span>
+
+  <div class="match_time">
+    <div class="the_time">
+      ${hours}:${minutes} ${ampm}
+    </div>
+
+    ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+  </div>
 </div>
+
     <div class="team awayteam cell col d-flex align-items-center">
         <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
 </div>
@@ -413,6 +422,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </body>
 
 </html>
+
 
 
 
