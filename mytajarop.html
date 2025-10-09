@@ -7,75 +7,118 @@
 <title>جدول مباريات اليوم - لوحة التحكم</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
-  /* البطاقة الرئيسية */
-.matches-wrapper {
-    width: 100%;
-    margin: 0 auto;
-    padding: 10px;
+/* تنسيق بطاقة المباراة الحديثة */
+.match-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
 }
-
-.matches-wrapper .card {
-    background: #fff; /* أو أي لون حسب التصميم */
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    padding: 15px;
-    text-align: center;
+.match-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('https://falahsab.github.io/jedwal/img/yemen-sat.png');
+  background-repeat: repeat;
+  background-size: 60px auto;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
 }
+.match-card > * { position: relative; z-index: 1; }
 
-/* الصف الخاص بالمباراة */
 .match_row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 12px 8px;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 8px;
+  text-align: center;
 }
 
-/* فرق الفريقين */
-.match_row .team {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
+.team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.team.hometeam { justify-content: flex-end; text-align: right; }
+.team.awayteam { justify-content: flex-start; text-align: left; }
+
+.team_logo {
+  width: clamp(25px, 4vw, 38px);
+  height: clamp(25px, 4vw, 38px);
+  object-fit: contain;
 }
 
-.match_row .hometeam {
-    justify-content: flex-end;
+.the_team {
+  font-weight: 700;
+  font-size: clamp(13px, 2vw, 17px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.match_row .awayteam {
-    justify-content: flex-start;
+.middle_column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: clamp(15px, 2vw, 22px);
+  line-height: 1.1;
 }
 
-.match_row .the_team {
-    margin: 0 8px;
-    font-weight: bold;
-    font-size: 14px;
+.the_time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.the_time span {
+  font-size: clamp(12px, 1.5vw, 16px);
 }
 
-/* الشعار */
-.match_row .team_logo {
-    width: 27px;
-    height: 27px;
+.next-day-label {
+  font-size: 10px;
+  color: #007bff;
+  margin-top: 0;
+  line-height: 1;
 }
 
-/* العمود الأوسط للوقت والنتيجة */
-.match_row .middle_column {
-    flex: 0 0 auto;
-    text-align: center;
+.meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  font-size: 13px;
+  color: #555;
+  margin-top: 6px;
+  font-weight: 500;
+  flex-wrap: wrap;
+  text-align: center;
 }
 
-.match_row .match_time {
-    font-size: 13px;
-    color: #333;
+.action-btns {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.action-btns button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
 }
 
-.match_row .match_score {
-    font-weight: bold;
-    display: block;
-}
-
-@importurl("https://fonts.googleapis.com/css?family=Tajawal:400,500&subset=arabic&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Tajawal:400,500&subset=arabic&display=swap");
 *{box-sizing:border-box;font-family:'Tajawal',Tahoma,system-ui,Segoe UI,Arial}
 body{margin:0;padding:18px;background:#f9f9f9;color:#222;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-start}
 .container{max-width:1100px;margin:0 auto;width:100%}
@@ -272,49 +315,67 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   };
 
-  function render(){
-    const matchesContainer=document.getElementById('matchesContainer');
-    matchesContainer.innerHTML='';
-    leagues.forEach(l=>{
-      const leagueMatches=matches.filter(m=>m.league===l.code);
-      if(leagueMatches.length>0){
-        const section=document.createElement('div'); section.className='matches-section';
-        const header=document.createElement('div'); header.className='section-header';
-        const extraLogo=l.extraLogo||l.extra;
-        header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
-        section.appendChild(header);
-        leagueMatches.forEach((m,i)=>{
-          const card=document.createElement('div'); card.className='match-card';
-          card.style.background=l.color||'#fdfdfd';
-          const d=new Date(m.time);
-          const hours = d.getHours() % 12 || 12; // بدون إضافة صفر بادئ
-          const minutes = ('0'+d.getMinutes()).slice(-2); // نترك الصفر البادئ للدقائق فقط
-          const ampm = d.getHours() >= 12 ? 'م' : 'ص';
+ function render(){
+  const matchesContainer=document.getElementById('matchesContainer');
+  matchesContainer.innerHTML='';
+  leagues.forEach(l=>{
+    const leagueMatches=matches.filter(m=>m.league===l.code);
+    if(leagueMatches.length>0){
+      const section=document.createElement('div'); section.className='matches-section';
+      const header=document.createElement('div'); header.className='section-header';
+      const extraLogo=l.extraLogo||l.extra;
+      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+      section.appendChild(header);
 
-          card.innerHTML=`
-<div class="match_row d-flex py-3 px-2">
-    <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">${m.home}</span>
-        <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
-    </div>
-    <div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"></span>
-        <div class="match_time"><span class="the_time"> ${hours}:${minutes} ${ampm} ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span></div>
-    </div>
-    <div class="team awayteam cell col d-flex align-items-center">
-        <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
-</div>
+      leagueMatches.forEach((m)=>{
+        const card=document.createElement('div');
+        card.className='match-card';
+        card.style.background=l.color||'#fdfdfd';
 
-            <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
-            <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-              <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-              <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+        const d=new Date(m.time);
+        const hours=d.getHours() % 12 || 12;
+        const minutes=d.getMinutes().toString().padStart(2,'0');
+        const ampm=d.getHours() >= 12 ? 'م' : 'ص';
+
+        card.innerHTML=`
+          <div class="match_row">
+            <div class="team hometeam">
+              <span class="the_team">${m.home}</span>
+              <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
             </div>
-          `;
-          section.appendChild(card);
-        });
-        matchesContainer.appendChild(section);
-      }
-    });
-  }
+
+            <div class="middle_column">
+              <div class="the_time">
+                <span>${ampm}</span>
+                <span>${hours}:${minutes}</span>
+              </div>
+              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+            </div>
+
+            <div class="team awayteam">
+              <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+              <span class="the_team">${m.away}</span>
+            </div>
+          </div>
+
+          <div class="meta">
+            <div>🎙️ ${m.comm}</div>
+            <div>📺 ${m.chan}</div>
+          </div>
+
+          <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+            <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+            <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+          </div>
+        `;
+        section.appendChild(card);
+      });
+
+      matchesContainer.appendChild(section);
+    }
+  });
+}
+
 
   window.editMatch=(index)=>{
     const m=matches[index];
@@ -353,3 +414,4 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
