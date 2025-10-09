@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+ 
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>جدول مباريات اليوم - لوحة التحكم</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  /* البطاقة الرئيسية */
+.matches-wrapper {
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.matches-wrapper .card {
+    background: #fff; /* أو أي لون حسب التصميم */
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 15px;
+    text-align: center;
+}
+
+/* الصف الخاص بالمباراة */
+.match_row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* فرق الفريقين */
+.match_row .team {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.match_row .hometeam {
+    justify-content: flex-end;
+}
+
+.match_row .awayteam {
+    justify-content: flex-start;
+}
+
+.match_row .the_team {
+    margin: 0 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* الشعار */
+.match_row .team_logo {
+    width: 27px;
+    height: 27px;
+}
+
+/* العمود الأوسط للوقت والنتيجة */
+.match_row .middle_column {
+    flex: 0 0 auto;
+    text-align: center;
+}
+
+.match_row .match_time {
+    font-size: 13px;
+    color: #333;
+}
+
+.match_row .match_score {
+    font-weight: bold;
+    display: block;
+}
+
+@importurl("https://fonts.googleapis.com/css?family=Tajawal:400,500&subset=arabic&display=swap");
+*{box-sizing:border-box;font-family:'Tajawal',Tahoma,system-ui,Segoe UI,Arial}
+body{margin:0;padding:18px;background:#f9f9f9;color:#222;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-start}
+.container{max-width:1100px;margin:0 auto;width:100%}
+header{
+  background:#3498db;color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:18px;
+  text-align:center;font-size:22px;font-weight:700;position:sticky;top:0;z-index:1000;
+}
+.grid{display:grid;grid-template-columns:1fr 400px;gap:14px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08)}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+select,input[type="datetime-local"]{background:transparent;border:1px solid rgba(0,0,0,0.12);padding:8px;border-radius:8px;color:#222;width:100%}
+label{font-size:13px;color:#555;display:block;margin-bottom:4px}
+.logo{width:40px;height:40px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.logo img{width:100%;height:100%;object-fit:contain;transition:width 0.3s,height 0.3s}
+.btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%}
+.matches-section{margin-bottom:16px}
+.section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:8px;position:relative;padding-left:40px;padding-right:0px}
+.extra-logo-header{position:absolute;left:0;top:50%;transform:translateY(-50%);width:auto;height:24px}
+.match-card{display:flex;flex-direction:column;border-radius:10px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:8px;position:relative;overflow:hidden}
+.match-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat.png');background-repeat:repeat;background-size:60px auto;opacity:0.04;pointer-events:none;z-index:0}
+.match-card>*{position:relative;z-index:1}
+.match-top{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:center;flex-wrap:wrap}
+.team-left,.team-right{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.team-left .team-name,.team-right .team-name{flex:1;text-align:center;font-size:clamp(12px,1.8vw,18px)}
+  .center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0; /* إزالة أي مسافة إضافية بين العناصر */
+  font-weight: 700;
+  font-size: clamp(14px, 2vw, 20px);
+}
+
+.next-day-label {
+  font-size: 10px;
+  color: #007bff;
+  margin-top: 0; /* إزالة المسافة فوق */
+  line-height: 1; /* يضبط النص مباشرة أسفل الوقت */
+}
+.meta{display:flex;justify-content:center;align-items: center; gap:40px;font-size:13px;color:#555;margin-top:6px;font-weight:500;flex-wrap:wrap}
+.action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
+.action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
+.matches-wrapper{margin-top:12px}
+@media print {.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn {display:none !important;}}
+</style>
+</head>
+<body>
+<div class="container">
+<link rel="stylesheet" href="css/datepicker1.css">
+
+  <header>
+  ⚽ جدول مباريات اليوم
+  <div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
+</header>
+
+<div class="grid">
+  <div class="card form">
+    <div class="row">
+      <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
+      <div style="width:120px"><label>الوقت</label><input id="matchTime" type="datetime-local" /></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><label>الفريق المضيف</label><select id="homeTeam"></select></div>
+      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><label>الفريق الضيف</label><select id="awayTeam"></select></div>
+      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
+    </div>
+    <div class="row">
+      <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
+      <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
+    </div>
+
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
+      <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
+    </div>
+
+    <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
+    <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
+  </div>
+</div>
+
+<div class="matches-wrapper">
+  <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
+  
+<button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
+<button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
+<a id="downloadLink"></a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const dateEl=document.getElementById('todayDate');
+  const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const now=new Date();
+  dateEl.textContent=`${days[now.getDay()]} ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
+
+  const leaguesCSV='csv/leagues.csv';
+  const commentatorsCSV='csv/commentators.csv';
+  const channelsCSV='csv/channels.csv';
+  const teamsCSVFolder='https://falahsab.github.io/jedwal/teams/';
+  let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
+  let matches=[], editIndex=null, isNextDay=false;
+
+  function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
+  
+  function populateLeagues(){
+    fetchCSV(leaguesCSV,data=>{
+      leagues=data;
+      const leagueSelect=document.getElementById('leagueSelect');
+      leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
+      loadTeams(leagueSelect.value);
+    });
+  }
+
+  function toBase64(url, callback){
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      canvas.getContext('2d').drawImage(img,0,0);
+      callback(canvas.toDataURL());
+    };
+    img.onerror = () => callback('');
+    img.src = url;
+  }
+
+  function loadTeams(leagueCode){
+    fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
+      teams[leagueCode]=data;
+      const homeTeam=document.getElementById('homeTeam');
+      const awayTeam=document.getElementById('awayTeam');
+      homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
+      updatePreview(homeTeam,'homePreview'); 
+      updatePreview(awayTeam,'awayPreview');
+    });
+  }
+
+  function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
+  function fetchChannels(){fetchCSV(channelsCSV,data=>{document.getElementById('channel').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
+  function updatePreview(selectEl,previewId){
+    const s=selectEl.selectedOptions[0];
+    const img=s.dataset.img;
+    if(img){
+      toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`);
+    } else document.getElementById(previewId).innerHTML='⚽';
+  }
+
+  populateLeagues(); fetchCommentators(); fetchChannels();
+  document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
+  document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
+  document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
+
+  if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
+
+  document.getElementById('nextDayBtn').onclick=()=>{
+    isNextDay=!isNextDay;
+    document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';
+  };
+
+  document.getElementById('addMatch').onclick=()=>{
+    const league=document.getElementById('leagueSelect').value;
+    const home=document.getElementById('homeTeam').value;
+    const away=document.getElementById('awayTeam').value;
+    const time=document.getElementById('matchTime').value;
+    const comm=document.getElementById('commentator').value;
+    const chan=document.getElementById('channel').value;
+    let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
+    let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
+    if(!time){alert('ادخل وقت المباراة');return;}
+    
+    // تحويل الصور إلى Base64 قبل التخزين
+    toBase64(homeImg,b64Home=>{
+      homeImg=b64Home;
+      toBase64(awayImg,b64Away=>{
+        awayImg=b64Away;
+        const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,nextDay:isNextDay};
+        if(editIndex!==null){
+          matches.splice(editIndex,0,newMatch);
+          editIndex=null;
+        } else matches.push(newMatch);
+        localStorage.setItem('matches',JSON.stringify(matches));
+        render();
+        document.getElementById('matchTime').value='';
+      });
+    });
+  };
+
+  function render(){
+    const matchesContainer=document.getElementById('matchesContainer');
+    matchesContainer.innerHTML='';
+    leagues.forEach(l=>{
+      const leagueMatches=matches.filter(m=>m.league===l.code);
+      if(leagueMatches.length>0){
+        const section=document.createElement('div'); section.className='matches-section';
+        const header=document.createElement('div'); header.className='section-header';
+        const extraLogo=l.extraLogo||l.extra;
+        header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+        section.appendChild(header);
+        leagueMatches.forEach((m,i)=>{
+          const card=document.createElement('div'); card.className='match-card';
+          card.style.background=l.color||'#fdfdfd';
+          const d=new Date(m.time);
+          const hours = d.getHours() % 12 || 12; // بدون إضافة صفر بادئ
+          const minutes = ('0'+d.getMinutes()).slice(-2); // نترك الصفر البادئ للدقائق فقط
+          const ampm = d.getHours() >= 12 ? 'م' : 'ص';
+
+          card.innerHTML=`
+<div class="match_row d-flex py-3 px-2">
+    <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">${m.home}</span>
+        <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
+    </div>
+    <div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"></span>
+        <div class="match_time"><span class="the_time"> ${hours}:${minutes} ${ampm} ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span></div>
+    </div>
+    <div class="team awayteam cell col d-flex align-items-center">
+        <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
+</div>
+
+            <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
+            <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+              <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+              <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+            </div>
+          `;
+          section.appendChild(card);
+        });
+        matchesContainer.appendChild(section);
+      }
+    });
+  }
+
+  window.editMatch=(index)=>{
+    const m=matches[index];
+    document.getElementById('leagueSelect').value=m.league;
+    loadTeams(m.league);
+    setTimeout(()=>{
+      document.getElementById('homeTeam').value=m.home;
+      document.getElementById('awayTeam').value=m.away;
+      document.getElementById('matchTime').value=m.time;
+      document.getElementById('commentator').value=m.comm;
+      document.getElementById('channel').value=m.chan;
+      updatePreview(document.getElementById('homeTeam'),'homePreview');
+      updatePreview(document.getElementById('awayTeam'),'awayPreview');
+      editIndex=index;
+      matches.splice(index,1);
+      localStorage.setItem('matches',JSON.stringify(matches));
+      render();
+    },100);
+  };
+
+  window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1);localStorage.setItem('matches',JSON.stringify(matches));render();}};
+
+  document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns;render();});
+  document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[];localStorage.setItem('matches','[]');render();}});
+
+  document.getElementById('downloadTable').addEventListener('click',()=>{
+    html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
+      const link=document.getElementById('downloadLink');
+      link.href=canvas.toDataURL('image/png');
+      link.download='matches.png';
+      link.click();
+    });
+  });
+
+});
+</script>
+</body>
+</html>
