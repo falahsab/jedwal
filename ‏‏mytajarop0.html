@@ -350,18 +350,18 @@ document.addEventListener('DOMContentLoaded',()=>{
           const minutes = ('0'+d.getMinutes()).slice(-2); // نترك الصفر البادئ للدقائق فقط
           const ampm = d.getHours() >= 12 ? 'م' : 'ص';
 
-          card.innerHTML=`
+card.innerHTML=`
 <div class="match_row d-flex py-3 px-2">
     <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">${m.home}</span>
         <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
     </div>
-<div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"></span>
+    <div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"></span>
         <div class="match_time"><span class="the_time"> ${hours}:${minutes} ${ampm} ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span></div>
     </div>
-
     <div class="team awayteam cell col d-flex align-items-center">
         <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
 </div>
+
 
             <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
             <div class="action-btns" style="display:${showBtns?'flex':'none'}">
@@ -414,6 +414,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </body>
 
 </html>
+
 
 
 
