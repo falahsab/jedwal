@@ -198,31 +198,58 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
   text-align: center;
-  font-size: clamp(12px, 1.5vw, 13px);
-  font-weight: 500;
-  color: #555;
+  color: #444;
 }
 
 .meta-inner .icons {
-  font-size: 15px;
+  flex-shrink: 0;
+  font-size: clamp(13px, 2vw, 16px);
+  text-align: center;
+}
+
+.comm-name,
+.chan-name {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-weight: 500;
+  font-size: clamp(11px, 1.6vw, 13px);
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl;
+}
+
+.text-trim {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.action-btns {
   display: flex;
-  align-items: center;
   justify-content: center;
-  min-width: 50px;
+  gap: 10px;
+  margin-top: 6px;
 }
 
-.meta-inner .comm-name {
-  text-align: right;
-  direction: rtl;
+.action-btns button {
+  background: #f4f4f4;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
 }
 
-.meta-inner .chan-name {
-  text-align: left;
-  direction: rtl;
+.action-btns button:hover {
+  background: #ddd;
 }
-
 
  .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
@@ -388,14 +415,14 @@ function render(showBtns = false) {
     card.className = "match-card";
 
     // تنسيق الوقت
-    let date = new Date(m.time);
+    const date = new Date(m.time);
     let hours = date.getHours();
     let minutes = date.getMinutes().toString().padStart(2, "0");
     let ampm = hours >= 12 ? "م" : "ص";
     hours = hours % 12 || 12;
     if (hours < 10) hours = parseInt(hours); // إزالة الصفر الزائد
 
-    // إنشاء بطاقة المباراة
+    // البطاقة
     card.innerHTML = `
       <div class="match_row">
         <div class="team hometeam">
@@ -419,22 +446,21 @@ function render(showBtns = false) {
 
       <div class="meta">
         <div class="meta-inner">
-          <span class="comm-name">${m.comm}</span>
-          <span class="icons">🎙️&nbsp;&nbsp;📺</span>
-          <span class="chan-name">${m.chan}</span>
+          <div class="comm-name text-trim">${m.comm}</div>
+          <div class="icons">🎙️&nbsp;&nbsp;📺</div>
+          <div class="chan-name text-trim">${m.chan}</div>
         </div>
       </div>
 
       <div class="action-btns" style="display:${showBtns ? 'flex' : 'none'}">
-        <button onclick="editMatch(${i})">✏️ تعديل</button>
-        <button onclick="deleteMatch(${i})">🗑️ حذف</button>
+        <button class="edit-btn" onclick="editMatch(${i})">✏️ تعديل</button>
+        <button class="delete-btn" onclick="deleteMatch(${i})">🗑️ حذف</button>
       </div>
     `;
 
     container.appendChild(card);
   });
 }
-
   window.editMatch=(index)=>{
     const m=matches[index];
     document.getElementById('leagueSelect').value=m.league;
@@ -472,4 +498,5 @@ function render(showBtns = false) {
 </script>
 </body>
 </html>
+
 
