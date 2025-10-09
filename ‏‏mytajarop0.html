@@ -342,6 +342,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
   </div>
 `;
+          section.appendChild(card);
+        });
+        matchesContainer.appendChild(section);
+      }
+    });
+  }
 
 
   window.editMatch=(index)=>{
@@ -382,6 +388,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </body>
 
 </html>
+
 
 
 
