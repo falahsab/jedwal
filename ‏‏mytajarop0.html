@@ -9,6 +9,7 @@
 <style>
   /* البطاقة الرئيسية */
 /* بطاقة مباراة على نمط موقع جدول */
+/* بطاقة مباراة على نمط جدول */
 .match-card {
   position: relative;
   background: #fff;
@@ -25,7 +26,6 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
-/* الخلفية المائية */
 .match-card::before {
   content: "";
   position: absolute;
@@ -39,7 +39,6 @@
 }
 .match-card > * { position: relative; z-index: 1; }
 
-/* الصف الرئيسي */
 .match_row {
   display: flex;
   align-items: center;
@@ -49,7 +48,6 @@
   text-align: center;
 }
 
-/* الفريقين */
 .team {
   display: flex;
   align-items: center;
@@ -60,17 +58,9 @@
   font-size: clamp(13px, 2vw, 17px);
 }
 
-.team.hometeam {
-  justify-content: flex-end;
-  text-align: right;
-}
+.team.hometeam { justify-content: flex-end; text-align: right; }
+.team.awayteam { justify-content: flex-start; text-align: left; }
 
-.team.awayteam {
-  justify-content: flex-start;
-  text-align: left;
-}
-
-/* الشعار */
 .team_logo {
   width: clamp(32px, 5vw, 44px);
   height: clamp(32px, 5vw, 44px);
@@ -81,7 +71,6 @@
   padding: 3px;
 }
 
-/* الوقت في المنتصف */
 .middle_column {
   display: flex;
   flex-direction: column;
@@ -92,28 +81,19 @@
 }
 
 .the_time {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
   font-size: clamp(18px, 3vw, 22px);
   color: #2c3e50;
 }
 
-.the_time span:last-child {
-  font-size: clamp(12px, 1.5vw, 14px);
-  color: #777;
-}
-
 .next-day-label {
   display: block;
-  margin-top: 2px; /* مسافة صغيرة تحت الوقت */
+  margin-top: 2px;
   font-size: 11px;
-  color: #007bff;
+  color: #999; /* رمادي فاتح */
   font-weight: 500;
   line-height: 1.1;
 }
 
-/* المعلق والقناة */
 .meta {
   display: flex;
   justify-content: center;
@@ -133,6 +113,9 @@
   align-items: center;
   gap: 4px;
 }
+
+.meta div:first-child::before { content: "🎙️"; }
+.meta div:last-child::before { content: "📺"; }
 
 @importurl("https://fonts.googleapis.com/css?family=Tajawal:400,500&subset=arabic&display=swap");
 *{box-sizing:border-box;font-family:'Tajawal',Tahoma,system-ui,Segoe UI,Arial}
@@ -331,50 +314,35 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   };
 
-  function render(){
-    const matchesContainer=document.getElementById('matchesContainer');
-    matchesContainer.innerHTML='';
-    leagues.forEach(l=>{
-      const leagueMatches=matches.filter(m=>m.league===l.code);
-      if(leagueMatches.length>0){
-        const section=document.createElement('div'); section.className='matches-section';
-        const header=document.createElement('div'); header.className='section-header';
-        const extraLogo=l.extraLogo||l.extra;
-        header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
-        section.appendChild(header);
-        leagueMatches.forEach((m,i)=>{
-          const card=document.createElement('div'); card.className='match-card';
-          card.style.background=l.color||'#fdfdfd';
-          const d=new Date(m.time);
-          const hours = d.getHours() % 12 || 12; // بدون إضافة صفر بادئ
-          const minutes = ('0'+d.getMinutes()).slice(-2); // نترك الصفر البادئ للدقائق فقط
-          const ampm = d.getHours() >= 12 ? 'م' : 'ص';
-
-card.innerHTML=`
-<div class="match_row d-flex py-3 px-2">
-    <div class="team hometeam cell col d-flex align-items-center justify-content-end"> <span class="the_team">${m.home}</span>
-        <div style="position:relative"> <img src="${m.homeImg}" class="team_logo" width="27" height="27" alt="الولايات المتحدة" loading="lazy"></div>
+  card.innerHTML = `
+  <div class="match_row">
+    <div class="team hometeam">
+      <span class="the_team">${m.home}</span>
+      <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
     </div>
-    <div class="middle_column cell col-2 col-md-1"> <span class="match_score" hidden="hidden"></span>
-        <div class="match_time"><span class="the_time"> ${hours}:${minutes} ${ampm} ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}</span></div>
+
+    <div class="middle_column">
+      <div class="the_time">${hours}:${minutes} ${ampm}</div>
+      ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
     </div>
-    <div class="team awayteam cell col d-flex align-items-center">
-        <div style="position:relative"> <img src="${m.awayImg}" class="team_logo" width="27" height="27" alt="إيطاليا" loading="lazy"></div> <span class="the_team">${m.away}</span></div>
-</div>
 
+    <div class="team awayteam">
+      <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+      <span class="the_team">${m.away}</span>
+    </div>
+  </div>
 
-            <div class="meta"><div>🎙️ ${m.comm}</div><div>📺 ${m.chan}</div></div>
-            <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-              <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-              <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-            </div>
-          `;
-          section.appendChild(card);
-        });
-        matchesContainer.appendChild(section);
-      }
-    });
-  }
+  <div class="meta">
+    <div>${m.comm}</div>
+    <div>${m.chan}</div>
+  </div>
+
+  <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+    <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+    <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+  </div>
+`;
+
 
   window.editMatch=(index)=>{
     const m=matches[index];
@@ -414,6 +382,7 @@ card.innerHTML=`
 </body>
 
 </html>
+
 
 
 
