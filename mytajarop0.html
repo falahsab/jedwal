@@ -126,11 +126,12 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
   position: absolute;
   bottom: 6px;
   left: 6px;
-  width: 45px;
-  height: 45px;
+  width: 30px; /* يمكن زيادة الحجم إذا أحببت */
+  height: 30px;
   object-fit: contain;
-  opacity: 0.95;
+  z-index: 3;
 }
+
 
 /* أزرار الإدارة */
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
@@ -325,9 +326,12 @@ function render(){
           </div>
         </div>
         <div class="meta">
-          <div>🎙️ ${m.comm}</div>
-          ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
+  <div>🎙️ ${m.comm}</div>
+</div>
+${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
         </div>
+
+
         <div class="action-btns" style="display:${showBtns?'flex':'none'}">
           <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
           <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
@@ -376,3 +380,4 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
