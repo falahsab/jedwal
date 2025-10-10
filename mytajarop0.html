@@ -10,34 +10,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
-  
- html, body, * {
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-  -webkit-text-size-adjust: 100%; /* لمنع تصغير الخط في Safari */
-}
-@font-face {
-  font-family: 'Tajawal';
-  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff2') format('woff2'),
-       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Tajawal';
-  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff2') format('woff2'),
-       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+html, body, * { font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important; -webkit-text-size-adjust: 100%; }
 body { background:#f9f9f9; padding:18px; color:#222; min-height:100vh; display:flex; flex-direction:column; }
 header { background:#3498db; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
 .grid{display:grid; grid-template-columns:1fr 400px; gap:14px;}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
 .row{display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
-select,input[type="datetime-local"]{background:transparent; border:1px solid rgba(0,0,0,0.12); padding:8px; border-radius:8px; color:#222; width:100%;}
+select,input[type="time"]{background:transparent; border:1px solid rgba(0,0,0,0.12); padding:8px; border-radius:8px; color:#222; width:100%;}
 label{font-size:13px;color:#555;display:block;margin-bottom:4px;}
 .logo{width:40px;height:40px;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
 .logo img{width:100%;height:100%;object-fit:contain; transition:width 0.3s,height 0.3s;}
@@ -130,13 +110,7 @@ function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,comple
 function toBase64(url, callback){
   const img = new Image();
   img.crossOrigin = 'Anonymous';
-  img.onload = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    canvas.getContext('2d').drawImage(img,0,0);
-    callback(canvas.toDataURL());
-  };
+  img.onload = () => { const canvas = document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; canvas.getContext('2d').drawImage(img,0,0); callback(canvas.toDataURL()); };
   img.onerror = () => callback('');
   img.src = url;
 }
@@ -166,9 +140,8 @@ function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.get
 function updatePreview(selectEl,previewId){
   const s=selectEl.selectedOptions[0];
   const img=s.dataset.img;
-  if(img){
-    toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`);
-  } else document.getElementById(previewId).innerHTML='⚽';
+  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
+  else document.getElementById(previewId).innerHTML='⚽';
 }
 
 populateLeagues(); fetchCommentators(); fetchChannels();
@@ -220,10 +193,11 @@ function render(){
 
       leagueMatches.forEach((m)=>{
         const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#fdfdfd';
-        const d=new Date(m.time);
-        const hours=d.getHours() % 12 || 12;
-        const minutes=d.getMinutes().toString().padStart(2,'0');
-        const ampm=d.getHours() >=12?'م':'ص';
+        // عرض الوقت مباشرة بدون تحويله لكائن Date
+        const [hours, minutes] = m.time.split(':');
+        let displayHours = parseInt(hours,10);
+        const ampm = displayHours >= 12 ? 'م' : 'ص';
+        displayHours = displayHours % 12 || 12;
 
         card.innerHTML=`
           <div class="match_row">
@@ -233,7 +207,7 @@ function render(){
             </div>
             <div class="middle_column">
               <div class="the_time">
-                <span>${hours}:${minutes}</span>
+                <span>${displayHours}:${minutes}</span>
                 <span>${ampm}</span>
               </div>
               ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
@@ -301,4 +275,3 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
-
