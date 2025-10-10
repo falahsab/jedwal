@@ -10,143 +10,46 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
-html, body, * {
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-  -webkit-text-size-adjust: 100%;
-  box-sizing: border-box;
-  margin:0; padding:0;
-}
-body {
-  background:#f9f9f9;
-  padding:18px;
-  color:#222;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-}
-
-header{
-  background:#3498db;color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:18px;
-  text-align:center;font-size:22px;font-weight:700;position:sticky;top:0;z-index:1000;
-}
-#todayDate{font-size:16px;font-weight:400;margin-top:4px;}
-
-.grid{display:grid;grid-template-columns:1fr 400px;gap:14px}
+html, body, * { font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important; -webkit-text-size-adjust:100%; box-sizing:border-box; margin:0; padding:0; }
+body { background:#f9f9f9; padding:18px; color:#222; min-height:100vh; display:flex; flex-direction:column; }
+header { background:#3498db; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
+.grid{display:grid; grid-template-columns:1fr 400px; gap:14px;}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
-.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08)}
-
-.row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
-select,input[type="datetime-local"]{
-  background:transparent;border:1px solid rgba(0,0,0,0.12);padding:8px;border-radius:8px;color:#222;width:100%;
-}
-label{font-size:13px;color:#555;display:block;margin-bottom:4px}
-.logo{width:40px;height:40px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.logo img{width:100%;height:100%;object-fit:contain;transition:width 0.3s,height 0.3s}
-.btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%}
-
-.matches-wrapper{margin-top:12px}
-
-/* ====== تصميم بطاقات المباريات jdwel style ====== */
-.match-card {
-  display:flex;
-  flex-direction:column;
-  border-radius:10px;
-  border:1px solid rgba(0,0,0,0.08);
-  padding:10px 12px;
-  margin-bottom:12px;
-  position:relative;
-  overflow:hidden;
-  background:#fff;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.match-card:hover {
-  transform: translateY(-2px);
-  box-shadow:0 6px 15px rgba(0,0,0,0.1);
-}
-
-/* شعار الدوري الزاوية العلوية */
-.league-logo {
-  position:absolute;
-  top:8px; left:8px;
-  width:24px; height:24px;
-  z-index:2;
-}
-
-/* صف الفريقين + الوقت */
-.match_row{
-  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
-}
-.team{
-  display:flex; flex:1; align-items:center; gap:6px; overflow:hidden; white-space:nowrap;
-}
+.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
+.row{display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
+select,input[type="datetime-local"]{background:transparent; border:1px solid rgba(0,0,0,0.12); padding:8px; border-radius:8px; color:#222; width:100%;}
+label{font-size:13px;color:#555;display:block;margin-bottom:4px;}
+.logo{width:40px;height:40px;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
+.logo img{width:100%;height:100%;object-fit:contain; transition:width 0.3s,height 0.3s;}
+.btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
+.matches-wrapper{margin-top:12px;}
+.matches-section{margin-bottom:16px;}
+.section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;margin-bottom:8px;position:relative;padding-left:40px;}
+.extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
+.match-card{display:flex;flex-direction:column;border-radius:10px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:8px;position:relative; overflow:hidden;}
+.match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;}
+.match-card>*{position:relative; z-index:1;}
+.match_row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+.team{display:flex; align-items:center; gap:6px; flex:1; min-width:0; white-space:nowrap;}
 .team.hometeam{justify-content:flex-end;}
 .team.awayteam{justify-content:flex-start;}
-.team-logo{
-  width:clamp(30px,6vw,45px);
-  height:clamp(30px,6vw,45px);
-  object-fit:contain;
-  border-radius:6px;
-}
-.team-name{
-  font-size:clamp(13px,2vw,18px);
-  font-weight:700;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.center{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  font-size:clamp(14px,2vw,20px);
-  gap:2px;
-}
-.the_time{display:flex;align-items:center;gap:4px;}
-.the_time span{font-size:clamp(12px,1.5vw,16px);}
-.next-day-label{font-size:10px;color:#007bff;margin-top:0;line-height:1;}
-
-/* الميتا */
-.meta{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  font-size:12px;
-  color:#636566;
-  margin-top:6px;
-  font-weight:500;
-  flex-wrap:wrap;
-  position:relative;
-}
-
-/* شعار القناة أسفل يسار البطاقة */
-.channel-logo {
-  position: absolute;
-  bottom: 6px;
-  left: 6px;
-  width: 30px; /* يمكن زيادة الحجم إذا أحببت */
-  height: 30px;
-  object-fit: contain;
-  z-index: 3;
-}
-
-
-/* أزرار الإدارة */
-.action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
-.action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
-
-@media print{
-  .action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn {display:none !important;}
-}
+.team_logo{width:clamp(25px,4vw,38px); height:clamp(25px,4vw,38px); object-fit:contain;}
+.the_team{font-weight:700; font-size:clamp(13px,2vw,17px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.middle_column{display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:clamp(15px,2vw,22px); line-height:1.1;}
+.the_time{display:flex; align-items:center; gap:4px; justify-content:center;}
+.next-day-label{font-size:10px; color:#007bff; margin-top:0; line-height:1;}
+.meta{display:flex; justify-content:center; align-items:center; gap:20px; font-size:13px; color:#555; margin-top:6px; font-weight:500; flex-wrap:wrap; text-align:center;}
+.action-btns{display:flex; gap:6px; margin-top:6px; justify-content:center; flex-wrap:wrap;}
+.action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
+.channel-logo{position:absolute; bottom:6px; left:6px; width:40px; height:40px; object-fit:contain; z-index:3;}
+@media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
 </style>
 </head>
 <body>
 
 <header>
 ⚽ جدول مباريات اليوم
-<div id="todayDate"></div>
+<div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
 </header>
 
 <div class="grid">
@@ -179,12 +82,11 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 </div>
 
 <div class="matches-wrapper">
-  <div class="card"><div id="matchesContainer"></div>
-  <center>مع vip عيش المتعة .. اشترك الآن</center></div>
-
-  <button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
-  <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
-  <a id="downloadLink"></a>
+  <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
+  
+<button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
+<button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
+<a id="downloadLink"></a>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -223,7 +125,7 @@ function populateLeagues(){
   fetchCSV(leaguesCSV,data=>{
     leagues=data;
     const leagueSelect=document.getElementById('leagueSelect');
-    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-extra='${l.extraLogo||""}' data-color='${l.color||"#fdfdfd"}'>${l.name}</option>`).join('');
+    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
     loadTeams(leagueSelect.value);
   });
 }
@@ -240,16 +142,7 @@ function loadTeams(leagueCode){
 }
 
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
-
-// ✅ تعديل تحميل القنوات لدعم الصور
-function fetchChannels(){
-  fetchCSV(channelsCSV,data=>{
-    channels=data;
-    const select=document.getElementById('channel');
-    select.innerHTML=data.map(c=>`<option value="${c.name}" data-logo="${c.logo}">${c.name}</option>`).join('');
-  });
-}
-
+function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
 function updatePreview(selectEl,previewId){
   const s=selectEl.selectedOptions[0];
   const img=s.dataset.img;
@@ -272,20 +165,23 @@ document.getElementById('addMatch').onclick=()=>{
   const away=document.getElementById('awayTeam').value;
   const time=document.getElementById('matchTime').value;
   const comm=document.getElementById('commentator').value;
-  const chanSelect=document.getElementById('channel');
-  const chan=chanSelect.value;
-  const chanLogo=chanSelect.selectedOptions[0].dataset.logo;
+  const chan=document.getElementById('channel').value;
   let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
   let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
   if(!time){alert('ادخل وقت المباراة');return;}
-  toBase64(homeImg,b64Home=>{homeImg=b64Home;
+
+  toBase64(homeImg,b64Home=>{
+    homeImg=b64Home;
     toBase64(awayImg,b64Away=>{
       awayImg=b64Away;
-      const newMatch={league,home,away,time,comm,chan,chanLogo,homeImg,awayImg,nextDay:isNextDay};
-      if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
-      localStorage.setItem('matches',JSON.stringify(matches));
-      render();
-      document.getElementById('matchTime').value='';
+      const chanLogoUrl = channels.find(c=>c.name===chan)?.logo || '';
+      toBase64(chanLogoUrl, b64Chan=>{
+        const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,chanLogo:b64Chan,nextDay:isNextDay};
+        if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
+        localStorage.setItem('matches',JSON.stringify(matches));
+        render();
+        document.getElementById('matchTime').value='';
+      });
     });
   });
 };
@@ -298,47 +194,50 @@ function render(){
     if(leagueMatches.length>0){
       const section=document.createElement('div'); section.className='matches-section';
       const header=document.createElement('div'); header.className='section-header';
-      header.innerHTML=`<img src='${l.extraLogo||""}' class='league-logo'> <img src='${l.logo}' style='width:24px;height:24px;margin-left:4px'> ${l.name}`;
+      const extraLogo=l.extraLogo||l.extra;
+      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
 
-      leagueMatches.forEach(m=>{
-        const card=document.createElement('div');
-        card.className='match-card';
-        card.style.background=l.color||'#fff';
+      leagueMatches.forEach((m)=>{
+        const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#fdfdfd';
         const d=new Date(m.time);
-        const hours=d.getHours()%12||12;
+        const hours=d.getHours() % 12 || 12;
         const minutes=d.getMinutes().toString().padStart(2,'0');
-        const ampm=d.getHours()>=12?'م':'ص';
+        const ampm=d.getHours() >=12?'م':'ص';
 
         card.innerHTML=`
-        <div class="match_row">
-          <div class="team hometeam">
-            <span class="team-name">${m.home}</span>
-            <img src="${m.homeImg}" class="team-logo" alt="${m.home}">
+          <div class="match_row">
+            <div class="team hometeam">
+              <span class="the_team">${m.home}</span>
+              <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+            </div>
+            <div class="middle_column">
+              <div class="the_time">
+                <span>${hours}:${minutes}</span>
+                <span>${ampm}</span>
+              </div>
+              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+            </div>
+            <div class="team awayteam">
+              <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+              <span class="the_team">${m.away}</span>
+            </div>
           </div>
-          <div class="center">
-            <div class="the_time"><span>${hours}:${minutes}</span><span>${ampm}</span></div>
-            ${m.nextDay?`<div class="next-day-label">(اليوم التالي)</div>`:''}
-          </div>
-          <div class="team awayteam">
-            <img src="${m.awayImg}" class="team-logo" alt="${m.away}">
-            <span class="team-name">${m.away}</span>
-          </div>
-        </div>
-        <div class="meta">
-  <div>🎙️ ${m.comm}</div>
-</div>
-${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
-        </div>
 
+          <div class="meta">
+            <div>🎙️ ${m.comm}</div>
+          </div>
 
-        <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-          <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-          <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-        </div>
+          ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
+
+          <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+            <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+            <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+          </div>
         `;
         section.appendChild(card);
       });
+
       matchesContainer.appendChild(section);
     }
   });
@@ -363,9 +262,11 @@ window.editMatch=(index)=>{
   },100);
 };
 
-window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1);localStorage.setItem('matches',JSON.stringify(matches));render();}};
-document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns;render();});
-document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[];localStorage.setItem('matches','[]');render();}});
+window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
+
+document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns; render();});
+document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[]; localStorage.setItem('matches','[]'); render();}});
+
 document.getElementById('downloadTable').addEventListener('click',()=>{
   html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
     const link=document.getElementById('downloadLink');
@@ -380,4 +281,3 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
-
