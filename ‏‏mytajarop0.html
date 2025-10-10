@@ -23,7 +23,6 @@ body {
   min-height:100vh;
   display:flex;
   flex-direction:column;
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif;
 }
 
 header{
@@ -121,6 +120,20 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 }
 .action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap}
 .action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
+
+/* شعار القناة في أسفل يسار البطاقة */
+.channel-icon {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+@media (max-width:600px){
+  .channel-icon{width:32px;height:32px;}
+}
 
 @media print{
   .action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn {display:none !important;}
@@ -224,8 +237,20 @@ function loadTeams(leagueCode){
   });
 }
 
-function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
-function fetchChannels(){fetchCSV(channelsCSV,data=>{document.getElementById('channel').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
+function fetchCommentators(){
+  fetchCSV(commentatorsCSV,data=>{
+    document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');
+  });
+}
+
+function fetchChannels(){
+  fetchCSV(channelsCSV,data=>{
+    channels=data;
+    document.getElementById('channel').innerHTML = data
+      .map(c => `<option value="${c.name}" data-logo="${c.logo}">${c.name}</option>`)
+      .join('');
+  });
+}
 
 function updatePreview(selectEl,previewId){
   const s=selectEl.selectedOptions[0];
@@ -249,14 +274,17 @@ document.getElementById('addMatch').onclick=()=>{
   const away=document.getElementById('awayTeam').value;
   const time=document.getElementById('matchTime').value;
   const comm=document.getElementById('commentator').value;
-  const chan=document.getElementById('channel').value;
+  const chanSelect=document.getElementById('channel');
+  const chan=chanSelect.value;
+  const chanLogo=chanSelect.selectedOptions[0].dataset.logo;
+
   let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
   let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
   if(!time){alert('ادخل وقت المباراة');return;}
   toBase64(homeImg,b64Home=>{homeImg=b64Home;
     toBase64(awayImg,b64Away=>{
       awayImg=b64Away;
-      const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,nextDay:isNextDay};
+      const newMatch={league,home,away,time,comm,chan,chanLogo,homeImg,awayImg,nextDay:isNextDay};
       if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
       localStorage.setItem('matches',JSON.stringify(matches));
       render();
@@ -302,8 +330,8 @@ function render(){
         </div>
         <div class="meta">
           <div>🎙️ ${m.comm}</div>
-          <div>📺 ${m.chan}</div>
         </div>
+        <img src="${m.chanLogo}" class="channel-icon" alt="${m.chan}" title="${m.chan}">
         <div class="action-btns" style="display:${showBtns?'flex':'none'}">
           <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
           <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
