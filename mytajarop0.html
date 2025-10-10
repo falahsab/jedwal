@@ -11,13 +11,13 @@
 
 <style>
 html, body, * { font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important; -webkit-text-size-adjust: 100%; }
-body { background:#f9f9f9; padding:18px; color:#222; min-height:100vh; display:flex; flex-direction:column; }
+body { background:#ffffff; padding:18px; color:#222; min-height:100vh; display:flex; flex-direction:column; }
 header { background:#3498db; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
 .grid{display:grid; grid-template-columns:1fr 400px; gap:14px;}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
-.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
+.card{background:#0e0e0e;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
 .row{display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
-select,input[type="time"]{background:transparent; border:1px solid rgba(0,0,0,0.12); padding:8px; border-radius:8px; color:#222; width:85%;}
+select,input[type="time"]{background:transparent; border:1px solid rgba(0,0,0,0.12); padding:8px; border-radius:8px; color:#ff8000; width:100%;}
 label{font-size:13px;color:#555;display:block;margin-bottom:4px;}
 .logo{width:40px;height:40px;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
 .logo img{width:100%;height:100%;object-fit:contain; transition:width 0.3s,height 0.3s;}
@@ -27,7 +27,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px;}
 .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;}
 .extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
 .match-card{display:flex;flex-direction:column;border-radius:10px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:8px;position:relative; overflow:hidden;}
-.match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;}
+.match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;background-color:#232323;}
 .match-card>*{position:relative; z-index:1;}
 .match_row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
 .team{display:flex; align-items:center; gap:6px; flex:1; min-width:0; white-space:nowrap;}
@@ -37,7 +37,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px;}
 .the_team{font-weight:700; font-size:clamp(13px,2vw,17px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .middle_column{display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:clamp(15px,2vw,22px); line-height:1.1;}
 .the_time{display:flex; align-items:center; gap:4px; justify-content:center;}
-.next-day-label{font-size:10px; color:#007bff; margin-top:0; line-height:1;}
+.next-day-label{font-size:10px; color:#98999a; margin-top:0; line-height:1;}
 .meta{display:flex; justify-content:center; align-items:center; gap:20px; font-size:13px; color:#555; margin-top:6px; font-weight:500; flex-wrap:wrap; text-align:center;}
 .action-btns{display:flex; gap:6px; margin-top:6px; justify-content:center; flex-wrap:wrap;}
 .action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
@@ -275,6 +275,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
