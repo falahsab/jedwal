@@ -1,323 +1,880 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>جدول مباريات اليوم - لوحة التحكم</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>جدول مباريات اليوم - لوحة التحكم</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
-<style>
- html, body, * {
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-  -webkit-text-size-adjust: 100%; /* لمنع تصغير الخط في Safari */
-}
-@font-face {
-  font-family: 'Tajawal';
-  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff2') format('woff2'),
-       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Tajawal';
-  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff2') format('woff2'),
-       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+    <style>
+        /* Custom Font & Reset */
+        html, body, * {
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+            -webkit-text-size-adjust: 100%;
+            box-sizing: border-box;
+        }
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
 
-body { background:#ffffff; padding:1px; color:#ffffff; min-height:100vh; display:flex; flex-direction:column; }
-header { background:#070607; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
-.grid{display:grid; grid-template-columns:1fr 400px; gap:14px;}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-.card{background:#252525;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
-.row{display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
-select,input[type="time"]{background:#444444; border:1px solid rgba(255,255,25,0.12); padding:8px; border-radius:8px; color:#ffffff; width:100%;}
-label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
-.logo{height: auto; max-width: 100%;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
-.logo img{width:100%;height:100%;object-fit:contain; transition:width 0.3s,height 0.3s;}
-.btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
-.matches-wrapper{margin-top:12px;}
-.matches-section{margin-bottom:16px;}
-.section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;}
-.extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
-.match-card{display:flex;flex-direction:column;border-radius:7px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:2px;position:relative; overflow:hidden;background-color:#191919}
-.match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat0.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;background-color:#191919;}
-.match-card>*{position:relative; z-index:1;}
-.match_row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
-.team{display:flex; align-items:center; gap:6px; flex:1; min-width:0; white-space:nowrap;}
-.team.hometeam{justify-content:flex-end;}
-.team.awayteam{justify-content:flex-start;}
-.team_logo{width:clamp(25px,4vw,38px); height:clamp(25px,4vw,38px); object-fit:contain;}
-.the_team{font-weight:700; font-size:clamp(13px,2vw,17px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.middle_column{display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:clamp(15px,2vw,22px); line-height:1.1;}
-.the_time{display:flex; align-items:center; gap:4px; justify-content:center;}
-.next-day-label{font-size:10px; color:#98999a; margin-top:0; line-height:1;}
-.meta{display:flex; justify-content:center; align-items:center; gap:20px; font-size:13px; color:#efeded; margin-top:6px; font-weight:500; flex-wrap:wrap; text-align:center;}
-.action-btns{display:flex; gap:6px; margin-top:6px; justify-content:center; flex-wrap:wrap;}
-.action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
-.channel-logo{position:absolute; bottom:6px; left:6px; width:auto; height:35px; object-fit:contain; z-index:3;}
-@media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
-</style>
+        /* Base Styles */
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: #252525;
+            --header-bg: #070607;
+            --text-color: #ffffff;
+            --input-bg: #444444;
+            --primary-color: #3498db;
+            --secondary-color: #6c5ce7;
+            --delete-color: #e74c3c;
+            --border-color: rgba(255,255,255,0.12);
+            --shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        body {
+            background: var(--bg-color);
+            padding: 1px;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            color: var(--text-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .date-display {
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        /* Layout */
+        .main-container {
+            padding: 0 16px 16px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        @media(max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        .card-footer-text {
+            font-size: 12px;
+            color: #98999a;
+            margin-top: 15px;
+        }
+
+        /* Form Styles */
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        select, input[type="time"] {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            color: var(--text-color);
+            width: 100%;
+            appearance: none;
+        }
+        label {
+            font-size: 14px;
+            color: var(--text-color);
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .logo-preview-wrapper {
+            width: 60px;
+        }
+        .logo-preview {
+            height: 40px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--input-bg);
+            font-size: 20px;
+        }
+        .logo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .btn {
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        .primary-btn {
+            background: var(--primary-color);
+            flex: 1;
+        }
+        .secondary-btn {
+            background: var(--secondary-color);
+            flex-basis: 150px;
+        }
+        .tertiary-btn {
+            background: #3c3c3c;
+        }
+        .delete-btn {
+            background: var(--delete-color);
+        }
+        .download-btn {
+            background: #27ae60;
+            width: 100%;
+            display: block;
+        }
+        .margin-top-1 { margin-top: 6px; }
+        .margin-top-2 { margin-top: 12px; }
+
+        /* System Message */
+        .system-message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 500;
+            color: white;
+        }
+        .error-message { background: #e74c3c; }
+        .success-message { background: #2ecc71; }
+        .warning-message { background: #f39c12; }
+        .hidden { display: none !important; }
+
+        /* Matches Display */
+        .matches-section {
+            margin-bottom: 18px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 8px;
+            padding-right: 10px;
+            border-right: 4px solid var(--primary-color);
+            color: var(--text-color);
+        }
+        .league-logo {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+        .extra-logo-header {
+            height: 24px;
+            opacity: 0.8;
+        }
+
+        .match-card {
+            background-color: var(--match-card-bg, #191919);
+            border-radius: 7px;
+            padding: 12px;
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+            background-image: url('https://falahsab.github.io/jedwal/img/yemen-sat0.png');
+            background-repeat: repeat;
+            background-size: 60px auto;
+            background-blend-mode: overlay;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .match-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: var(--match-card-bg, #191919);
+            opacity: 0.96;
+            z-index: 0;
+        }
+        .match-card > * { position: relative; z-index: 1; }
+        .match-card.is-editing {
+            border: 3px solid #ffc107;
+            box-shadow: 0 0 10px #ffc107;
+        }
+
+        .match_row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+        }
+        .team.hometeam { justify-content: flex-end; text-align: right; }
+        .team.awayteam { justify-content: flex-start; text-align: left; }
+
+        .team_logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .the_team {
+            font-weight: 700;
+            font-size: clamp(14px, 2vw, 18px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .middle_column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: clamp(16px, 2vw, 24px);
+            line-height: 1.1;
+            flex-shrink: 0;
+        }
+        .the_time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            justify-content: center;
+        }
+        .next-day-label {
+            font-size: 10px;
+            color: #98999a;
+            margin-top: 3px;
+            line-height: 1;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+            color: #efeded;
+            margin-top: 8px;
+            font-weight: 500;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .action-btns button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            background: #3c3c3c;
+            color: white;
+        }
+        .action-btns button:hover { opacity: 0.9; }
+
+        .channel-logo {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: auto;
+            height: 30px;
+            object-fit: contain;
+            z-index: 3;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            text-align: center;
+            padding: 30px;
+            font-size: 16px;
+            color: #aaa;
+        }
+
+        /* Print Styles */
+        @media print {
+            .main-container, .form, header, .action-btns, #downloadTable, .card-footer-text, #toggleBtns, #deleteAll, #nextDayBtn {
+                display: none !important;
+            }
+            .matches-wrapper {
+                margin: 0;
+                box-shadow: none;
+            }
+            .card {
+                box-shadow: none;
+                background: none;
+                padding: 0;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-⚽ جدول مباريات اليوم
-<div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
-</header>
+    <header>
+        ⚽ جدول مباريات اليوم
+        <div id="todayDate" class="date-display"></div>
+    </header>
 
-<div class="grid">
-  <div class="card form">
-    <div class="row">
-      <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
-      <div style="width:120px"><label>الوقت</label><input id="matchTime" type="time" /></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>الفريق المضيف</label><select id="homeTeam"></select></div>
-      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>الفريق الضيف</label><select id="awayTeam"></select></div>
-      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
-      <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
-    </div>
+    <div class="main-container">
 
-    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-      <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
-      <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
-    </div>
+        <div class="grid">
+            <div class="card form">
+                <h2 class="card-title">إدخال المباراة الجديدة</h2>
+                
+                <div id="systemMessage" class="system-message hidden"></div>
 
-    <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
-    <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
-  </div>
-</div>
+                <div class="row">
+                    <div style="flex:1"><label for="leagueSelect">الدوري</label><select id="leagueSelect" required></select></div>
+                    <div style="width:120px"><label for="matchTime">الوقت</label><input id="matchTime" type="time" required /></div>
+                </div>
+                <div class="row">
+                    <div style="flex:1"><label for="homeTeam">الفريق المضيف</label><select id="homeTeam" required></select></div>
+                    <div class="logo-preview-wrapper"><label>&nbsp;</label><div class="logo-preview" id="homePreview">🏠</div></div>
+                </div>
+                <div class="row">
+                    <div style="flex:1"><label for="awayTeam">الفريق الضيف</label><select id="awayTeam" required></select></div>
+                    <div class="logo-preview-wrapper"><label>&nbsp;</label><div class="logo-preview" id="awayPreview">⚽</div></div>
+                </div>
+                <div class="row">
+                    <div style="flex:1"><label for="commentator">المعلق</label><select id="commentator" required></select></div>
+                    <div style="width:180px"><label for="channel">القناة الناقلة</label><select id="channel" required></select></div>
+                </div>
 
-<div class="matches-wrapper">
-  <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
-  
-<button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
-<button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
-<a id="downloadLink"></a>
-</div>
+                <div class="button-group">
+                    <button id="addOrEditMatch" class="btn primary-btn flex-grow-1">➕ إضافة المباراة</button>
+                    <button id="nextDayBtn" class="btn secondary-btn">
+                        📅 اليوم التالي: <span id="nextDayState">❌</span>
+                    </button>
+                </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-
-const dateEl=document.getElementById('todayDate');
-const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-const now=new Date();
-dateEl.textContent=`${days[now.getDay()]} ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
-
-const leaguesCSV='csv/leagues.csv';
-const commentatorsCSV='csv/commentators.csv';
-const channelsCSV='csv/channels.csv';
-const teamsCSVFolder='https://falahsab.github.io/jedwal/teams/';
-let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
-let matches=[], editIndex=null, isNextDay=false;
-
-function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
-function toBase64(url, callback){
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.onload = () => { const canvas = document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; canvas.getContext('2d').drawImage(img,0,0); callback(canvas.toDataURL()); };
-  img.onerror = () => callback('');
-  img.src = url;
-}
-
-function populateLeagues(){
-  fetchCSV(leaguesCSV,data=>{
-    leagues=data;
-    const leagueSelect=document.getElementById('leagueSelect');
-    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
-    loadTeams(leagueSelect.value);
-  });
-}
-
-function loadTeams(leagueCode){
-  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
-    teams[leagueCode]=data;
-    const homeTeam=document.getElementById('homeTeam');
-    const awayTeam=document.getElementById('awayTeam');
-    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
-    updatePreview(homeTeam,'homePreview'); 
-    updatePreview(awayTeam,'awayPreview');
-  });
-}
-
-function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
-function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
-function updatePreview(selectEl,previewId){
-  const s=selectEl.selectedOptions[0];
-  const img=s.dataset.img;
-  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
-  else document.getElementById(previewId).innerHTML='⚽';
-}
-
-populateLeagues(); fetchCommentators(); fetchChannels();
-document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
-document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
-document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
-
-if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
-document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
-
-document.getElementById('addMatch').onclick=()=>{
-  const league=document.getElementById('leagueSelect').value;
-  const home=document.getElementById('homeTeam').value;
-  const away=document.getElementById('awayTeam').value;
-  const time=document.getElementById('matchTime').value;
-  const comm=document.getElementById('commentator').value;
-  const chan=document.getElementById('channel').value;
-  let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
-  let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
-  if(!time){alert('ادخل وقت المباراة');return;}
-
-  toBase64(homeImg,b64Home=>{
-    homeImg=b64Home;
-    toBase64(awayImg,b64Away=>{
-      awayImg=b64Away;
-      const chanLogoUrl = channels.find(c=>c.name===chan)?.logo || '';
-      toBase64(chanLogoUrl, b64Chan=>{
-        const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,chanLogo:b64Chan,nextDay:isNextDay};
-        if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
-        localStorage.setItem('matches',JSON.stringify(matches));
-        render();
-        document.getElementById('matchTime').value='';
-      });
-    });
-  });
-};
-
-function render(){
-  const matchesContainer=document.getElementById('matchesContainer');
-  matchesContainer.innerHTML='';
-  leagues.forEach(l=>{
-    const leagueMatches=matches.filter(m=>m.league===l.code);
-    if(leagueMatches.length>0){
-      const section=document.createElement('div'); section.className='matches-section';
-      const header=document.createElement('div'); header.className='section-header';
-      const extraLogo=l.extraLogo||l.extra;
-      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
-      section.appendChild(header);
-
-      leagueMatches.forEach((m)=>{
-        const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#fdfdfd';
-        // عرض الوقت مباشرة بدون تحويله لكائن Date
-        const [hours, minutes] = m.time.split(':');
-        let displayHours = parseInt(hours,10);
-        const ampm = displayHours >= 12 ? 'م' : 'ص';
-        displayHours = displayHours % 12 || 12;
-
-        card.innerHTML=`
-          <div class="match_row">
-            <div class="team hometeam">
-              <span class="the_team">${m.home}</span>
-              <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+                <button id="toggleBtns" class="btn tertiary-btn margin-top-1">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
+                <button id="deleteAll" class="btn delete-btn margin-top-1">🗑️ حذف كل البطاقات</button>
             </div>
-            <div class="middle_column">
-              <div class="the_time">
-                <span>${displayHours}:${minutes}</span>
-                <span>${ampm}</span>
-              </div>
-              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+        </div>
+
+        <div class="matches-wrapper">
+            <div class="card">
+                <div id="matchesContainer">
+                    <div class="loading-spinner" id="loadingSpinner">جارٍ تحميل البيانات...</div>
+                </div>
+                <center class="card-footer-text">مع vip عيش المتعة .. اشترك الآن</center>
             </div>
-            <div class="team awayteam">
-              <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-              <span class="the_team">${m.away}</span>
-            </div>
-          </div>
+            
+            <button id="downloadTable" class="btn download-btn margin-top-2">📸 تحميل الجدول كصورة عالية الجودة</button>
+            <a id="downloadLink" class="hidden"></a>
+        </div>
 
-          <div class="meta">
-            <div>🎙️ ${m.comm}</div>
-          </div>
+    </div>
 
-          ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-          <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-            <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-            <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-          </div>
-        `;
-        section.appendChild(card);
-      });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
 
-      matchesContainer.appendChild(section);
-    }
-  });
-}
+            // ----------------------------------------------------
+            // 1. Constants and State Management
+            // ----------------------------------------------------
+            // **ملاحظة هامة**: هذه المسارات تعتمد على وجود ملفات CSV في الموقع التالي.
+            const API_BASE = 'https://falahsab.github.io/jedwal/';
+            const CSV_PATHS = {
+                leagues: `${API_BASE}csv/leagues.csv`,
+                commentators: `${API_BASE}csv/commentators.csv`,
+                channels: `${API_BASE}csv/channels.csv`,
+                teamsFolder: `${API_BASE}teams/`
+            };
 
-window.editMatch=(index)=>{
-  const m=matches[index];
-  document.getElementById('leagueSelect').value=m.league;
-  loadTeams(m.league);
-  setTimeout(()=>{
-    document.getElementById('homeTeam').value=m.home;
-    document.getElementById('awayTeam').value=m.away;
-    document.getElementById('matchTime').value=m.time;
-    document.getElementById('commentator').value=m.comm;
-    document.getElementById('channel').value=m.chan;
-    updatePreview(document.getElementById('homeTeam'),'homePreview');
-    updatePreview(document.getElementById('awayTeam'),'awayPreview');
-    editIndex=index;
-    matches.splice(index,1);
-    localStorage.setItem('matches',JSON.stringify(matches));
-    render();
-  },100);
-};
+            let leagues = [];
+            let teams = {};
+            let commentators = [];
+            let channels = [];
+            let matches = [];
+            let editIndex = null;
+            let isNextDay = false;
+            let showBtns = true;
+            
+            const logoCache = new Map();
 
-window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
+            // DOM Elements
+            const DOM = {
+                dateEl: document.getElementById('todayDate'),
+                leagueSelect: document.getElementById('leagueSelect'),
+                matchTime: document.getElementById('matchTime'),
+                homeTeam: document.getElementById('homeTeam'),
+                awayTeam: document.getElementById('awayTeam'),
+                commentator: document.getElementById('commentator'),
+                channel: document.getElementById('channel'),
+                homePreview: document.getElementById('homePreview'),
+                awayPreview: document.getElementById('awayPreview'),
+                addOrEditMatch: document.getElementById('addOrEditMatch'),
+                nextDayBtn: document.getElementById('nextDayBtn'),
+                nextDayState: document.getElementById('nextDayState'),
+                toggleBtns: document.getElementById('toggleBtns'),
+                deleteAll: document.getElementById('deleteAll'),
+                downloadTable: document.getElementById('downloadTable'),
+                downloadLink: document.getElementById('downloadLink'),
+                matchesContainer: document.getElementById('matchesContainer'),
+                loadingSpinner: document.getElementById('loadingSpinner'),
+                systemMessage: document.getElementById('systemMessage')
+            };
 
-document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns; render();});
-document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[]; localStorage.setItem('matches','[]'); render();}});
+            // ----------------------------------------------------
+            // 2. Utility Functions
+            // ----------------------------------------------------
+            
+            function displayDate() {
+                const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                const now = new Date();
+                DOM.dateEl.textContent = `${days[now.getDay()]} ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+            }
 
-document.getElementById('downloadTable').addEventListener('click',()=>{
-  html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
-    const link=document.getElementById('downloadLink');
-    link.href=canvas.toDataURL('image/png');
-    link.download='matches.png';
-    link.click();
-  });
-});
+            function showMessage(message, type = 'error') {
+                DOM.systemMessage.textContent = message;
+                DOM.systemMessage.className = `system-message ${type}-message`;
+                DOM.systemMessage.classList.remove('hidden');
+                setTimeout(() => DOM.systemMessage.classList.add('hidden'), 5000);
+            }
 
-});
-</script>
+            function fetchCSV(url) {
+                return new Promise((resolve, reject) => {
+                    Papa.parse(url, {
+                        download: true,
+                        header: true,
+                        complete: (results) => resolve(results.data.filter(row => Object.values(row).some(v => v))),
+                        error: (error) => reject(error)
+                    });
+                });
+            }
+
+            function getLogoBase64(url) {
+                if (!url || url.includes('undefined')) return Promise.resolve('');
+                if (logoCache.has(url)) return Promise.resolve(logoCache.get(url));
+
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.crossOrigin = 'Anonymous';
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        canvas.getContext('2d').drawImage(img, 0, 0);
+                        const base64 = canvas.toDataURL();
+                        logoCache.set(url, base64);
+                        resolve(base64);
+                    };
+                    img.onerror = () => {
+                        showMessage(`خطأ في تحميل الشعار: ${url.substring(0, 50)}...`, 'error');
+                        resolve('');
+                    };
+                    img.src = url;
+                });
+            }
+
+            // ----------------------------------------------------
+            // 3. Data Loading and Population
+            // ----------------------------------------------------
+            
+            async function loadInitialData() {
+                try {
+                    DOM.loadingSpinner.style.display = 'block';
+                    [leagues, commentators, channels] = await Promise.all([
+                        fetchCSV(CSV_PATHS.leagues),
+                        fetchCSV(CSV_PATHS.commentators),
+                        fetchCSV(CSV_PATHS.channels)
+                    ]);
+
+                    populateLeagues();
+                    populateCommentators();
+                    populateChannels();
+                    
+                    if (leagues.length > 0) {
+                        await loadTeams(leagues[0].code);
+                    }
+                    
+                    const savedMatches = localStorage.getItem('matches');
+                    if (savedMatches) {
+                        matches = JSON.parse(savedMatches);
+                    }
+
+                } catch (error) {
+                    showMessage('فشل في تحميل البيانات الأساسية (CSV). تأكد من اتصالك بالإنترنت.', 'error');
+                } finally {
+                    DOM.loadingSpinner.style.display = 'none';
+                    render();
+                }
+            }
+
+            function populateLeagues() {
+                DOM.leagueSelect.innerHTML = leagues.map(l =>
+                    `<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color || "#fdfdfd"}' data-extra='${l.extraLogo || ""}' data-name='${l.name}'>${l.name}</option>`
+                ).join('');
+            }
+
+            async function loadTeams(leagueCode) {
+                if (!teams[leagueCode]) {
+                    try {
+                        const data = await fetchCSV(`${CSV_PATHS.teamsFolder}${leagueCode}_teams.csv`);
+                        teams[leagueCode] = data;
+                    } catch (error) {
+                        showMessage(`فشل في تحميل فرق الدوري: ${leagueCode}`, 'error');
+                        teams[leagueCode] = [];
+                    }
+                }
+                const teamOptions = teams[leagueCode].map(t =>
+                    `<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`
+                ).join('');
+                
+                DOM.homeTeam.innerHTML = DOM.awayTeam.innerHTML = teamOptions;
+                updatePreview(DOM.homeTeam, DOM.homePreview);
+                updatePreview(DOM.awayTeam, DOM.awayPreview);
+            }
+
+            function populateCommentators() {
+                DOM.commentator.innerHTML = commentators.map(c => `<option>${c.name}</option>`).join('');
+            }
+
+            function populateChannels() {
+                DOM.channel.innerHTML = channels.map(c =>
+                    `<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`
+                ).join('');
+            }
+
+            function updatePreview(selectEl, previewEl) {
+                const selectedOption = selectEl.selectedOptions[0];
+                const imgUrl = selectedOption ? selectedOption.dataset.img : '';
+                
+                previewEl.innerHTML = '';
+                if (imgUrl) {
+                    getLogoBase64(imgUrl).then(b64 => {
+                        previewEl.innerHTML = b64 ? `<img src='${b64}' alt='شعار الفريق'/>` : '❓';
+                    });
+                } else {
+                    previewEl.innerHTML = selectEl.id === 'homeTeam' ? '🏠' : '⚽';
+                }
+            }
+
+            // ----------------------------------------------------
+            // 4. Match Rendering and Management
+            // ----------------------------------------------------
+            
+            function saveMatches() {
+                try {
+                    localStorage.setItem('matches', JSON.stringify(matches));
+                } catch (e) {
+                    showMessage('خطأ: تجاوز الحد الأقصى للتخزين المحلي (LocalStorage). الرجاء حذف بعض المباريات.', 'error');
+                }
+            }
+
+            function render() {
+                DOM.matchesContainer.innerHTML = '';
+                const sortedLeagues = leagues.filter(l => matches.some(m => m.league === l.code));
+
+                sortedLeagues.forEach(l => {
+                    const leagueMatches = matches.filter(m => m.league === l.code);
+                    if (leagueMatches.length === 0) return;
+
+                    const section = document.createElement('div');
+                    section.className = 'matches-section';
+
+                    const header = document.createElement('div');
+                    header.className = 'section-header';
+                    
+                    Promise.all([
+                        getLogoBase64(l.logo),
+                        getLogoBase64(l.extraLogo || l.extra)
+                    ]).then(([leagueLogoB64, extraLogoB64]) => {
+                        const extraLogoHTML = extraLogoB64 ? `<img src='${extraLogoB64}' class='extra-logo-header' alt='شعار إضافي'>` : '';
+                        header.innerHTML = `${extraLogoHTML} <img src='${leagueLogoB64}' class='league-logo' alt='${l.name}'> ${l.name}`;
+                    });
+
+                    section.appendChild(header);
+
+                    leagueMatches.forEach((m) => {
+                        const matchIndex = matches.indexOf(m);
+                        const card = document.createElement('div');
+                        card.className = `match-card ${matchIndex === editIndex ? 'is-editing' : ''}`;
+                        card.style.setProperty('--match-card-bg', l.color || '#191919');
+
+                        const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+                        let displayTime = '';
+                        try {
+                            displayTime = new Date(`2000-01-01T${m.time}`).toLocaleTimeString('ar-EG', timeOptions);
+                        } catch {
+                            displayTime = m.time;
+                        }
+                        const [timePart, ampmPart] = displayTime.split(/\s+/);
+
+                        getLogoBase64(m.chanLogoUrl).then(chanLogoB64 => {
+                            const channelLogoHTML = chanLogoB64 ? `<img src="${chanLogoB64}" class="channel-logo" alt="${m.chan}">` : '';
+
+                            card.innerHTML = `
+                                <div class="match_row">
+                                    <div class="team hometeam">
+                                        <span class="the_team">${m.home}</span>
+                                        <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+                                    </div>
+                                    <div class="middle_column">
+                                        <div class="the_time">
+                                            <span>${timePart}</span>
+                                            <span>${ampmPart || ''}</span>
+                                        </div>
+                                        ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+                                    </div>
+                                    <div class="team awayteam">
+                                        <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+                                        <span class="the_team">${m.away}</span>
+                                    </div>
+                                </div>
+
+                                <div class="meta">
+                                    <div>🎙️ ${m.comm}</div>
+                                </div>
+
+                                ${channelLogoHTML}
+
+                                <div class="action-btns" style="display:${showBtns ? 'flex' : 'none'}">
+                                    <button onclick="window.editMatch(${matchIndex})">✏️ تعديل</button>
+                                    <button onclick="window.deleteMatch(${matchIndex})">🗑️ حذف</button>
+                                </div>
+                            `;
+                            section.appendChild(card);
+                        });
+                    });
+
+                    DOM.matchesContainer.appendChild(section);
+                });
+            }
+
+            // ----------------------------------------------------
+            // 5. Event Handlers
+            // ----------------------------------------------------
+            
+            window.editMatch = (index) => {
+                if (editIndex !== null) {
+                    showMessage('يجب إنهاء تعديل المباراة الحالية أولاً.', 'warning');
+                    return;
+                }
+                
+                const m = matches[index];
+                editIndex = index;
+                
+                DOM.leagueSelect.value = m.league;
+                loadTeams(m.league).then(() => {
+                    DOM.homeTeam.value = m.home;
+                    DOM.awayTeam.value = m.away;
+                    updatePreview(DOM.homeTeam, DOM.homePreview);
+                    updatePreview(DOM.awayTeam, DOM.awayPreview);
+                });
+                
+                DOM.matchTime.value = m.time;
+                DOM.commentator.value = m.comm;
+                DOM.channel.value = m.chan;
+                
+                isNextDay = m.nextDay;
+                DOM.nextDayState.textContent = isNextDay ? '✅' : '❌';
+                
+                DOM.addOrEditMatch.textContent = '💾 حفظ التعديلات';
+                DOM.addOrEditMatch.classList.add('warning-btn');
+
+                render();
+            };
+
+            window.deleteMatch = (index) => {
+                if (confirm('هل تريد حذف هذه المباراة؟')) {
+                    matches.splice(index, 1);
+                    saveMatches();
+                    render();
+                    if (editIndex === index) {
+                        resetEditMode();
+                    } else if (editIndex !== null && editIndex > index) {
+                        editIndex--;
+                    }
+                }
+            };
+            
+            function resetEditMode() {
+                editIndex = null;
+                DOM.addOrEditMatch.textContent = '➕ إضافة المباراة';
+                DOM.addOrEditMatch.classList.remove('warning-btn');
+                render();
+            }
+
+            DOM.addOrEditMatch.onclick = async () => {
+                const time = DOM.matchTime.value;
+                if (!time) {
+                    showMessage('ادخل وقت المباراة', 'warning');
+                    return;
+                }
+
+                const league = DOM.leagueSelect.value;
+                const homeOption = DOM.homeTeam.selectedOptions[0];
+                const awayOption = DOM.awayTeam.selectedOptions[0];
+                const channelOption = DOM.channel.selectedOptions[0];
+
+                if (!homeOption || !awayOption || !channelOption) {
+                    showMessage('الرجاء اختيار جميع الفرق والقناة.', 'warning');
+                    return;
+                }
+
+                // جلب Base64 للشعارات (يستخدم التخزين المؤقت)
+                const [homeImg, awayImg] = await Promise.all([
+                    getLogoBase64(homeOption.dataset.img),
+                    getLogoBase64(awayOption.dataset.img)
+                ]);
+                
+                const newMatch = {
+                    league,
+                    home: homeOption.value,
+                    away: awayOption.value,
+                    time,
+                    comm: DOM.commentator.value,
+                    chan: DOM.channel.value,
+                    homeImg, // Base64
+                    awayImg, // Base64
+                    chanLogoUrl: channelOption.dataset.logo || '', // URL (سيتم تحويله في Render)
+                    nextDay: isNextDay
+                };
+
+                if (editIndex !== null) {
+                    matches[editIndex] = newMatch;
+                    showMessage('تم تحديث المباراة بنجاح.', 'success');
+                    resetEditMode();
+                } else {
+                    matches.push(newMatch);
+                    showMessage('تم إضافة المباراة بنجاح.', 'success');
+                }
+
+                saveMatches();
+                render();
+                DOM.matchTime.value = '';
+            };
+
+            DOM.nextDayBtn.onclick = () => {
+                isNextDay = !isNextDay;
+                DOM.nextDayState.textContent = isNextDay ? '✅' : '❌';
+            };
+
+            DOM.toggleBtns.onclick = () => {
+                showBtns = !showBtns;
+                render();
+            };
+
+            DOM.deleteAll.onclick = () => {
+                if (confirm('هل أنت متأكد من حذف كل المباريات؟')) {
+                    matches = [];
+                    saveMatches();
+                    render();
+                    resetEditMode();
+                }
+            };
+
+            DOM.downloadTable.addEventListener('click', () => {
+                DOM.downloadTable.disabled = true;
+                DOM.downloadTable.textContent = '...جارٍ التحميل';
+                
+                html2canvas(document.querySelector('.matches-wrapper'), {
+                    useCORS: true,
+                    allowTaint: true,
+                    scale: 2,
+                    backgroundColor: '#ffffff'
+                }).then(canvas => {
+                    const link = DOM.downloadLink;
+                    link.href = canvas.toDataURL('image/png');
+                    link.download = `جدول_مباريات_${DOM.dateEl.textContent.replace(/\s/g, '_')}.png`;
+                    link.click();
+
+                    DOM.downloadTable.disabled = false;
+                    DOM.downloadTable.textContent = '📸 تحميل الجدول كصورة عالية الجودة';
+                });
+            });
+
+            DOM.leagueSelect.addEventListener('change', (e) => loadTeams(e.target.value));
+            DOM.homeTeam.addEventListener('change', () => updatePreview(DOM.homeTeam, DOM.homePreview));
+            DOM.awayTeam.addEventListener('change', () => updatePreview(DOM.awayTeam, DOM.awayPreview));
+
+            // ----------------------------------------------------
+            // 6. Initialization
+            // ----------------------------------------------------
+            displayDate();
+            loadInitialData();
+
+        });
+    </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
