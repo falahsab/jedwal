@@ -149,6 +149,41 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
     font-size: 17px;
   }
 }
+/* 🕒 تنسيق حقل الوقت ليطابق القوائم الداكنة */
+input[type="time"] {
+  background-color: #333;
+  border: 1px solid #555;
+  color: #fff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 16px;
+  height: 46px;
+  width: 100%;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+/* عند التركيز */
+input[type="time"]:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+/* تحسين للأيقونة الداخلية (السهم أو الساعة) */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.4);
+  cursor: pointer;
+}
+
+/* ⚡ تحسين للموبايل */
+@media (max-width: 600px) {
+  input[type="time"] {
+    height: 52px;
+    font-size: 17px;
+    border-radius: 14px;
+  }
+}
 
 
 
@@ -401,6 +436,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
