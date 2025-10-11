@@ -9,36 +9,45 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/ar.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
 <style>
-html, body, * {
+ html, body, * {
   font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-  -webkit-text-size-adjust: 100%;
-  margin:0; padding:0;
+  -webkit-text-size-adjust: 100%; /* لمنع تصغير الخط في Safari */
 }
-body { background:#252525; color:#fff; min-height:100vh; display:flex; flex-direction:column; padding:1px; }
-header { background:#070607; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
+@font-face {
+  font-family: 'Tajawal';
+  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff2') format('woff2'),
+       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tajawal';
+  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff2') format('woff2'),
+       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+body { background:#ffffff; padding:1px; color:#ffffff; min-height:100vh; display:flex; flex-direction:column; }
+header { background:#070607; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
 .grid{display:grid; grid-template-columns:1fr 400px; gap:14px;}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
-.card{width:100%; border-radius:0; background:#252525;}
+.card{background:#252525;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
 .row{display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
-select,input[type="time"]{background:#444; border:1px solid rgba(255,255,25,0.12); padding:8px; border-radius:8px; color:#fff; width:100%;}
-label{font-size:13px; color:#fff; display:block; margin-bottom:4px;}
-.logo{height:auto; max-width:100%; border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
-.logo img{width:100%; height:100%; object-fit:contain; transition:0.3s;}
-.btn{background:#3498db; color:#fff; padding:10px; border-radius:10px; border:none; cursor:pointer; font-weight:700; width:100%;}
-.matches-wrapper{margin-top:12px; width:100%; max-width:100%; padding:0;}
+select,input[type="time"]{background:#444444; border:1px solid rgba(255,255,25,0.12); padding:8px; border-radius:8px; color:#ffffff; width:100%;}
+label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
+.logo{height: auto; max-width: 100%;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
+.logo img{width:100%;height:100%;object-fit:contain; transition:width 0.3s,height 0.3s;}
+.btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
+.matches-wrapper{margin-top:12px;}
 .matches-section{margin-bottom:16px;}
-.section-header{display:flex; align-items:center; gap:8px; font-weight:700; font-size:15px; margin-bottom:8px; position:relative; padding-left:40px;}
+.section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;}
 .extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
-.match-card{display:flex; flex-direction:column; border-radius:7px; border:1px solid rgba(0,0,0,0.05); padding:10px; margin-bottom:2px; position:relative; overflow:hidden; background-color:#191919;}
-.match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat0.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;}
+.match-card{display:flex;flex-direction:column;border-radius:7px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:2px;position:relative; overflow:hidden;background-color:#191919}
+.match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat0.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;background-color:#191919;}
 .match-card>*{position:relative; z-index:1;}
 .match_row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
 .team{display:flex; align-items:center; gap:6px; flex:1; min-width:0; white-space:nowrap;}
@@ -54,23 +63,12 @@ label{font-size:13px; color:#fff; display:block; margin-bottom:4px;}
 .action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
 .channel-logo{position:absolute; bottom:6px; left:6px; width:auto; height:35px; object-fit:contain; z-index:3;}
 @media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
-
-/* Select2 Dark Theme */
-.select2-container--default .select2-selection--single {
-  background-color: #333; border:1px solid #555; color:#fff; height:40px; border-radius:8px; display:flex; align-items:center; padding:4px 10px;
-}
-.select2-container--default .select2-selection--single .select2-selection__rendered { color:#fff; line-height:32px; }
-.select2-container--default .select2-selection--single .select2-selection__arrow { height:100%; right:10px; }
-.select2-container--default .select2-results > .select2-results__options { background-color:#222; color:#fff; }
-.select2-container--default .select2-results__option--highlighted[aria-selected] { background-color:#3498db; color:#fff; }
-.select2-dropdown { border:1px solid #555; border-radius:8px; overflow:hidden; }
-.select2-container--default .select2-results__option[aria-selected="true"] { background-color:#444; color:#fff; }
 </style>
 </head>
 <body>
 
 <header>
-⚽ أهم مباريات اليوم
+⚽ جدول مباريات اليوم
 <div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
 </header>
 
@@ -106,11 +104,13 @@ label{font-size:13px; color:#fff; display:block; margin-bottom:4px;}
 <div class="matches-wrapper">
   <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
   
-  <button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
-  <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
-  <a id="downloadLink"></a>
+<button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
+<button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
+<a id="downloadLink"></a>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
 
@@ -127,10 +127,12 @@ let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
 let matches=[], editIndex=null, isNextDay=false;
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
-function updatePreview(selectEl,previewId){
-  const s=selectEl.selectedOptions[0];
-  const img=s.dataset.img;
-  document.getElementById(previewId).innerHTML = img ? `<img src="${img}"/>` : '⚽';
+function toBase64(url, callback){
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onload = () => { const canvas = document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; canvas.getContext('2d').drawImage(img,0,0); callback(canvas.toDataURL()); };
+  img.onerror = () => callback('');
+  img.src = url;
 }
 
 function populateLeagues(){
@@ -155,17 +157,19 @@ function loadTeams(leagueCode){
 
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
+function updatePreview(selectEl,previewId){
+  const s=selectEl.selectedOptions[0];
+  const img=s.dataset.img;
+  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
+  else document.getElementById(previewId).innerHTML='⚽';
+}
 
 populateLeagues(); fetchCommentators(); fetchChannels();
-
-$('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..."});
-
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
 document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
 
 if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
-
 document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
 
 document.getElementById('addMatch').onclick=()=>{
@@ -175,15 +179,24 @@ document.getElementById('addMatch').onclick=()=>{
   const time=document.getElementById('matchTime').value;
   const comm=document.getElementById('commentator').value;
   const chan=document.getElementById('channel').value;
-  const homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
-  const awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
-  const chanLogo = channels.find(c=>c.name===chan)?.logo || '';
-  if(!time){alert('ادخل وقت المباراة'); return;}
-  const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,chanLogo,nextDay:isNextDay};
-  if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
-  localStorage.setItem('matches',JSON.stringify(matches));
-  render();
-  document.getElementById('matchTime').value='';
+  let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
+  let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
+  if(!time){alert('ادخل وقت المباراة');return;}
+
+  toBase64(homeImg,b64Home=>{
+    homeImg=b64Home;
+    toBase64(awayImg,b64Away=>{
+      awayImg=b64Away;
+      const chanLogoUrl = channels.find(c=>c.name===chan)?.logo || '';
+      toBase64(chanLogoUrl, b64Chan=>{
+        const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,chanLogo:b64Chan,nextDay:isNextDay};
+        if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
+        localStorage.setItem('matches',JSON.stringify(matches));
+        render();
+        document.getElementById('matchTime').value='';
+      });
+    });
+  });
 };
 
 function render(){
@@ -197,9 +210,15 @@ function render(){
       const extraLogo=l.extraLogo||l.extra;
       header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
-      leagueMatches.forEach(m=>{
-        const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#191919';
-        const [hours, minutes]=m.time.split(':'); let displayHours=parseInt(hours,10); const ampm=displayHours>=12?'م':'ص'; displayHours=displayHours%12||12;
+
+      leagueMatches.forEach((m)=>{
+        const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#fdfdfd';
+        // عرض الوقت مباشرة بدون تحويله لكائن Date
+        const [hours, minutes] = m.time.split(':');
+        let displayHours = parseInt(hours,10);
+        const ampm = displayHours >= 12 ? 'م' : 'ص';
+        displayHours = displayHours % 12 || 12;
+
         card.innerHTML=`
           <div class="match_row">
             <div class="team hometeam">
@@ -211,15 +230,20 @@ function render(){
                 <span>${displayHours}:${minutes}</span>
                 <span>${ampm}</span>
               </div>
-              ${m.nextDay?"<div class='next-day-label'>(اليوم التالي)</div>":""}
+              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
             </div>
             <div class="team awayteam">
               <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
               <span class="the_team">${m.away}</span>
             </div>
           </div>
-          <div class="meta">🎙️ ${m.comm}</div>
-          ${m.chanLogo?`<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">`:''}
+
+          <div class="meta">
+            <div>🎙️ ${m.comm}</div>
+          </div>
+
+          ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
+
           <div class="action-btns" style="display:${showBtns?'flex':'none'}">
             <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
             <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
@@ -227,6 +251,7 @@ function render(){
         `;
         section.appendChild(card);
       });
+
       matchesContainer.appendChild(section);
     }
   });
@@ -267,5 +292,6 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 });
 </script>
+
 </body>
 </html>
