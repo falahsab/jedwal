@@ -269,11 +269,13 @@ function populateLeagues(){
 }
 
 function loadTeams(leagueCode){
-  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
+  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`, data=>{
     teams[leagueCode]=data;
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
-    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
+    homeTeam.innerHTML = awayTeam.innerHTML = data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
+    
+    // تحديث المعاينة بعد إضافة الخيارات
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
   });
@@ -436,6 +438,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
