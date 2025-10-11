@@ -75,7 +75,7 @@
             margin-top: 4px;
         }
 
-        /* Layout - Enhanced Grid for full width */
+        /* Layout */
         .main-container {
             padding: 0 16px 16px;
             flex-grow: 1;
@@ -113,7 +113,7 @@
             margin-top: 15px;
         }
 
-        /* Form Styles */
+        /* Form Styles (No changes here) */
         .row {
             display: flex;
             gap: 8px;
@@ -133,7 +133,6 @@
                 min-width: 40%;
             }
         }
-
         select, input[type="time"] {
             background: var(--input-bg);
             border: 1px solid var(--border-color);
@@ -170,8 +169,6 @@
             max-height: 100%;
             object-fit: contain;
         }
-
-        /* Buttons */
         .button-group {
             display: flex;
             gap: 6px;
@@ -189,34 +186,14 @@
             flex-shrink: 0;
             font-size: 14px;
         }
-        .primary-btn {
-            background: var(--primary-color);
-            flex: 1;
-        }
-        .secondary-btn {
-            background: var(--secondary-color);
-            flex-basis: 150px;
-        }
-        @media(max-width: 450px) {
-            .secondary-btn {
-                flex: 1;
-            }
-        }
-        .tertiary-btn {
-            background: #3c3c3c;
-        }
-        .delete-btn {
-            background: var(--delete-color);
-        }
-        .download-btn {
-            background: #27ae60;
-            width: 100%;
-            display: block;
-        }
+        .primary-btn { background: var(--primary-color); flex: 1; }
+        .secondary-btn { background: var(--secondary-color); flex-basis: 150px; }
+        @media(max-width: 450px) { .secondary-btn { flex: 1; } }
+        .tertiary-btn { background: #3c3c3c; }
+        .delete-btn { background: var(--delete-color); }
+        .download-btn { background: #27ae60; width: 100%; display: block; }
         .margin-top-1 { margin-top: 6px; }
         .margin-top-2 { margin-top: 12px; }
-
-        /* System Message */
         .system-message {
             padding: 10px;
             border-radius: 8px;
@@ -234,6 +211,8 @@
         .matches-section {
             margin-bottom: 18px;
         }
+        
+        /* ⚠️ التعديل 1: نقل الشعار الإضافي لليسار */
         .section-header {
             display: flex;
             align-items: center;
@@ -244,17 +223,36 @@
             padding-right: 10px;
             border-right: 4px solid var(--primary-color);
             color: var(--text-color);
+            justify-content: space-between; /* للسماح بتوزيع العناصر */
         }
+        /* لإرجاع الشعار العادي والنص لليمين */
+        .section-header > .league-logo, .section-header > .league-name {
+            order: 1;
+        }
+        /* لضمان أن النص والشعار العادي متجاوران */
+        .section-header > .league-logo + span {
+            margin-right: 10px; /* المسافة بين الشعار والنص */
+        }
+        /* تجميع الشعار العادي والنص على اليمين */
+        .section-header-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            order: 1;
+        }
+        .extra-logo-header {
+            height: 24px;
+            opacity: 0.8;
+            order: 2; /* نقل الشعار الإضافي لليسار */
+            margin-right: auto; /* لدفعه أقصى اليسار */
+        }
+        /* نهاية التعديل 1 */
+        
         .league-logo {
             width: 28px;
             height: 28px;
             object-fit: contain;
         }
-        .extra-logo-header {
-            height: 24px;
-            opacity: 0.8;
-        }
-
         .match-card {
             background-color: var(--match-card-bg, #191919);
             border-radius: 7px;
@@ -289,7 +287,7 @@
             gap: 10px;
         }
 
-        /* ⚠️ التعديل هنا: تحديد عرض أساسي مرن للوقت لمنع الدفع */
+        /* ⚠️ التعديل 2: تحسين التجاوب في أسماء الفرق والوقت */
         .middle_column {
             display: flex;
             flex-direction: column;
@@ -299,18 +297,17 @@
             font-size: clamp(16px, 3vw, 24px);
             line-height: 1.1;
             flex-shrink: 0;
-            width: 25%; /* تحديد عرض نسبي للمنتصف */
-            max-width: 90px; /* لتقييد العرض قليلاً */
+            min-width: 70px; /* ضمان مساحة كافية للوقت */
+            width: auto;
         }
-        /* نهاية التعديل */
 
         .team {
             display: flex;
             align-items: center;
             gap: 8px;
-            flex: 1; /* للسماح للفريق بأخذ المساحة المتبقية */
-            min-width: 0; /* مهم للسماح بالتقلص داخل Flexbox */
-            overflow: hidden; /* لمنع تجاوز محتوى الفريق */
+            flex: 1; 
+            min-width: 0; 
+            overflow: hidden; 
         }
         .team.hometeam { justify-content: flex-end; text-align: right; }
         .team.awayteam { justify-content: flex-start; text-align: left; }
@@ -322,17 +319,15 @@
             flex-shrink: 0;
         }
 
-        /* ⚠️ التعديل هنا: تطبيق Ellipsis بشكل صحيح على العنصر الذي يحمل النص */
         .the_team {
             font-weight: 700;
             font-size: clamp(14px, 2vw, 18px);
             overflow: hidden;
-            text-overflow: ellipsis; /* إضافة علامة (...) */
-            white-space: nowrap; /* منع النص من الالتفاف */
-            min-width: 0; /* السماح بالتقلص */
+            text-overflow: ellipsis; 
+            white-space: nowrap; 
+            min-width: 0; 
         }
-        /* نهاية التعديل */
-
+        /* نهاية التعديل 2 */
 
         .the_time {
             display: flex;
@@ -346,7 +341,6 @@
             margin-top: 3px;
             line-height: 1;
         }
-
         .meta {
             display: flex;
             justify-content: center;
@@ -381,25 +375,26 @@
         }
         .action-btns button:hover { opacity: 0.9; }
 
+        /* ⚠️ التعديل 3: نقل أيقونة القناة لليسار السفلي */
         .channel-logo {
             position: absolute;
             bottom: 8px;
-            right: 8px;
+            left: 8px; /* تغيير من right إلى left */
+            right: auto; /* إزالة القيمة السابقة */
             width: auto;
             height: 30px;
             object-fit: contain;
             z-index: 3;
         }
+        /* نهاية التعديل 3 */
 
-        /* Loading Spinner */
+        /* Loading Spinner & Print Styles (No changes here) */
         .loading-spinner {
             text-align: center;
             padding: 30px;
             font-size: 16px;
             color: #aaa;
         }
-
-        /* Print Styles */
         @media print {
             .main-container, .form, header, .action-btns, #downloadTable, .card-footer-text, #toggleBtns, #deleteAll, #nextDayBtn {
                 display: none !important;
@@ -688,8 +683,19 @@
                         getLogoBase64(l.logo),
                         getLogoBase64(l.extraLogo || l.extra)
                     ]).then(([leagueLogoB64, extraLogoB64]) => {
+                        
+                        const leagueName = l.name;
+                        const leagueLogoHTML = leagueLogoB64 ? `<img src='${leagueLogoB64}' class='league-logo' alt='${l.name}'>` : '';
                         const extraLogoHTML = extraLogoB64 ? `<img src='${extraLogoB64}' class='extra-logo-header' alt='شعار إضافي'>` : '';
-                        header.innerHTML = `${extraLogoHTML} <img src='${leagueLogoB64}' class='league-logo' alt='${l.name}'> ${l.name}`;
+                        
+                        // تجميع الشعار العادي واسم الدوري ليكون على اليمين (order: 1)
+                        header.innerHTML = `
+                            <div class="section-header-content">
+                                ${leagueLogoHTML}
+                                <span>${leagueName}</span>
+                            </div>
+                            ${extraLogoHTML}
+                        `;
                     });
 
                     section.appendChild(header);
@@ -751,7 +757,7 @@
             }
 
             // ----------------------------------------------------
-            // 5. Event Handlers
+            // 5. Event Handlers (No changes here)
             // ----------------------------------------------------
             
             window.editMatch = (index) => {
