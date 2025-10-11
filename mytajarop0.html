@@ -55,7 +55,7 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 .matches-wrapper{margin-top:12px;width:100%;max-width:100%;padding:0;}
 .matches-section{margin-bottom:16px;}
 /* مربع خلف شعار الدوري */ 
-.section-header img.league-logo { background: #ffffff; border-radius: 6px; padding: 4px; width: 30px; height: 30px; object-fit: contain; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+.section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;}
 .extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
 .match-card{display:flex;flex-direction:column;border-radius:7px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:2px;position:relative; overflow:hidden;background-color:#191919}
 .match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat0.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;background-color:#191919;}
@@ -187,6 +187,8 @@ function enableSearchableSelects(){
     dir: "rtl",
     language: "ar",
     placeholder: "اختر..."
+    color: black;
+
   });
 }
 
@@ -233,7 +235,7 @@ function render(){
       const section=document.createElement('div'); section.className='matches-section';
       const header=document.createElement('div'); header.className='section-header';
       const extraLogo=l.extraLogo||l.extra;
-    header.innerHTML = ` ${extraLogo ? `<img src='${extraLogo}' class='extra-logo-header'>` : ''} <img src='${l.logo}' class='league-logo' alt='${l.name}'> <span>${l.name}</span> `;
+      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
 
       leagueMatches.forEach((m)=>{
@@ -320,6 +322,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
