@@ -53,6 +53,8 @@
             display: flex;
             flex-direction: column;
             width: 100%;
+            /* **تصحيح هام:** لإزالة أي خلفية بيضاء قد تظهر بسبب التجاوز */
+            overflow-x: hidden; 
         }
 
         /* Header */
@@ -212,7 +214,7 @@
             margin-bottom: 18px;
         }
         
-        /* 1. Header (League Title & Logos) */
+        /* Header (League Title & Logos) */
         .section-header {
             display: flex;
             align-items: center;
@@ -229,12 +231,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            order: 1; /* Keep main content on the right */
+            order: 1; 
         }
         .extra-logo-header {
             height: 24px;
             opacity: 0.8;
-            order: 2; /* Move extra logo to the left */
+            order: 2; 
         }
         
         .league-logo {
@@ -275,10 +277,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px; /* تقليل المسافة لتوفير مساحة */
+            gap: 8px; 
+            /* **تصحيح هام:** تأكيد عدم السماح بالتجاوز الأفقي للبطاقة */
+            min-width: 100%;
         }
 
-        /* 2. **Critical Mobile Responsiveness Fix** */
+        /* Critical Mobile Responsiveness Fix */
         .middle_column {
             display: flex;
             flex-direction: column;
@@ -288,17 +292,16 @@
             font-size: clamp(16px, 3vw, 24px);
             line-height: 1.1;
             flex-shrink: 0;
-            /* تثبيت العرض عند حد معين مع الحفاظ على مرونة بسيطة */
             min-width: 65px; 
             max-width: 80px;
-            width: 25%; /* عرض مرن كمرجع */
+            width: 25%;
         }
 
         .team {
             display: flex;
             align-items: center;
-            gap: 6px; /* تقليل المسافة بين الشعار والاسم */
-            flex: 1 1 0%; /* الأهم: السماح بالتقلص (flex-basis: 0%) */
+            gap: 6px; 
+            flex: 1 1 0%; 
             min-width: 0; 
             overflow: hidden; 
         }
@@ -309,16 +312,20 @@
             width: clamp(30px, 4vw, 38px);
             height: clamp(30px, 4vw, 38px);
             object-fit: contain;
-            flex-shrink: 0; /* الشعار يجب أن لا يتقلص */
+            flex-shrink: 0; 
         }
 
+        /* **التعديل الحاسم:** التأكد أن عنصر النص هو الذي يتقلص */
         .the_team {
             font-weight: 700;
             font-size: clamp(14px, 2vw, 18px);
             overflow: hidden;
             text-overflow: ellipsis; 
             white-space: nowrap; 
-            min-width: 0; /* مهم ليعمل الـ Ellipsis */
+            /* ضمان أن العنصر مرن تماماً ولا يحتوي على حد أدنى للعرض */
+            flex-grow: 1; 
+            flex-shrink: 1;
+            min-width: 10px; /* حد أدنى صغير جداً لضمان عمل الـ Ellipsis */
         }
         /* End of Mobile Fix */
 
@@ -368,11 +375,11 @@
         }
         .action-btns button:hover { opacity: 0.9; }
 
-        /* 3. Channel Logo on Left */
+        /* Channel Logo on Left */
         .channel-logo {
             position: absolute;
             bottom: 8px;
-            left: 8px; /* Moved to left */
+            left: 8px; 
             right: auto;
             width: auto;
             height: 30px;
