@@ -53,7 +53,6 @@
             display: flex;
             flex-direction: column;
             width: 100%;
-            /* **تصحيح هام:** لإزالة أي خلفية بيضاء قد تظهر بسبب التجاوز */
             overflow-x: hidden; 
         }
 
@@ -78,15 +77,19 @@
         }
 
         /* Layout */
+        /* **التعديل هنا:** إزالة الهامش الأفقي لـ main-container */
         .main-container {
-            padding: 0 16px 16px;
+            padding: 0 0 16px 0; /* تم حذف الـ 16px الجانبية */
             flex-grow: 1;
         }
+        
+        /* **التعديل الجديد:** إضافة الهامش الأفقي إلى العناصر الداخلية */
         .grid {
             display: grid;
             grid-template-columns: 1fr minmax(350px, 450px);
             gap: 20px;
             margin-bottom: 20px;
+            padding: 0 16px; /* تم إضافة الهامش هنا بدلاً من main-container */
         }
         @media(max-width: 950px) {
             .grid {
@@ -94,6 +97,8 @@
                 gap: 16px;
             }
         }
+        /* نهاية التعديلات للعرض الكامل */
+
         .card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -278,7 +283,6 @@
             align-items: center;
             justify-content: space-between;
             gap: 8px; 
-            /* **تصحيح هام:** تأكيد عدم السماح بالتجاوز الأفقي للبطاقة */
             min-width: 100%;
         }
 
@@ -315,17 +319,15 @@
             flex-shrink: 0; 
         }
 
-        /* **التعديل الحاسم:** التأكد أن عنصر النص هو الذي يتقلص */
         .the_team {
             font-weight: 700;
             font-size: clamp(14px, 2vw, 18px);
             overflow: hidden;
             text-overflow: ellipsis; 
             white-space: nowrap; 
-            /* ضمان أن العنصر مرن تماماً ولا يحتوي على حد أدنى للعرض */
             flex-grow: 1; 
             flex-shrink: 1;
-            min-width: 10px; /* حد أدنى صغير جداً لضمان عمل الـ Ellipsis */
+            min-width: 10px; 
         }
         /* End of Mobile Fix */
 
