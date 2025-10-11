@@ -182,14 +182,14 @@ document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(
 
  // تفعيل خاصية البحث في القوائم المنسدلة
 function enableSearchableSelects(){
-  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
-    width: '100%',
-    dir: "rtl",
-    language: "ar",
-    placeholder: "اختر..."
-    color: black;
+$('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
+  width: '100%',
+  dir: "rtl",
+  language: "ar",
+  placeholder: "اختر..."
+  color: black;
+});
 
-  });
 }
 
 // انتظر قليلاً حتى يتم إنشاء العناصر ثم فعّل البحث
@@ -323,6 +323,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
