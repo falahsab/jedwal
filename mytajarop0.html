@@ -7,47 +7,55 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/ar.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
 <style>
-html,body,*{font-family:'Tajawal',sans-serif!important;}
-body{background:#252525;color:#fff;margin:0;padding:0;display:flex;flex-direction:column;min-height:100vh;}
-header{background:#070607;color:#fff;padding:12px 16px;text-align:center;font-size:22px;font-weight:700;position:sticky;top:0;z-index:1000;}
-.grid{display:grid;grid-template-columns:1fr 400px;gap:14px;margin:12px;}
+html, body, * { font-family: 'Tajawal', sans-serif !important; }
+body { background:#252525; color:#fff; padding:1px; min-height:100vh; display:flex; flex-direction:column; }
+header { background:#070607; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
+.grid{display:grid; grid-template-columns:1fr 400px; gap:14px;}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .card{background:#252525;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
-.row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
-select,input[type="time"]{background:#444;border:1px solid rgba(255,255,25,0.12);padding:8px;border-radius:8px;color:#fff;width:100%;}
+.row{display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
+select,input[type="time"]{background:#444444; border:1px solid rgba(255,255,25,0.12); padding:8px; border-radius:8px; color:#ffffff; width:100%;}
 label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
-.logo{height:auto;max-width:100%;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-.logo img{width:100%;height:100%;object-fit:contain;transition:0.3s;}
+.logo{height: auto; max-width: 100%;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
+.logo img{width:100%;height:100%;object-fit:contain; transition:0.3s;}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
-.matches-wrapper{margin:12px;}
-.matches-section{margin-bottom:16px;border-radius:10px;border:1px solid #444;overflow:hidden;}
-.matches-header{display:flex;justify-content:space-between;align-items:center;background:#1e1e1e;padding:6px 12px;cursor:pointer;font-weight:700;}
-.matches-header img{height:24px;margin-left:6px;}
-.matches-content{padding:8px;}
-.match-card{display:flex;flex-direction:column;border-radius:7px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:8px;background-color:#191919;position:relative;overflow:hidden;}
-.match_card *{position:relative;z-index:1;}
-.match_row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-.team{display:flex;align-items:center;gap:6px;flex:1;min-width:0;white-space:nowrap;}
+.matches-wrapper{margin-top:12px;}
+.matches-section{margin-bottom:16px;}
+.matches-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;cursor:pointer;}
+.extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
+.matches-content{display:block;}
+.match-card{display:flex;flex-direction:column;border-radius:7px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:2px;position:relative; overflow:hidden;background-color:#191919;}
+.match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat0.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;background-color:#191919;}
+.match-card>*{position:relative; z-index:1;}
+.match_row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+.team{display:flex; align-items:center; gap:6px; flex:1; min-width:0; white-space:nowrap;}
 .team.hometeam{justify-content:flex-end;}
 .team.awayteam{justify-content:flex-start;}
-.team_logo{width:clamp(25px,4vw,38px);height:clamp(25px,4vw,38px);object-fit:contain;}
-.the_team{font-weight:700;font-size:clamp(13px,2vw,17px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.middle_column{display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:clamp(15px,2vw,22px);line-height:1.1;}
-.the_time{display:flex;align-items:center;gap:4px;justify-content:center;}
-.next-day-label{font-size:10px;color:#98999a;margin-top:0;line-height:1;}
-.meta{display:flex;justify-content:center;align-items:center;gap:20px;font-size:13px;color:#efeded;margin-top:6px;font-weight:500;flex-wrap:wrap;text-align:center;}
-.action-btns{display:flex;gap:6px;margin-top:6px;justify-content:center;flex-wrap:wrap;}
-.action-btns button{padding:4px 8px;border:none;border-radius:6px;cursor:pointer;font-size:12px;}
-.channel-logo{position:absolute;bottom:6px;left:6px;width:auto;height:35px;object-fit:contain;z-index:3;}
+.team_logo{width:clamp(25px,4vw,38px); height:clamp(25px,4vw,38px); object-fit:contain;}
+.the_team{font-weight:700; font-size:clamp(13px,2vw,17px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.middle_column{display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:clamp(15px,2vw,22px); line-height:1.1;}
+.the_time{display:flex; align-items:center; gap:4px; justify-content:center;}
+.next-day-label{font-size:10px; color:#98999a; margin-top:0; line-height:1;}
+.meta{display:flex; justify-content:center; align-items:center; gap:20px; font-size:13px; color:#efeded; margin-top:6px; font-weight:500; flex-wrap:wrap; text-align:center;}
+.action-btns{display:flex; gap:6px; margin-top:6px; justify-content:center; flex-wrap:wrap;}
+.action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
+.channel-logo{position:absolute; bottom:6px; left:6px; width:auto; height:35px; object-fit:contain; z-index:3;}
+/* Select2 */
+.select2-container--default .select2-selection--single { background-color:#333; border:1px solid #555; color:#fff; height:40px; border-radius:8px; display:flex; align-items:center; padding:4px 10px; }
+.select2-container--default .select2-selection--single .select2-selection__rendered { color:#fff; line-height:32px; }
+.select2-container--default .select2-selection--single .select2-selection__arrow { display:none; }
+.select2-container--default .select2-results > .select2-results__options { background-color:#222; color:#fff; }
+.select2-container--default .select2-results__option--highlighted[aria-selected] { background-color:#3498db; color:#fff; }
+.select2-dropdown { border:1px solid #555; border-radius:8px; overflow:hidden; }
+.select2-container--default .select2-results__option[aria-selected="true"] { background-color:#444; color:#fff; }
 </style>
 </head>
 <body>
@@ -75,10 +83,12 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
       <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
       <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
     </div>
+
     <div style="display:flex;gap:6px;flex-wrap:wrap;">
       <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
       <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
     </div>
+
     <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
     <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
   </div>
@@ -86,8 +96,11 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 
 <div class="matches-wrapper" id="matchesWrapper"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
+
 const dateEl=document.getElementById('todayDate');
 const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 const now=new Date();
@@ -101,25 +114,53 @@ let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
 let matches=[], editIndex=null, isNextDay=false;
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
-function toBase64(url,callback){if(!url){callback('');return;} const img=new Image(); img.crossOrigin='Anonymous'; img.onload=()=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0); callback(c.toDataURL());}; img.onerror=()=>callback(''); img.src=url;}
+function toBase64(url, callback){
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onload = () => { const canvas = document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; canvas.getContext('2d').drawImage(img,0,0); callback(canvas.toDataURL()); };
+  img.onerror = () => callback('');
+  img.src = url;
+}
 
 function populateLeagues(){
-  fetchCSV(leaguesCSV,data=>{leagues=data; const leagueSelect=document.getElementById('leagueSelect'); leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join(''); loadTeams(leagueSelect.value);});
+  fetchCSV(leaguesCSV,data=>{
+    leagues=data;
+    const leagueSelect=document.getElementById('leagueSelect');
+    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
+    loadTeams(leagueSelect.value);
+  });
 }
-function loadTeams(leagueCode){fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{teams[leagueCode]=data; const homeTeam=document.getElementById('homeTeam'); const awayTeam=document.getElementById('awayTeam'); homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join(''); updatePreview(homeTeam,'homePreview'); updatePreview(awayTeam,'awayPreview');});}
+
+function loadTeams(leagueCode){
+  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
+    teams[leagueCode]=data;
+    const homeTeam=document.getElementById('homeTeam');
+    const awayTeam=document.getElementById('awayTeam');
+    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
+    updatePreview(homeTeam,'homePreview'); 
+    updatePreview(awayTeam,'awayPreview');
+  });
+}
+
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
-
-function updatePreview(selectEl,previewId){const s=selectEl.selectedOptions[0]; const img=s.dataset.img; if(img){toBase64(img,b64=>document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`);}else document.getElementById(previewId).innerHTML='⚽';}
+function updatePreview(selectEl,previewId){
+  const s=selectEl.selectedOptions[0];
+  const img=s.dataset.img;
+  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
+  else document.getElementById(previewId).innerHTML='⚽';
+}
 
 populateLeagues(); fetchCommentators(); fetchChannels();
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
 document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
 
-if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
+if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches'));}
+render();
 
 document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
+
 document.getElementById('addMatch').onclick=()=>{
   const league=document.getElementById('leagueSelect').value;
   const home=document.getElementById('homeTeam').value;
@@ -130,7 +171,21 @@ document.getElementById('addMatch').onclick=()=>{
   let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
   let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
   if(!time){alert('ادخل وقت المباراة');return;}
-  toBase64(homeImg,b64Home=>{homeImg=b64Home; toBase64(awayImg,b64Away=>{awayImg=b64Away; const chanLogoUrl = channels.find(c=>c.name===chan)?.logo || ''; toBase64(chanLogoUrl,b64Chan=>{const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,chanLogo:b64Chan,nextDay:isNextDay}; if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch); localStorage.setItem('matches',JSON.stringify(matches)); render(); document.getElementById('matchTime').value='';});});});
+
+  toBase64(homeImg,b64Home=>{
+    homeImg=b64Home;
+    toBase64(awayImg,b64Away=>{
+      awayImg=b64Away;
+      const chanLogoUrl = channels.find(c=>c.name===chan)?.logo || '';
+      toBase64(chanLogoUrl, b64Chan=>{
+        const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,chanLogo:b64Chan,nextDay:isNextDay};
+        if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
+        localStorage.setItem('matches',JSON.stringify(matches));
+        render();
+        document.getElementById('matchTime').value='';
+      });
+    });
+  });
 };
 
 function render(){
@@ -139,13 +194,22 @@ function render(){
     const leagueMatches=matches.filter(m=>m.league===l.code);
     if(leagueMatches.length>0){
       const section=document.createElement('div'); section.className='matches-section';
+
+      // Header
       const header=document.createElement('div'); header.className='matches-header';
       const extraLogo=l.extraLogo||'';
-      header.innerHTML=`<span><img src="${l.logo}"><img src="${extraLogo}">${l.name}</span><span>▼</span>`;
+      header.innerHTML=`
+        <div style="display:flex;align-items:center;gap:6px;">
+          <img src="${extraLogo}" class="extra-logo-header">
+          <img src="${l.logo}" style="width:24px;height:24px;"> ${l.name}
+        </div>
+      `;
       section.appendChild(header);
+
       const content=document.createElement('div'); content.className='matches-content';
       leagueMatches.forEach((m)=>{
-        const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#191919';
+        const card=document.createElement('div'); card.className='match-card';
+        card.style.background=l.color||'#191919';
         const [hours,minutes]=m.time.split(':'); let displayHours=parseInt(hours,10); const ampm=displayHours>=12?'م':'ص'; displayHours=displayHours%12||12;
         card.innerHTML=`
           <div class="match_row">
@@ -162,22 +226,35 @@ function render(){
         `;
         content.appendChild(card);
       });
+
       section.appendChild(content);
-      header.onclick=()=>{content.style.display=(content.style.display==='none')?'block':'none';};
+
+      header.onclick = ()=>{ content.style.display = (content.style.display==='none')?'block':'none'; };
+
       wrapper.appendChild(section);
     }
   });
 }
 
-window.editMatch=(index)=>{const m=matches[index]; document.getElementById('leagueSelect').value=m.league; loadTeams(m.league); setTimeout(()=>{document.getElementById('homeTeam').value=m.home; document.getElementById('awayTeam').value=m.away; document.getElementById('matchTime').value=m.time; document.getElementById('commentator').value=m.comm; document.getElementById('channel').value=m.chan; updatePreview(document.getElementById('homeTeam'),'homePreview'); updatePreview(document.getElementById('awayTeam'),'awayPreview'); editIndex=index; matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();},100);};
+window.editMatch=(index)=>{ 
+  const m=matches[index];
+  document.getElementById('leagueSelect').value=m.league; loadTeams(m.league);
+  setTimeout(()=>{
+    document.getElementById('homeTeam').value=m.home; document.getElementById('awayTeam').value=m.away;
+    document.getElementById('matchTime').value=m.time; document.getElementById('commentator').value=m.comm;
+    document.getElementById('channel').value=m.chan;
+    updatePreview(document.getElementById('homeTeam'),'homePreview'); updatePreview(document.getElementById('awayTeam'),'awayPreview');
+    editIndex=index; matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();
+  },100);
+};
 
 window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
-
 document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns; render();});
 document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[]; localStorage.setItem('matches','[]'); render();}});
+document.getElementById('downloadTable').addEventListener('click',()=>{ html2canvas(document.querySelector('.matches-wrapper'),{useCORS:true,allowTaint:true}).then(canvas=>{ const link=document.createElement('a'); link.href=canvas.toDataURL('image/png'); link.download='matches.png'; link.click(); });});
 
-document.getElementById('downloadTable').addEventListener('click',()=>{html2canvas(document.querySelector('.matches-wrapper'),{useCORS:true,allowTaint:true}).then(canvas=>{const link=document.createElement('a'); link.href=canvas.toDataURL('image/png'); link.download='matches.png'; link.click();});});
-
+$(document).ready(function(){
+  $('select').select2({width:'100%',language:'ar',dropdownParent:$('.form')});
 });
 </script>
 
