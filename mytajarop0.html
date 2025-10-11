@@ -231,12 +231,13 @@ function render(){
   matchesContainer.innerHTML='';
   leagues.forEach(l=>{
     const leagueMatches=matches.filter(m=>m.league===l.code);
-    if(leagueMatches.length>0){
+     if(leagueMatches.length>0){
       const section=document.createElement('div'); section.className='matches-section';
       const header=document.createElement('div'); header.className='section-header';
       const extraLogo=l.extraLogo||l.extra;
       header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
+
 
       leagueMatches.forEach((m)=>{
         const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#fdfdfd';
@@ -322,6 +323,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
