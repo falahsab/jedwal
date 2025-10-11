@@ -13,7 +13,7 @@
  html, body, * {
   font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
   -webkit-text-size-adjust: 100%;
-    box-sizing: border-box; /* هام جداً للـ padding و border */
+    box-sizing: border-box; /* لضمان التجاوب الصحيح */
 }
 @font-face {
   font-family: 'Tajawal';
@@ -32,53 +32,48 @@
   font-display: swap;
 }
 
-/* **تعديل 1: إعداد الـ Body للتوسيط** */
 body { 
     background:#ffffff; 
-    padding:0; 
+    padding:0; /* تم التعديل */
     color:#ffffff; 
     min-height:100vh; 
     display:flex; 
     flex-direction:column; 
-    align-items:center; /* توسيط المحتوى */
-    width:100%;
+    /* إزالة align-items: center; ليصبح التوسيط مسؤولية الـ main-container */
+    width: 100%;
     overflow-x: hidden;
 }
+
+/* **الإضافة الرئيسية: الحاوية المسؤولة عن التوسيط** */
+.main-container {
+    width: 100%; /* تملأ عرض الشاشة بالكامل */
+    max-width: 1200px; /* **الحد الأقصى للعرض على الشاشات الكبيرة** */
+    margin: 0 auto; /* **التوسيط الأفقي الفعلي للمحتوى** */
+    padding: 0 16px; /* هوامش داخلية لضمان عدم ملامسة الحواف على الجوال */
+    flex-grow: 1; /* لملء المساحة العمودية المتبقية */
+}
+/* نهاية التعديل الرئيسي */
+
 header { 
     background:#070607; 
     color:#fff; 
     padding:12px 16px; 
-    border-radius:0; /* لملء العرض بالكامل */
-    margin-bottom:0; /* إزالة الهامش */
+    border-radius:0; /* تم التعديل ليملأ العرض */
+    margin-bottom:0; /* تم التعديل: إزالة الهامش من الهيدر */
     text-align:center; 
     font-size:22px; 
     font-weight:700; 
     position:sticky; 
     top:0; 
     z-index:1000;
-    width: 100%; /* ضمان أن الهيدر يملأ العرض */
+    width: 100%; /* ضمان ملء العرض */
 }
-
-/* **تعديل 2: توسيط الـ Grid وتحديد أقصى عرض** */
 .grid{
     display:grid; 
     grid-template-columns:1fr 400px; 
     gap:14px;
-    width: 100%;
-    max-width: 1200px; /* أقصى عرض على الشاشات الكبيرة */
-    padding: 0 16px; /* هامش جانبي للجوال */
-    margin-top: 18px; /* مسافة بعد الهيدر */
+    margin-top: 18px; /* المسافة بعد الـ Header أصبحت هنا */
 }
-
-/* **تعديل 3: توسيط الـ Matches Wrapper وتحديد أقصى عرض** */
-.matches-wrapper{
-    margin-top:12px;
-    width: 100%;
-    max-width: 1200px; /* أقصى عرض يتطابق مع الـ grid */
-    padding: 0 16px; /* هامش جانبي للجوال */
-    margin-bottom: 20px; /* مسافة سفلية */
-}
-
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 
 .card{background:#252525;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
@@ -88,6 +83,7 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 .logo{height: auto; max-width: 100%;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
 .logo img{width:100%;height:100%;object-fit:contain; transition:width 0.3s,height 0.3s;}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
+.matches-wrapper{margin-top:12px;}
 .matches-section{margin-bottom:16px;}
 .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;}
 .extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
@@ -117,43 +113,46 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 <div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
 </header>
 
-<div class="grid">
-  <div class="card form">
-    <div class="row">
-      <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
-      <div style="width:120px"><label>الوقت</label><input id="matchTime" type="time" /></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>الفريق المضيف</label><select id="homeTeam"></select></div>
-      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>الفريق الضيف</label><select id="awayTeam"></select></div>
-      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
-      <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
-    </div>
+<div class="main-container">
 
-    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-      <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
-      <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
-    </div>
+    <div class="grid">
+      <div class="card form">
+        <div class="row">
+          <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
+          <div style="width:120px"><label>الوقت</label><input id="matchTime" type="time" /></div>
+        </div>
+        <div class="row">
+          <div style="flex:1"><label>الفريق المضيف</label><select id="homeTeam"></select></div>
+          <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
+        </div>
+        <div class="row">
+          <div style="flex:1"><label>الفريق الضيف</label><select id="awayTeam"></select></div>
+          <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
+        </div>
+        <div class="row">
+          <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
+          <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
+        </div>
 
-    <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
-    <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
-  </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
+          <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
+        </div>
+
+        <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
+        <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
+      </div>
+    </div>
+
+    <div class="matches-wrapper">
+      <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
+      
+    <button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
+    <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
+    <a id="downloadLink"></a>
+    </div>
+
 </div>
-
-<div class="matches-wrapper">
-  <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
-  
-<button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
-<button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
-<a id="downloadLink"></a>
-</div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
@@ -164,14 +163,16 @@ const days=['الأحد','الاثنين','الثلاثاء','الأربعاء',
 const now=new Date();
 dateEl.textContent=`${days[now.getDay()]} ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
 
-const leaguesCSV='https://falahsab.github.io/jedwal/csv/leagues.csv'; // تم تعديل المسار
-const commentatorsCSV='https://falahsab.github.io/jedwal/csv/commentators.csv'; // تم تعديل المسار
-const channelsCSV='https://falahsab.github.io/jedwal/csv/channels.csv'; // تم تعديل المسار
-const teamsCSVFolder='https://falahsab.github.io/jedwal/teams/';
+// **تم تصحيح مسارات ملفات CSV إلى مسارات مطلقة**
+const API_BASE = 'https://falahsab.github.io/jedwal/';
+const leaguesCSV=`${API_BASE}csv/leagues.csv`; 
+const commentatorsCSV=`${API_BASE}csv/commentators.csv`;
+const channelsCSV=`${API_BASE}csv/channels.csv`; 
+const teamsCSVFolder=`${API_BASE}teams/`;
+
 let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
 let matches=[], editIndex=null, isNextDay=false;
 
-// Cache object for base64 images
 const logoCache = new Map();
 
 function fetchCSV(url,callback){
@@ -200,7 +201,6 @@ function toBase64(url, callback){
     img.src = url;
 }
 
-
 function populateLeagues(){
   fetchCSV(leaguesCSV,data=>{
     leagues=data;
@@ -211,21 +211,24 @@ function populateLeagues(){
 }
 
 function loadTeams(leagueCode){
-  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
-    teams[leagueCode]=data;
-    const homeTeam=document.getElementById('homeTeam');
-    const awayTeam=document.getElementById('awayTeam');
-    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
-    updatePreview(homeTeam,'homePreview', '🏠'); 
-    updatePreview(awayTeam,'awayPreview', '⚽');
-  });
+    return new Promise(resolve => {
+        fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
+        teams[leagueCode]=data;
+        const homeTeam=document.getElementById('homeTeam');
+        const awayTeam=document.getElementById('awayTeam');
+        homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
+        updatePreview(homeTeam,'homePreview', '🏠'); 
+        updatePreview(awayTeam,'awayPreview', '⚽');
+         resolve();
+      });
+    });
 }
 
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
 function updatePreview(selectEl,previewId, defaultIcon){
   const s=selectEl.selectedOptions[0];
-  const img=s.dataset.img;
+  const img=s ? s.dataset.img : '';
   if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=b64?`<img src='${b64}'/>`:defaultIcon); } 
   else document.getElementById(previewId).innerHTML=defaultIcon;
 }
@@ -248,18 +251,21 @@ document.getElementById('addMatch').onclick=()=>{
   const homeOption=document.getElementById('homeTeam').selectedOptions[0];
   const awayOption=document.getElementById('awayTeam').selectedOptions[0];
   const channelOption=document.getElementById('channel').selectedOptions[0];
+  
+  if(!time || !homeOption || !awayOption || !channelOption){
+    alert('الرجاء تعبئة جميع الحقول.');
+    return;
+  }
+  
   let homeImgUrl=homeOption.dataset.img;
   let awayImgUrl=awayOption.dataset.img;
   const chanLogoUrl = channelOption.dataset.logo || '';
-
-  if(!time){alert('ادخل وقت المباراة');return;}
 
   toBase64(homeImgUrl,b64Home=>{
     toBase64(awayImgUrl,b64Away=>{
       toBase64(chanLogoUrl, b64Chan=>{
         const newMatch={league,home,away,time,comm,chan,homeImg:b64Home,awayImg:b64Away,chanLogo:b64Chan,nextDay:isNextDay};
         
-        // تحديث المنطق: إذا كان editIndex ليس null، يتم التحديث في نفس مكانه
         if(editIndex!==null){
           matches[editIndex] = newMatch;
           editIndex=null;
@@ -353,6 +359,8 @@ function render(){
 window.editMatchFunc=(index)=>{
   const m=matches[index];
   document.getElementById('leagueSelect').value=m.league;
+  
+  // يجب الانتظار لتحميل الفرق الجديدة قبل محاولة اختيار فريق
   loadTeams(m.league).then(()=>{
     document.getElementById('homeTeam').value=m.home;
     document.getElementById('awayTeam').value=m.away;
