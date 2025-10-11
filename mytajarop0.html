@@ -77,27 +77,31 @@
         }
 
         /* Layout */
-        /* **التعديل هنا:** إزالة الهامش الأفقي لـ main-container */
+        /* **1. التعديل النهائي:** main-container يملأ العرض الأفقي بالكامل */
         .main-container {
-            padding: 0 0 16px 0; /* تم حذف الـ 16px الجانبية */
+            padding: 0 0 16px 0;
             flex-grow: 1;
+            width: 100%;
         }
         
-        /* **التعديل الجديد:** إضافة الهامش الأفقي إلى العناصر الداخلية */
+        /* **2. التعديل النهائي:** grid (المحتوى الفعلي) يتوسط الشاشة بحد أقصى للعرض */
         .grid {
             display: grid;
             grid-template-columns: 1fr minmax(350px, 450px);
             gap: 20px;
             margin-bottom: 20px;
-            padding: 0 16px; /* تم إضافة الهامش هنا بدلاً من main-container */
+            padding: 0 16px; /* هامش داخلي لضمان عدم ملامسة الحواف على الجوال */
+            max-width: 1200px; /* **التحكم بعرض المحتوى على الشاشات الكبيرة** */
+            margin: 0 auto; /* **التوسيط الفعلي على الشاشات الكبيرة** */
         }
         @media(max-width: 950px) {
             .grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
+                max-width: 100%; /* العرض 100% على الجوال */
             }
         }
-        /* نهاية التعديلات للعرض الكامل */
+        /* نهاية التعديلات للعرض الكامل والتوسيط */
 
         .card {
             background: var(--card-bg);
