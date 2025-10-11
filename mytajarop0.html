@@ -47,12 +47,12 @@
 
         body {
             background: var(--bg-color);
-            padding: 0; /* إزالة الـ 1px */
+            padding: 0;
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            width: 100%; /* ضمان عرض كامل للصفحة */
+            width: 100%;
         }
 
         /* Header */
@@ -60,7 +60,7 @@
             background: var(--header-bg);
             color: var(--text-color);
             padding: 12px 16px;
-            border-radius: 0; /* إزالة انحناء الزاوية لتمتد على كامل العرض */
+            border-radius: 0;
             margin-bottom: 18px;
             text-align: center;
             font-size: 24px;
@@ -78,17 +78,15 @@
         /* Layout - Enhanced Grid for full width */
         .main-container {
             padding: 0 16px 16px;
-            flex-grow: 1; /* للسماح بتمدد الحاوية */
+            flex-grow: 1;
         }
         .grid {
             display: grid;
-            /* تقسيم الشاشة إلى جزء للمحتوى وجزء جانبي (اللوحة) */
             grid-template-columns: 1fr minmax(350px, 450px);
             gap: 20px;
             margin-bottom: 20px;
         }
         @media(max-width: 950px) {
-            /* على الشاشات الصغيرة، يتم تكديس العناصر (لوحة التحكم في الأعلى) */
             .grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
@@ -121,15 +119,15 @@
             gap: 8px;
             align-items: flex-end;
             margin-bottom: 12px;
-            flex-wrap: nowrap; /* منع اللف افتراضياً */
+            flex-wrap: nowrap;
         }
         .row > div {
             flex-grow: 1;
-            min-width: 100px; /* لضمان عدم ضغط العناصر الصغيرة جداً */
+            min-width: 100px;
         }
         @media(max-width: 600px) {
             .row {
-                flex-wrap: wrap; /* السماح باللف على الجوالات */
+                flex-wrap: wrap;
             }
             .row > div {
                 min-width: 40%;
@@ -154,7 +152,7 @@
         }
         .logo-preview-wrapper {
             width: 60px;
-            flex-shrink: 0; /* منع تصغير الـ logo preview */
+            flex-shrink: 0;
         }
         .logo-preview {
             height: 40px;
@@ -201,7 +199,7 @@
         }
         @media(max-width: 450px) {
             .secondary-btn {
-                flex: 1; /* جعل زر اليوم التالي يأخذ عرض كامل على الجوالات الصغيرة */
+                flex: 1;
             }
         }
         .tertiary-btn {
@@ -291,40 +289,51 @@
             gap: 10px;
         }
 
-        .team {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-            min-width: 0;
-        }
-        .team.hometeam { justify-content: flex-end; text-align: right; }
-        .team.awayteam { justify-content: flex-start; text-align: left; }
-
-        .team_logo {
-            width: clamp(30px, 4vw, 38px); /* حجم متجاوب للشعار */
-            height: clamp(30px, 4vw, 38px);
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-        .the_team {
-            font-weight: 700;
-            font-size: clamp(14px, 2vw, 18px);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
+        /* ⚠️ التعديل هنا: تحديد عرض أساسي مرن للوقت لمنع الدفع */
         .middle_column {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: clamp(16px, 3vw, 24px); /* حجم خط متجاوب للوقت */
+            font-size: clamp(16px, 3vw, 24px);
             line-height: 1.1;
             flex-shrink: 0;
+            width: 25%; /* تحديد عرض نسبي للمنتصف */
+            max-width: 90px; /* لتقييد العرض قليلاً */
         }
+        /* نهاية التعديل */
+
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1; /* للسماح للفريق بأخذ المساحة المتبقية */
+            min-width: 0; /* مهم للسماح بالتقلص داخل Flexbox */
+            overflow: hidden; /* لمنع تجاوز محتوى الفريق */
+        }
+        .team.hometeam { justify-content: flex-end; text-align: right; }
+        .team.awayteam { justify-content: flex-start; text-align: left; }
+
+        .team_logo {
+            width: clamp(30px, 4vw, 38px);
+            height: clamp(30px, 4vw, 38px);
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        /* ⚠️ التعديل هنا: تطبيق Ellipsis بشكل صحيح على العنصر الذي يحمل النص */
+        .the_team {
+            font-weight: 700;
+            font-size: clamp(14px, 2vw, 18px);
+            overflow: hidden;
+            text-overflow: ellipsis; /* إضافة علامة (...) */
+            white-space: nowrap; /* منع النص من الالتفاف */
+            min-width: 0; /* السماح بالتقلص */
+        }
+        /* نهاية التعديل */
+
+
         .the_time {
             display: flex;
             align-items: center;
@@ -560,7 +569,6 @@
                         resolve(base64);
                     };
                     img.onerror = () => {
-                        // لا يتم إظهار رسالة خطأ هنا لتجنب إزعاج المستخدم بكل شعار مفقود
                         resolve('');
                     };
                     img.src = url;
@@ -701,7 +709,6 @@
                         }
                         const [timePart, ampmPart] = displayTime.split(/\s+/);
 
-                        // Note: m.chanLogoUrl is used to get the base64 from the cache/server
                         getLogoBase64(m.chanLogoUrl).then(chanLogoB64 => {
                             const channelLogoHTML = chanLogoB64 ? `<img src="${chanLogoB64}" class="channel-logo" alt="${m.chan}">` : '';
 
