@@ -212,7 +212,7 @@
             margin-bottom: 18px;
         }
         
-        /* ⚠️ التعديل 1: نقل الشعار الإضافي لليسار */
+        /* 1. Header (League Title & Logos) */
         .section-header {
             display: flex;
             align-items: center;
@@ -223,36 +223,27 @@
             padding-right: 10px;
             border-right: 4px solid var(--primary-color);
             color: var(--text-color);
-            justify-content: space-between; /* للسماح بتوزيع العناصر */
+            justify-content: space-between;
         }
-        /* لإرجاع الشعار العادي والنص لليمين */
-        .section-header > .league-logo, .section-header > .league-name {
-            order: 1;
-        }
-        /* لضمان أن النص والشعار العادي متجاوران */
-        .section-header > .league-logo + span {
-            margin-right: 10px; /* المسافة بين الشعار والنص */
-        }
-        /* تجميع الشعار العادي والنص على اليمين */
         .section-header-content {
             display: flex;
             align-items: center;
             gap: 10px;
-            order: 1;
+            order: 1; /* Keep main content on the right */
         }
         .extra-logo-header {
             height: 24px;
             opacity: 0.8;
-            order: 2; /* نقل الشعار الإضافي لليسار */
-            margin-right: auto; /* لدفعه أقصى اليسار */
+            order: 2; /* Move extra logo to the left */
         }
-        /* نهاية التعديل 1 */
         
         .league-logo {
             width: 28px;
             height: 28px;
             object-fit: contain;
         }
+        
+        /* Match Card Structure */
         .match-card {
             background-color: var(--match-card-bg, #191919);
             border-radius: 7px;
@@ -284,10 +275,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px; /* تقليل المسافة لتوفير مساحة */
         }
 
-        /* ⚠️ التعديل 2: تحسين التجاوب في أسماء الفرق والوقت */
+        /* 2. **Critical Mobile Responsiveness Fix** */
         .middle_column {
             display: flex;
             flex-direction: column;
@@ -297,15 +288,17 @@
             font-size: clamp(16px, 3vw, 24px);
             line-height: 1.1;
             flex-shrink: 0;
-            min-width: 70px; /* ضمان مساحة كافية للوقت */
-            width: auto;
+            /* تثبيت العرض عند حد معين مع الحفاظ على مرونة بسيطة */
+            min-width: 65px; 
+            max-width: 80px;
+            width: 25%; /* عرض مرن كمرجع */
         }
 
         .team {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex: 1; 
+            gap: 6px; /* تقليل المسافة بين الشعار والاسم */
+            flex: 1 1 0%; /* الأهم: السماح بالتقلص (flex-basis: 0%) */
             min-width: 0; 
             overflow: hidden; 
         }
@@ -316,7 +309,7 @@
             width: clamp(30px, 4vw, 38px);
             height: clamp(30px, 4vw, 38px);
             object-fit: contain;
-            flex-shrink: 0;
+            flex-shrink: 0; /* الشعار يجب أن لا يتقلص */
         }
 
         .the_team {
@@ -325,9 +318,9 @@
             overflow: hidden;
             text-overflow: ellipsis; 
             white-space: nowrap; 
-            min-width: 0; 
+            min-width: 0; /* مهم ليعمل الـ Ellipsis */
         }
-        /* نهاية التعديل 2 */
+        /* End of Mobile Fix */
 
         .the_time {
             display: flex;
@@ -375,18 +368,17 @@
         }
         .action-btns button:hover { opacity: 0.9; }
 
-        /* ⚠️ التعديل 3: نقل أيقونة القناة لليسار السفلي */
+        /* 3. Channel Logo on Left */
         .channel-logo {
             position: absolute;
             bottom: 8px;
-            left: 8px; /* تغيير من right إلى left */
-            right: auto; /* إزالة القيمة السابقة */
+            left: 8px; /* Moved to left */
+            right: auto;
             width: auto;
             height: 30px;
             object-fit: contain;
             z-index: 3;
         }
-        /* نهاية التعديل 3 */
 
         /* Loading Spinner & Print Styles (No changes here) */
         .loading-spinner {
@@ -688,7 +680,6 @@
                         const leagueLogoHTML = leagueLogoB64 ? `<img src='${leagueLogoB64}' class='league-logo' alt='${l.name}'>` : '';
                         const extraLogoHTML = extraLogoB64 ? `<img src='${extraLogoB64}' class='extra-logo-header' alt='شعار إضافي'>` : '';
                         
-                        // تجميع الشعار العادي واسم الدوري ليكون على اليمين (order: 1)
                         header.innerHTML = `
                             <div class="section-header-content">
                                 ${leagueLogoHTML}
@@ -757,7 +748,7 @@
             }
 
             // ----------------------------------------------------
-            // 5. Event Handlers (No changes here)
+            // 5. Event Handlers (No changes to logic)
             // ----------------------------------------------------
             
             window.editMatch = (index) => {
