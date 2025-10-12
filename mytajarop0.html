@@ -69,7 +69,10 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 
 <header>
 ⚽ أهم مباريات اليوم
-<div id="todayDate" style="font-size:16px;font-weight:400;margin-top:4px;"></div>
+<div style="margin-top:4px;">
+  <span id="todayDateDisplay"style="font-size:16px;font-weight:400;margin-top:4px;"></span>
+  
+</div>
 </header>
 
 <div class="grid">
@@ -109,15 +112,46 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 <a id="downloadLink"></a>
 </div>
 
+<div style="margin-top:4px;">
+  <span id="todayDateDisplay"></span>
+<input type="date" id="manualDate" style="display:none; margin-top:4px;">
+  <button id="editDateBtn" style="margin-left:6px;">📅 اختر يوم</button>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
 
-const dateEl=document.getElementById('todayDate');
-const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-const now=new Date();
-dateEl.textContent=`${days[now.getDay()]} ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
+const displayEl = document.getElementById('todayDateDisplay');
+const manualDateEl = document.getElementById('manualDate');
+const editBtn = document.getElementById('editDateBtn');
+
+const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+// دالة لتحديث العرض
+function updateDateDisplay(date){
+  displayEl.textContent = `${days[date.getDay()]} ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+}
+
+// افتراضياً اليوم الحالي
+let currentDate = new Date();
+updateDateDisplay(currentDate);
+
+// عند الضغط على زر التحديد
+editBtn.addEventListener('click',()=>{
+  manualDateEl.style.display = 'inline-block';
+  manualDateEl.valueAsDate = currentDate;
+});
+
+// عند تغيير التاريخ يدوياً
+manualDateEl.addEventListener('change',()=>{
+  const selected = new Date(manualDateEl.value);
+  if(!isNaN(selected)) {
+    currentDate = selected;
+    updateDateDisplay(currentDate);
+  }
+});
 
 const leaguesCSV='csv/leagues.csv';
 const commentatorsCSV='csv/commentators.csv';
@@ -301,10 +335,10 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 });
 
 });
+
+
 </script>
 
 </body>
 </html>
-
-
 
