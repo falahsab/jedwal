@@ -165,14 +165,26 @@ document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
 document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
 
+// تفعيل البحث وعرض شعار الفريق عند اختيار أي فريق
 function enableSearchableSelects(){
-$('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
-  width: '100%',
-  dir: "rtl",
-  language: "ar",
-  placeholder: "اختر..."
-});
+  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
+    width: '100%',
+    dir: "rtl",
+    language: "ar",
+    placeholder: "اختر..."
+  });
+
+  // عند اختيار فريق المضيف
+  $('#homeTeam').on('select2:select', function(){
+    updatePreview(document.getElementById('homeTeam'),'homePreview');
+  });
+
+  // عند اختيار الفريق الضيف
+  $('#awayTeam').on('select2:select', function(){
+    updatePreview(document.getElementById('awayTeam'),'awayPreview');
+  });
 }
+
 
 setTimeout(enableSearchableSelects, 800);
 
@@ -304,3 +316,4 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
