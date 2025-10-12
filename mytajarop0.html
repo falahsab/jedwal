@@ -319,10 +319,24 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 });
 
 });
+  
+  document.getElementById('finalView').addEventListener('click', () => {
+  if(editIndex !== null) {
+    alert('لا يمكن عرض الجدول النهائي أثناء تعديل بطاقة. يرجى إنهاء التعديل أولاً.');
+    return;
+  }
+
+  const container = document.getElementById('matchesContainer');
+  // مثال: عرض فقط البطاقات بدون أزرار التعديل والحذف
+  container.querySelectorAll('.action-btns').forEach(btn => btn.style.display = 'none');
+  alert('الجدول النهائي جاهز للعرض! يمكنك الآن تحميله كصورة.');
+});
+
 </script>
 
 </body>
 </html>
+
 
 
 
