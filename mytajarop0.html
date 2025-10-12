@@ -199,7 +199,14 @@ setTimeout(() => {
       noResults: () => "لا توجد نتائج مطابقة"
     }
   });
+
+  // ✅ حدث اختيار الدوري
+  $('#leagueSelect').on('select2:select', function (e) {
+    const leagueCode = e.params.data.id; // قيمة الدوري
+    loadTeams(leagueCode);
+  });
 }, 800);
+
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
 function toBase64(url, callback){
