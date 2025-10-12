@@ -17,7 +17,8 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/ar.js"></script>
 
 <style>
-html, body, * { font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important; -webkit-text-size-adjust: 100%; box-sizing: border-box; margin:0; padding:0; }body { background:#252525; padding:1px; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+html, body, * { font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important; -webkit-text-size-adjust: 100%; }
+body { background:#252525; padding:1px; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
 header { background:#070607; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
 .grid{display:grid; grid-template-columns:1fr 400px; gap:14px;}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
@@ -28,6 +29,7 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 .logo{height: auto; max-width: 100%;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
 .logo img{width:80%;height:80%;object-fit:contain; transition:width 0.3s,height 0.3s;}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
+
 .matches-wrapper{margin-top:12px;width:100%;max-width:100%;padding:0;}
 .matches-section{margin-bottom:16px;}
 .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;}
@@ -133,6 +135,7 @@ function populateLeagues(){
     leagues=data;
     const leagueSelect=document.getElementById('leagueSelect');
     leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
+    // جلب الفرق لأول دوري تلقائياً
     loadTeams(leagueSelect.value);
   });
 }
@@ -143,9 +146,16 @@ function loadTeams(leagueCode){
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
     homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
-    updatePreview(homeTeam,'homePreview'); 
-    updatePreview(awayTeam,'awayPreview');
-    $('#homeTeam, #awayTeam').trigger('change.select2'); // تحديث Select2 لتفادي التجمّد
+
+    $('#homeTeam, #awayTeam').trigger('change.select2');
+
+    // اختيار أول فريقين تلقائياً
+    if(data.length>0){
+      homeTeam.selectedIndex = 0;
+      awayTeam.selectedIndex = data.length>1 ? 1 : 0;
+      updatePreview(homeTeam,'homePreview'); 
+      updatePreview(awayTeam,'awayPreview');
+    }
   });
 }
 
@@ -160,7 +170,16 @@ function updatePreview(selectEl,previewId){
 
 populateLeagues(); fetchCommentators(); fetchChannels();
 
-document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
+document.getElementById('leagueSelect').addEventListener('change', e=>{
+  const leagueCode = e.target.value;
+  // مسح خيارات الفرق والمعاينة
+  document.getElementById('homeTeam').innerHTML='';
+  document.getElementById('awayTeam').innerHTML='';
+  document.getElementById('homePreview').innerHTML='🏠';
+  document.getElementById('awayPreview').innerHTML='⚽';
+  loadTeams(leagueCode);
+});
+
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
 document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
 
@@ -172,25 +191,14 @@ function enableSearchableSelects(){
     language: "ar",
     placeholder: "اختر..."
   });
-
-  // عند اختيار فريق المضيف
-  $('#homeTeam').on('select2:select', function(){
-    updatePreview(document.getElementById('homeTeam'),'homePreview');
-  });
-
-  // عند اختيار الفريق الضيف
-  $('#awayTeam').on('select2:select', function(){
-    updatePreview(document.getElementById('awayTeam'),'awayPreview');
-  });
 }
-
 
 setTimeout(enableSearchableSelects, 800);
 
 if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
 document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
 
-document.getElementById('addMatch').onclick=()=>{
+document.getElementById('addMatch').onclick=()=>{ 
   const league=document.getElementById('leagueSelect').value;
   const home=document.getElementById('homeTeam').value;
   const away=document.getElementById('awayTeam').value;
@@ -222,7 +230,7 @@ function render(){
   matchesContainer.innerHTML='';
   leagues.forEach(l=>{
     const leagueMatches=matches.filter(m=>m.league===l.code);
-     if(leagueMatches.length>0){
+    if(leagueMatches.length>0){
       const section=document.createElement('div'); section.className='matches-section';
       const header=document.createElement('div'); header.className='section-header';
       const extraLogo=l.extraLogo||l.extra;
@@ -274,7 +282,7 @@ function render(){
   });
 }
 
-// تعديل المباراة مع ملء كامل البيانات بالشعار والوقت والمعلق والقناة
+// تعديل المباراة
 window.editMatch = (index) => {
   if (editIndex !== null) {
     alert('هناك بطاقة قيد التعديل حالياً! يرجى حفظ أو إلغاء التعديل قبل تعديل مباراة أخرى.');
@@ -293,21 +301,18 @@ window.editMatch = (index) => {
     updatePreview(document.getElementById('homeTeam'), 'homePreview');
     updatePreview(document.getElementById('awayTeam'), 'awayPreview');
 
-    editIndex = index; // تعيين بطاقة التعديل
+    editIndex = index;
     matches.splice(index, 1);
     localStorage.setItem('matches', JSON.stringify(matches));
     render();
 
-    // تحديث Select2 بعد تعديل القيم لتجنب التجمّد
     $('#homeTeam, #awayTeam, #leagueSelect, #commentator, #channel').trigger('change.select2');
   }, 150);
 };
 
 window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
-
 document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns; render();});
 document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[]; localStorage.setItem('matches','[]'); render();}});
-
 document.getElementById('downloadTable').addEventListener('click',()=>{
   html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
     const link=document.getElementById('downloadLink');
@@ -318,13 +323,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 });
 
 });
-  
 </script>
 
 </body>
 </html>
-
-
-
-
-
