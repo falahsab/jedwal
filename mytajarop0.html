@@ -270,27 +270,35 @@ function formatOptionWithImage(option) {
 }
 
 function refreshSelect2(){
-  // destroy existing to avoid double-init
+  // إزالة أي تهيئة سابقة
   $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').each(function(){
     if ($(this).hasClass("select2-hidden-accessible")) $(this).select2('destroy');
   });
 
-  $('#leagueSelect').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
-  $('#commentator').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
-  $('#channel').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
+  // تهيئة القوائم
+  $('#leagueSelect, #commentator, #channel, #homeTeam, #awayTeam').select2({
+    width:'100%',
+    dir:"rtl",
+    language:"ar",
+    placeholder:"اختر..."
+  });
 
-  // For team selects, we DON'T force images inside the dropdown by default (per request),
-  // but show the image inline in the field when selected. If you want images in dropdown, set templateResult/templateSelection to formatOptionWithImage.
-  $('#homeTeam').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
-  $('#awayTeam').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
+  // تحديث صور الشعار عند تغيير الفريق
+  $('#homeTeam').off('change.selectLogo').on('change.selectLogo', ()=> {
+    updatePreview('homeTeam','homePreview');
+    updateInlineLogo('homeTeam','homeLogoIcon');
+  });
 
-  // ensure select2 change triggers our change listeners too
-  $('#homeTeam').on('change', function(){ document.getElementById('homeTeam').dispatchEvent(new Event('change')); });
-  $('#awayTeam').on('change', function(){ document.getElementById('awayTeam').dispatchEvent(new Event('change')); });
-  $('#leagueSelect').on('change', function(){ document.getElementById('leagueSelect').dispatchEvent(new Event('change')); });
-  $('#commentator').on('change', function(){ document.getElementById('commentator').dispatchEvent(new Event('change')); });
-  $('#channel').on('change', function(){ document.getElementById('channel').dispatchEvent(new Event('change')); });
+  $('#awayTeam').off('change.selectLogo').on('change.selectLogo', ()=> {
+    updatePreview('awayTeam','awayPreview');
+    updateInlineLogo('awayTeam','awayLogoIcon');
+  });
+
+  $('#leagueSelect').off('change.loadTeams').on('change.loadTeams', ()=> {
+    loadTeams(document.getElementById('leagueSelect').value);
+  });
 }
+
 
 // --- Previews and inline logos ---
 function updatePreview(selectEl,previewId){
@@ -509,3 +517,4 @@ document.getElementById('downloadTable').addEventListener('click', ()=>{
 
 </body>
 </html>
+
