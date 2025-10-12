@@ -227,6 +227,15 @@ function loadTeams(leagueCode){
     homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
+
+    // 🔍 تفعيل البحث بعد تحميل الفرق الجديدة
+    setTimeout(()=>{
+      $('#homeTeam, #awayTeam').select2({
+        width: '100%',
+        dir: "rtl",
+        language: { noResults: () => "لا توجد نتائج مطابقة" }
+      });
+    }, 100);
   });
 }
 
