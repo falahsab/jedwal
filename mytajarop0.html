@@ -185,6 +185,21 @@ const channelsCSV='csv/channels.csv';
 const teamsCSVFolder='https://falahsab.github.io/jedwal/teams/';
 let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
 let matches=[], editIndex=null, isNextDay=false;
+// بعد تحميل القوائم
+populateLeagues();
+fetchCommentators();
+fetchChannels();
+
+// تفعيل Select2 بعد التأكد أن القوائم موجودة
+setTimeout(() => {
+  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
+    width: '100%',
+    dir: "rtl",
+    language: {
+      noResults: () => "لا توجد نتائج مطابقة"
+    }
+  });
+}, 800);
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
 function toBase64(url, callback){
@@ -362,21 +377,6 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 });
 
-// بعد تحميل القوائم
-populateLeagues();
-fetchCommentators();
-fetchChannels();
-
-// تفعيل Select2 بعد التأكد أن القوائم موجودة
-setTimeout(() => {
-  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
-    width: '100%',
-    dir: "rtl",
-    language: {
-      noResults: () => "لا توجد نتائج مطابقة"
-    }
-  });
-}, 800);
 
 </script>
 
