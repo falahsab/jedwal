@@ -257,24 +257,34 @@ function render(){
   });
 }
 
-window.editMatch=(index)=>{
-  const m=matches[index];
-  document.getElementById('leagueSelect').value=m.league;
+window.editMatch = (index) => {
+  if (editIndex !== null) {
+    alert('هناك بطاقة قيد التعديل حالياً! يرجى حفظ أو إلغاء التعديل قبل تعديل مباراة أخرى.');
+    return;
+  }
+
+  const m = matches[index];
+  document.getElementById('leagueSelect').value = m.league;
   loadTeams(m.league);
-  setTimeout(()=>{
-    document.getElementById('homeTeam').value=m.home;
-    document.getElementById('awayTeam').value=m.away;
-    document.getElementById('matchTime').value=m.time;
-    document.getElementById('commentator').value=m.comm;
-    document.getElementById('channel').value=m.chan;
-    updatePreview(document.getElementById('homeTeam'),'homePreview');
-    updatePreview(document.getElementById('awayTeam'),'awayPreview');
-    editIndex=index;
-    matches.splice(index,1);
-    localStorage.setItem('matches',JSON.stringify(matches));
+  setTimeout(() => {
+    document.getElementById('homeTeam').value = m.home;
+    document.getElementById('awayTeam').value = m.away;
+    document.getElementById('matchTime').value = m.time;
+    document.getElementById('commentator').value = m.comm;
+    document.getElementById('channel').value = m.chan;
+    updatePreview(document.getElementById('homeTeam'), 'homePreview');
+    updatePreview(document.getElementById('awayTeam'), 'awayPreview');
+
+    editIndex = index; // تعيين بطاقة التعديل
+    matches.splice(index, 1);
+    localStorage.setItem('matches', JSON.stringify(matches));
     render();
-  },100);
+
+    // تحديث Select2 بعد تعديل القيم لتجنب التجمّد
+    $('#homeTeam, #awayTeam, #leagueSelect, #commentator, #channel').trigger('change.select2');
+  }, 150);
 };
+
 
 window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
 
@@ -295,3 +305,4 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
