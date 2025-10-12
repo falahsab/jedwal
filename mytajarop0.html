@@ -69,7 +69,7 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 @media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
 
 .select2-container--default .select2-selection--single {
-  background-color: ##;
+  background-color: #;
   border: 1px solid rgba(255,255,255,0.12);
   color: #fff;
   border-radius: 8px;
@@ -226,8 +226,8 @@ function populateLeagues(){
   });
 }
 
-function loadTeams(leagueCode){
-  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
+function loadTeams(leagueCode, cb){
+  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`, data=>{
     teams[leagueCode]=data;
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
@@ -235,21 +235,27 @@ function loadTeams(leagueCode){
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
-    // 🔍 تفعيل البحث بعد تحميل الفرق
+    // تهيئة Select2 للفرق وإعادة ربط حدث التغيير للمعاينة
     setTimeout(()=>{
+      // إلغاء أي مستمع سابق لتجنب التكرار
+      $('#homeTeam, #awayTeam').off('change');
+
       $('#homeTeam, #awayTeam').select2({
         width: '100%',
         dir: "rtl",
         language: { noResults: () => "لا توجد نتائج مطابقة" }
       });
 
-      // 🖼️ تفعيل المعاينة عند اختيار الفريق بعد تطبيق Select2
       $('#homeTeam, #awayTeam').on('change', function() {
         updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
       });
-    }, 100);
+
+      // استدعاء callback إن وُجد (مثلاً عند تعديل بطاقة)
+      if(typeof cb === 'function') cb();
+    }, 120); // مهلة صغيرة لتهيئة DOM
   });
 }
+
 
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
@@ -360,25 +366,33 @@ window.editMatch = (index) => {
   }
 
   const m = matches[index];
-  document.getElementById('leagueSelect').value = m.league;
-  loadTeams(m.league);
-  setTimeout(() => {
-    document.getElementById('homeTeam').value = m.home;
-    document.getElementById('awayTeam').value = m.away;
-    document.getElementById('matchTime').value = m.time;
-    document.getElementById('commentator').value = m.comm;
-    document.getElementById('channel').value = m.chan;
-    updatePreview(document.getElementById('homeTeam'), 'homePreview');
-    updatePreview(document.getElementById('awayTeam'), 'awayPreview');
 
-    editIndex = index; // تعيين بطاقة التعديل
+  // ضبط اختيار الدوري عبر Select2 (لكي يظهر اختيار الدوري المرئي)
+  $('#leagueSelect').val(m.league).trigger('change.select2');
+
+  // نستخدم loadTeams مع callback لضمان أن الفرق محملة قبل ملء الحقول
+  loadTeams(m.league, () => {
+    // الآن بعد أن تم تحميل الفرق وتهيئة Select2 لها، نعيّن القيم
+    $('#homeTeam').val(m.home).trigger('change.select2');
+    $('#awayTeam').val(m.away).trigger('change.select2');
+
+    // المعلّق والقناة - نضبطهما كذلك
+    $('#commentator').val(m.comm).trigger('change.select2');
+    $('#channel').val(m.chan).trigger('change.select2');
+
+    // الوقت (حقل نصي/وقت)
+    document.getElementById('matchTime').value = m.time;
+
+    // تحديث المعاينات (تأكد أن updatePreview تتعامل مع العنصر الأصلي أو dataset)
+    updatePreview(document.getElementById('homeTeam'),'homePreview');
+    updatePreview(document.getElementById('awayTeam'),'awayPreview');
+
+    // ضبط حالة التحرير: نحدد editIndex ونحذف العنصر من المصفوفة الآن
+    editIndex = index;
     matches.splice(index, 1);
     localStorage.setItem('matches', JSON.stringify(matches));
     render();
-
-    // تحديث Select2 بعد تعديل القيم لتجنب التجمّد
-    $('#homeTeam, #awayTeam, #leagueSelect, #commentator, #channel').trigger('change.select2');
-  }, 150);
+  });
 };
 
 
@@ -403,6 +417,5 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
-
 
 
