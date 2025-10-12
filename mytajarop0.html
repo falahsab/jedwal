@@ -118,6 +118,23 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
   color: #fff;
 }
 
+/* ✅ عرض شعار الفريق بجانب القائمة */
+.select-with-logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select-with-logo img {
+  position: absolute;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+  pointer-events: none;
+  display: none;
+}
 
 </style>
 </head>
@@ -130,17 +147,28 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 
 <div class="grid">
   <div class="card form">
-    <div class="row">
-      <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
-      <div style="width:120px"><label>الوقت</label><input id="matchTime" type="time" /></div>
+   <div class="row">
+  <div style="flex:1">
+    <label>الفريق المضيف</label>
+    <div class="select-with-logo">
+      <img id="homeLogoIcon" src="" alt="">
+      <select id="homeTeam"></select>
     </div>
-    <div class="row">
-      <div style="flex:1"><label>الفريق المضيف</label><select id="homeTeam"></select></div>
-      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
+  </div>
+  <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
+</div>
+
+<div class="row">
+  <div style="flex:1">
+    <label>الفريق الضيف</label>
+    <div class="select-with-logo">
+      <img id="awayLogoIcon" src="" alt="">
+      <select id="awayTeam"></select>
     </div>
-    <div class="row">
-      <div style="flex:1"><label>الفريق الضيف</label><select id="awayTeam"></select></div>
-      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
+  </div>
+  <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
+</div>
+
     </div>
     <div class="row">
       <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
@@ -342,6 +370,9 @@ window.editMatch=(index)=>{
     document.getElementById('channel').value=m.chan;
     updatePreview(document.getElementById('homeTeam'),'homePreview');
     updatePreview(document.getElementById('awayTeam'),'awayPreview');
+   updateInlineLogo('homeTeam', 'homeLogoIcon');
+   updateInlineLogo('awayTeam', 'awayLogoIcon');
+
     editIndex=index;
     matches.splice(index,1);
     localStorage.setItem('matches',JSON.stringify(matches));
@@ -364,7 +395,33 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 });
 
 });
+ // ✅ عرض شعار الفريق بجانب القائمة
+function updateInlineLogo(selectId, logoId) {
+  const select = document.getElementById(selectId);
+  const logo = document.getElementById(logoId);
+  const selected = select.selectedOptions[0];
+  const imgUrl = selected ? selected.dataset.img : '';
+  if (imgUrl) {
+    logo.src = imgUrl;
+    logo.style.display = 'block';
+  } else {
+    logo.style.display = 'none';
+  }
+}
+
+// ✅ تعديل أحداث التغيير للقائمتين
+document.getElementById('homeTeam').addEventListener('change', () => {
+  updatePreview(document.getElementById('homeTeam'), 'homePreview');
+  updateInlineLogo('homeTeam', 'homeLogoIcon');
+});
+
+document.getElementById('awayTeam').addEventListener('change', () => {
+  updatePreview(document.getElementById('awayTeam'), 'awayPreview');
+  updateInlineLogo('awayTeam', 'awayLogoIcon');
+});
+
 </script>
 
 </body>
 </html>
+
