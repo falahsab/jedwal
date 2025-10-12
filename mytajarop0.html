@@ -78,6 +78,7 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 
 <div class="matches-wrapper">
   <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
+</p>
 <div class="grid">
   <div class="card form">
     <div class="row">
@@ -102,8 +103,11 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
       <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
     </div>
 
-    <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
-    <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
+<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+  <button id="toggleBtns" class="btn" style="flex:1;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
+  <button id="deleteAll" class="btn" style="flex:1;">🗑️ حذف كل البطاقات</button>
+</div>
+   
   </div>
 </div>
   
@@ -341,5 +345,6 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
