@@ -8,6 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- مكتبة Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <style>
  html, body, * {
@@ -63,6 +67,28 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 .action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
 .channel-logo{position:absolute; bottom:6px; left:6px; width:auto; height:35px; object-fit:contain; z-index:3;}
 @media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
+
+.select2-container--default .select2-selection--single {
+  background-color: #444;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  border-radius: 8px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+}
+.select2-container--default .select2-results__option {
+  background-color: #333;
+  color: #fff;
+}
+.select2-container--default .select2-results__option--highlighted {
+  background-color: #3498db;
+}
+.select2-search__field {
+  background-color: #555 !important;
+  color: #fff !important;
+}
+
 </style>
 </head>
 <body>
@@ -75,10 +101,6 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 </div>
 </header>
 
-
-<div class="matches-wrapper">
-  <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
-</p>
 <div class="grid">
   <div class="card form">
     <div class="row">
@@ -87,11 +109,11 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
     </div>
     <div class="row">
       <div style="flex:1"><label>الفريق المضيف</label><select id="homeTeam"></select></div>
-      <div style="width:40px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
+      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
     </div>
     <div class="row">
       <div style="flex:1"><label>الفريق الضيف</label><select id="awayTeam"></select></div>
-      <div style="width:40px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
+      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
     </div>
     <div class="row">
       <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
@@ -103,13 +125,13 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
       <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
     </div>
 
-<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
-  <button id="toggleBtns" class="btn" style="flex:1;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
-  <button id="deleteAll" class="btn" style="flex:1;">🗑️ حذف كل البطاقات</button>
-</div>
-   
+    <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
+    <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
   </div>
 </div>
+
+<div class="matches-wrapper">
+  <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
   
 <button id="finalView" class="btn" style="margin-top:12px;">🔗 عرض الجدول النهائي</button>
 <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
@@ -340,17 +362,25 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 });
 
+// بعد تحميل القوائم
+populateLeagues();
+fetchCommentators();
+fetchChannels();
+
+// تفعيل Select2 بعد التأكد أن القوائم موجودة
+setTimeout(() => {
+  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
+    width: '100%',
+    dir: "rtl",
+    language: {
+      noResults: () => "لا توجد نتائج مطابقة"
+    }
+  });
+}, 800);
 
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
 
 
