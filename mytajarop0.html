@@ -228,12 +228,17 @@ function loadTeams(leagueCode){
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
-    // 🔍 تفعيل البحث بعد تحميل الفرق الجديدة
+    // 🔍 تفعيل البحث بعد تحميل الفرق
     setTimeout(()=>{
       $('#homeTeam, #awayTeam').select2({
         width: '100%',
         dir: "rtl",
         language: { noResults: () => "لا توجد نتائج مطابقة" }
+      });
+
+      // 🖼️ تفعيل المعاينة عند اختيار الفريق بعد تطبيق Select2
+      $('#homeTeam, #awayTeam').on('change', function() {
+        updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
       });
     }, 100);
   });
