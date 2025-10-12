@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
- 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>جدول مباريات اليوم - لوحة التحكم</title>
@@ -22,7 +21,7 @@
 <style>
  html, body, * {
   font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-  -webkit-text-size-adjust: 100%; /* لمنع تصغير الخط في Safari */
+  -webkit-text-size-adjust: 100%;
 }
 @font-face {
   font-family: 'Tajawal';
@@ -54,7 +53,6 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
 .matches-wrapper{margin-top:12px;width:100%;max-width:100%;padding:0;}
 .matches-section{margin-bottom:16px;}
-/* مربع خلف شعار الدوري */ 
 .section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;}
 .extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
 .match-card{display:flex;flex-direction:column;border-radius:7px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:2px;position:relative; overflow:hidden;background-color:#191919}
@@ -74,10 +72,10 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 .action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
 .channel-logo{position:absolute; bottom:6px; left:6px; width:auto; height:35px; object-fit:contain; z-index:3;}
 @media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
-/* تخصيص مظهر القوائم المنسدلة Select2 */
 
+/* تخصيص مظهر القوائم المنسدلة Select2 */
 .select2-container--default .select2-selection--single {
-  background-color: #333; /* خلفية مربع الاختيار */
+  background-color: #333; 
   border: 1px solid #555;
   color: #fff;
   height: 40px;
@@ -88,7 +86,7 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-  color: #fff; /* لون النص داخل المربع */
+  color: #fff; 
   line-height: 32px;
 }
 
@@ -98,12 +96,12 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 }
 
 .select2-container--default .select2-results > .select2-results__options {
-  background-color: #222; /* خلفية قائمة الخيارات */
-  color: #fff; /* لون النص */
+  background-color: #222; 
+  color: #fff; 
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: #3498db; /* لون عند التمرير على خيار */
+  background-color: #3498db; 
   color: #fff;
 }
 
@@ -114,28 +112,30 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 }
 
 .select2-container--default .select2-results__option[aria-selected="true"] {
-  background-color: #444; /* لون العنصر المحدد */
+  background-color: #444; 
   color: #fff;
 }
 
-/* ✅ عرض شعار الفريق بجانب القائمة */
+/* عرض شعار الفريق داخل حقل الاختيار (بجانب select) */
 .select-with-logo {
   position: relative;
   display: flex;
   align-items: center;
 }
-
-.select-with-logo img {
+.select-with-logo img.inline-logo {
   position: absolute;
-  right: 8px;
+  left: 10px; /* because dir=rtl, logo sits on left visually; adjust if needed */
   width: 28px;
   height: 28px;
   object-fit: contain;
   border-radius: 6px;
   pointer-events: none;
   display: none;
+  z-index: 30;
 }
-
+.select-with-logo .select2-container--default .select2-selection--single {
+  padding-left: 44px; /* space for inline logo */
+}
 </style>
 </head>
 <body>
@@ -147,28 +147,29 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 
 <div class="grid">
   <div class="card form">
-   <div class="row">
-  <div style="flex:1">
-    <label>الفريق المضيف</label>
-    <div class="select-with-logo">
-      <img id="homeLogoIcon" src="" alt="">
-      <select id="homeTeam"></select>
+    <div class="row">
+      <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
+      <div style="width:120px"><label>الوقت</label><input id="matchTime" type="time" /></div>
     </div>
-  </div>
-  <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
-</div>
-
-<div class="row">
-  <div style="flex:1">
-    <label>الفريق الضيف</label>
-    <div class="select-with-logo">
-      <img id="awayLogoIcon" src="" alt="">
-      <select id="awayTeam"></select>
+    <div class="row">
+      <div style="flex:1">
+        <label>الفريق المضيف</label>
+        <div class="select-with-logo">
+          <img id="homeLogoIcon" class="inline-logo" src="" alt="">
+          <select id="homeTeam"></select>
+        </div>
+      </div>
+      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
     </div>
-  </div>
-  <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
-</div>
-
+    <div class="row">
+      <div style="flex:1">
+        <label>الفريق الضيف</label>
+        <div class="select-with-logo">
+          <img id="awayLogoIcon" class="inline-logo" src="" alt="">
+          <select id="awayTeam"></select>
+        </div>
+      </div>
+      <div style="width:50px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
     </div>
     <div class="row">
       <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
@@ -211,116 +212,184 @@ let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
 let matches=[], editIndex=null, isNextDay=false;
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
+
 function toBase64(url, callback){
+  if(!url){ callback(''); return; }
   const img = new Image();
   img.crossOrigin = 'Anonymous';
-  img.onload = () => { const canvas = document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; canvas.getContext('2d').drawImage(img,0,0); callback(canvas.toDataURL()); };
-  img.onerror = () => callback('');
+  img.onload = () => { try { const canvas = document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; canvas.getContext('2d').drawImage(img,0,0); callback(canvas.toDataURL()); } catch(e){ callback(url); } };
+  img.onerror = () => callback(url);
   img.src = url;
 }
 
+// --- Populate and load functions ---
 function populateLeagues(){
   fetchCSV(leaguesCSV,data=>{
-    leagues=data;
+    leagues=data.filter(l=>l && l.code); // guard
     const leagueSelect=document.getElementById('leagueSelect');
-    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
-    loadTeams(leagueSelect.value);
+    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||l.extra||""}'>${l.name}</option>`).join('');
+    refreshSelect2();
+    // load teams of first league by default if exists
+    if(leagueSelect.value) loadTeams(leagueSelect.value);
   });
 }
 
 function loadTeams(leagueCode){
   fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`,data=>{
-    teams[leagueCode]=data;
+    teams[leagueCode]=data.filter(t=>t && t.name);
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
-    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
-    updatePreview(homeTeam,'homePreview'); 
+    // build options with data-img
+    const opts = teams[leagueCode].map(t=>`<option value='${t.name}' data-img='${t.img||""}'>${t.name}</option>`).join('');
+    homeTeam.innerHTML = opts;
+    awayTeam.innerHTML = opts;
+    refreshSelect2(); // important to re-init select2 after changing options
+    // update inline logos for current selection (if any)
+    updateInlineLogo('homeTeam','homeLogoIcon');
+    updateInlineLogo('awayTeam','awayLogoIcon');
+    updatePreview(homeTeam,'homePreview');
     updatePreview(awayTeam,'awayPreview');
   });
 }
 
-function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
-function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
-function updatePreview(selectEl,previewId){
-  const s=selectEl.selectedOptions[0];
-  const img=s.dataset.img;
-  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
-  else document.getElementById(previewId).innerHTML='⚽';
+function fetchCommentators(){ fetchCSV(commentatorsCSV,data=>{ commentators=data.filter(c=>c && c.name); document.getElementById('commentator').innerHTML=commentators.map(c=>`<option value='${c.name}'>${c.name}</option>`).join(''); refreshSelect2(); }); }
+function fetchChannels(){ fetchCSV(channelsCSV,data=>{ channels=data.filter(c=>c && c.name); document.getElementById('channel').innerHTML=channels.map(c=>`<option value='${c.name}' data-logo='${c.logo||""}'>${c.name}</option>`).join(''); refreshSelect2(); }); }
+
+// --- Select2 with optional image rendering inside dropdown (we keep dropdown plain, but ensure available) ---
+function formatOptionWithImage(option) {
+  if (!option.id) return option.text;
+  const img = $(option.element).data('img') || $(option.element).data('logo');
+  if (!img) return option.text;
+  const $option = $(`
+    <span style="display:flex;align-items:center;gap:8px;">
+      <img src="${img}" style="width:26px;height:26px;object-fit:contain;border-radius:4px;">
+      ${option.text}
+    </span>
+  `);
+  return $option;
 }
 
-populateLeagues(); fetchCommentators(); fetchChannels();
-document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
-document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
-document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
+function refreshSelect2(){
+  // destroy existing to avoid double-init
+  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').each(function(){
+    if ($(this).hasClass("select2-hidden-accessible")) $(this).select2('destroy');
+  });
 
- // تفعيل خاصية البحث في القوائم المنسدلة
-function enableSearchableSelects(){
-$('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
-  width: '100%',
-  dir: "rtl",
-  language: "ar",
-  placeholder: "اختر..."
+  $('#leagueSelect').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
+  $('#commentator').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
+  $('#channel').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
+
+  // For team selects, we DON'T force images inside the dropdown by default (per request),
+  // but show the image inline in the field when selected. If you want images in dropdown, set templateResult/templateSelection to formatOptionWithImage.
+  $('#homeTeam').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
+  $('#awayTeam').select2({ width:'100%', dir:"rtl", language:"ar", placeholder:"اختر..." });
+
+  // ensure select2 change triggers our change listeners too
+  $('#homeTeam').on('change', function(){ document.getElementById('homeTeam').dispatchEvent(new Event('change')); });
+  $('#awayTeam').on('change', function(){ document.getElementById('awayTeam').dispatchEvent(new Event('change')); });
+  $('#leagueSelect').on('change', function(){ document.getElementById('leagueSelect').dispatchEvent(new Event('change')); });
+  $('#commentator').on('change', function(){ document.getElementById('commentator').dispatchEvent(new Event('change')); });
+  $('#channel').on('change', function(){ document.getElementById('channel').dispatchEvent(new Event('change')); });
+}
+
+// --- Previews and inline logos ---
+function updatePreview(selectEl,previewId){
+  const s = typeof selectEl === 'string' ? document.getElementById(selectEl) : selectEl;
+  const selected = s.selectedOptions[0];
+  const img = selected ? selected.dataset.img : '';
+  const preview = document.getElementById(previewId);
+  if(img){ preview.innerHTML=`<img src='${img}' style='width:100%;height:100%;object-fit:contain;'>`; } else preview.innerHTML = previewId==='homePreview' ? '🏠' : '⚽';
+}
+
+function updateInlineLogo(selectId, logoId){
+  const select = document.getElementById(selectId);
+  const logo = document.getElementById(logoId);
+  const selected = select.selectedOptions[0];
+  const imgUrl = selected ? selected.dataset.img : '';
+  if(imgUrl){
+    logo.src = imgUrl;
+    logo.style.display = 'block';
+  } else {
+    logo.style.display = 'none';
+  }
+}
+
+// --- initial population ---
+populateLeagues();
+fetchCommentators();
+fetchChannels();
+
+document.getElementById('leagueSelect').addEventListener('change', e=> loadTeams(e.target.value) );
+
+document.getElementById('homeTeam').addEventListener('change', ()=>{
+  updatePreview('homeTeam','homePreview');
+  updateInlineLogo('homeTeam','homeLogoIcon');
 });
 
+document.getElementById('awayTeam').addEventListener('change', ()=>{
+  updatePreview('awayTeam','awayPreview');
+  updateInlineLogo('awayTeam','awayLogoIcon');
+});
 
-}
+// enable select2 initially after slight delay (CSV may still be loading, but refreshSelect2 is called after each fetch)
+setTimeout(()=>{ refreshSelect2(); }, 600);
 
-// انتظر قليلاً حتى يتم إنشاء العناصر ثم فعّل البحث
-setTimeout(enableSearchableSelects, 800);
+// --- load saved matches if exist ---
+if(localStorage.getItem('matches')){ matches = JSON.parse(localStorage.getItem('matches')) || []; render(); }
 
- 
-if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
-document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
+document.getElementById('nextDayBtn').onclick=()=>{ isNextDay = !isNextDay; document.getElementById('nextDayState').textContent = isNextDay ? '✅' : '❌'; };
 
-document.getElementById('addMatch').onclick=()=>{
-  const league=document.getElementById('leagueSelect').value;
-  const home=document.getElementById('homeTeam').value;
-  const away=document.getElementById('awayTeam').value;
-  const time=document.getElementById('matchTime').value;
-  const comm=document.getElementById('commentator').value;
-  const chan=document.getElementById('channel').value;
-  let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
-  let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
-  if(!time){alert('ادخل وقت المباراة');return;}
+document.getElementById('addMatch').onclick=()=> {
+  const league = document.getElementById('leagueSelect').value;
+  const home = document.getElementById('homeTeam').value;
+  const away = document.getElementById('awayTeam').value;
+  const time = document.getElementById('matchTime').value;
+  const comm = document.getElementById('commentator').value;
+  const chan = document.getElementById('channel').value;
+  let homeImg = document.getElementById('homeTeam').selectedOptions[0]?.dataset.img || '';
+  let awayImg = document.getElementById('awayTeam').selectedOptions[0]?.dataset.img || '';
+  if(!time){ alert('ادخل وقت المباراة'); return; }
 
-  toBase64(homeImg,b64Home=>{
-    homeImg=b64Home;
-    toBase64(awayImg,b64Away=>{
-      awayImg=b64Away;
-      const chanLogoUrl = channels.find(c=>c.name===chan)?.logo || '';
+  // convert images to base64 (as in original) but fall back to original url if CORS fails
+  toBase64(homeImg, b64Home=>{
+    homeImg = b64Home || homeImg;
+    toBase64(awayImg, b64Away=>{
+      awayImg = b64Away || awayImg;
+      const chanLogoUrl = (channels || []).find(c=>c.name===chan)?.logo || '';
       toBase64(chanLogoUrl, b64Chan=>{
-        const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,chanLogo:b64Chan,nextDay:isNextDay};
-        if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
-        localStorage.setItem('matches',JSON.stringify(matches));
+        const newMatch = { league, home, away, time, comm, chan, homeImg, awayImg, chanLogo: b64Chan, nextDay: isNextDay };
+        if(editIndex !== null){ matches.splice(editIndex,0,newMatch); editIndex = null; } else matches.push(newMatch);
+        localStorage.setItem('matches', JSON.stringify(matches));
         render();
-        document.getElementById('matchTime').value='';
+        document.getElementById('matchTime').value = '';
       });
     });
   });
 };
 
+// --- render matches grouped by league ---
 function render(){
-  const matchesContainer=document.getElementById('matchesContainer');
-  matchesContainer.innerHTML='';
+  const matchesContainer = document.getElementById('matchesContainer');
+  matchesContainer.innerHTML = '';
   leagues.forEach(l=>{
-    const leagueMatches=matches.filter(m=>m.league===l.code);
-     if(leagueMatches.length>0){
-      const section=document.createElement('div'); section.className='matches-section';
-      const header=document.createElement('div'); header.className='section-header';
-      const extraLogo=l.extraLogo||l.extra;
-      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+    const leagueMatches = matches.filter(m=>m.league===l.code);
+    if(leagueMatches.length>0){
+      const section = document.createElement('div'); section.className = 'matches-section';
+      const header = document.createElement('div'); header.className = 'section-header';
+      const extraLogo = l.extraLogo || l.extra || l.extra || '';
+      header.innerHTML = `<img src='${extraLogo}' class='extra-logo-header' style='cursor:pointer'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
 
-
-      leagueMatches.forEach((m)=>{
-        const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#fdfdfd';
-        // عرض الوقت مباشرة بدون تحويله لكائن Date
+      // container for league's matches (for collapse support)
+      const leagueMatchesList = document.createElement('div');
+      leagueMatches.forEach((m, idx)=>{
+        const card = document.createElement('div'); card.className='match-card'; card.style.background = l.color || '#191919';
         const [hours, minutes] = m.time.split(':');
         let displayHours = parseInt(hours,10);
         const ampm = displayHours >= 12 ? 'م' : 'ص';
         displayHours = displayHours % 12 || 12;
 
-        card.innerHTML=`
+        card.innerHTML = `
           <div class="match_row">
             <div class="team hometeam">
               <span class="the_team">${m.home}</span>
@@ -350,78 +419,93 @@ function render(){
             <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
           </div>
         `;
-        section.appendChild(card);
+        leagueMatchesList.appendChild(card);
       });
 
+      // collapse toggle only when clicking extra logo
+      header.querySelector('.extra-logo-header').addEventListener('click', ()=>{
+        leagueMatchesList.style.display = leagueMatchesList.style.display === 'none' ? '' : 'none';
+      });
+
+      section.appendChild(leagueMatchesList);
       matchesContainer.appendChild(section);
     }
   });
 }
 
-window.editMatch=(index)=>{
-  const m=matches[index];
-  document.getElementById('leagueSelect').value=m.league;
-  loadTeams(m.league);
-  setTimeout(()=>{
-    document.getElementById('homeTeam').value=m.home;
-    document.getElementById('awayTeam').value=m.away;
-    document.getElementById('matchTime').value=m.time;
-    document.getElementById('commentator').value=m.comm;
-    document.getElementById('channel').value=m.chan;
-    updatePreview(document.getElementById('homeTeam'),'homePreview');
-    updatePreview(document.getElementById('awayTeam'),'awayPreview');
-   updateInlineLogo('homeTeam', 'homeLogoIcon');
-   updateInlineLogo('awayTeam', 'awayLogoIcon');
+// --- edit/delete functions ---
+window.editMatch = (index) => {
+  const m = matches[index];
+  // fill fields
+  document.getElementById('leagueSelect').value = m.league;
+  loadTeams(m.league); // will fill team selects, so we set values after a short timeout
 
-    editIndex=index;
+  setTimeout(()=>{
+    document.getElementById('homeTeam').value = m.home;
+    document.getElementById('awayTeam').value = m.away;
+    document.getElementById('matchTime').value = m.time;
+    document.getElementById('commentator').value = m.comm;
+    document.getElementById('channel').value = m.chan;
+
+    // update preview images (preview boxes)
+    document.getElementById('homePreview').innerHTML = m.homeImg ? `<img src="${m.homeImg}">` : '🏠';
+    document.getElementById('awayPreview').innerHTML = m.awayImg ? `<img src="${m.awayImg}">` : '⚽';
+
+    // For inline logos beside selects we might have dataset.img empty (because saved is base64).
+    // To show inline logo we prefer to set the select option dataset.img to the image if it's not present.
+    let homeSelect = document.getElementById('homeTeam');
+    let awaySelect = document.getElementById('awayTeam');
+
+    // ensure the option that matches has dataset.img; if not, inject it so inline logo shows
+    for(const opt of homeSelect.options){
+      if(opt.value === m.home){
+        if(!opt.dataset.img && m.homeImg) opt.dataset.img = m.homeImg;
+      }
+    }
+    for(const opt of awaySelect.options){
+      if(opt.value === m.away){
+        if(!opt.dataset.img && m.awayImg) opt.dataset.img = m.awayImg;
+      }
+    }
+
+    // update select2 visual selection and inline logos
+    try {
+      $('#homeTeam').trigger('change.select2');
+      $('#awayTeam').trigger('change.select2');
+    } catch(e){ /* ignore if select2 not yet initialized */ }
+
+    updateInlineLogo('homeTeam','homeLogoIcon');
+    updateInlineLogo('awayTeam','awayLogoIcon');
+
+    // prepare for re-saving: remove the current match from list so saving will insert new/edited
     matches.splice(index,1);
-    localStorage.setItem('matches',JSON.stringify(matches));
+    localStorage.setItem('matches', JSON.stringify(matches));
     render();
-  },100);
+  }, 250);
 };
 
-window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
+window.deleteMatch = (index) => {
+  if(confirm('هل تريد حذف هذه المباراة؟')){
+    matches.splice(index,1);
+    localStorage.setItem('matches', JSON.stringify(matches));
+    render();
+  }
+};
 
-document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns; render();});
-document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[]; localStorage.setItem('matches','[]'); render();}});
+document.getElementById('toggleBtns').addEventListener('click', ()=>{ showBtns = !showBtns; render(); });
+document.getElementById('deleteAll').addEventListener('click', ()=>{ if(confirm('هل تريد حذف كل البطاقات؟')){ matches = []; localStorage.setItem('matches','[]'); render(); } });
 
-document.getElementById('downloadTable').addEventListener('click',()=>{
+document.getElementById('downloadTable').addEventListener('click', ()=>{
   html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
-    const link=document.getElementById('downloadLink');
-    link.href=canvas.toDataURL('image/png');
-    link.download='matches.png';
+    const link = document.getElementById('downloadLink');
+    link.href = canvas.toDataURL('image/png');
+    link.download = 'matches.png';
     link.click();
   });
 });
 
-});
- // ✅ عرض شعار الفريق بجانب القائمة
-function updateInlineLogo(selectId, logoId) {
-  const select = document.getElementById(selectId);
-  const logo = document.getElementById(logoId);
-  const selected = select.selectedOptions[0];
-  const imgUrl = selected ? selected.dataset.img : '';
-  if (imgUrl) {
-    logo.src = imgUrl;
-    logo.style.display = 'block';
-  } else {
-    logo.style.display = 'none';
-  }
-}
-
-// ✅ تعديل أحداث التغيير للقائمتين
-document.getElementById('homeTeam').addEventListener('change', () => {
-  updatePreview(document.getElementById('homeTeam'), 'homePreview');
-  updateInlineLogo('homeTeam', 'homeLogoIcon');
-});
-
-document.getElementById('awayTeam').addEventListener('change', () => {
-  updatePreview(document.getElementById('awayTeam'), 'awayPreview');
-  updateInlineLogo('awayTeam', 'awayLogoIcon');
-});
-
+}); // DOMContentLoaded
 </script>
 
 </body>
 </html>
-
