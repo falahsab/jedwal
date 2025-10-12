@@ -17,8 +17,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/ar.js"></script>
 
 <style>
-html, body, * { font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important; -webkit-text-size-adjust: 100%; }
-body { background:#252525; padding:1px; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+html, body, * { font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important; -webkit-text-size-adjust: 100%; box-sizing: border-box; margin:0; padding:0; }body { background:#252525; padding:1px; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
 header { background:#070607; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
 .grid{display:grid; grid-template-columns:1fr 400px; gap:14px;}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
@@ -320,22 +319,11 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 });
   
-  document.getElementById('finalView').addEventListener('click', () => {
-  if(editIndex !== null) {
-    alert('لا يمكن عرض الجدول النهائي أثناء تعديل بطاقة. يرجى إنهاء التعديل أولاً.');
-    return;
-  }
-
-  const container = document.getElementById('matchesContainer');
-  // مثال: عرض فقط البطاقات بدون أزرار التعديل والحذف
-  container.querySelectorAll('.action-btns').forEach(btn => btn.style.display = 'none');
-  alert('الجدول النهائي جاهز للعرض! يمكنك الآن تحميله كصورة.');
-});
-
 </script>
 
 </body>
 </html>
+
 
 
 
