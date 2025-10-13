@@ -121,14 +121,28 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
   color: #ffffff !important;
   opacity: 0.7;
 }
-/* إعادة تطبيق خط Tajawal على كل أجزاء Select2 */
-.select2-container,
-.select2-dropdown,
+/* إجبار Select2 على استخدام خط Tajawal في جميع الحالات */
+.select2-container *,
+.select2-dropdown *,
 .select2-results__option,
 .select2-search__field,
 .select2-selection__rendered {
   font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+  font-weight: 500 !important;
 }
+
+/* لمنع إعادة تعيين النمط الافتراضي بعد التحميل */
+body .select2-container--default,
+body .select2-dropdown,
+body .select2-results__options {
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+}
+
+/* تثبيت الخط أيضًا عند الفتح أو الإغلاق (التأثير الانتقالي) */
+.select2-container--open .select2-dropdown {
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+}
+
 
 </style>
 </head>
@@ -458,6 +472,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
