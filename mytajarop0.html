@@ -145,10 +145,9 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 </div>
 
 <div style="margin-top:4px;" >
-<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
   <span id="todayDateDisplay"></span>
-  <input type="date" id="manualDate" style="display:none;">
-  <button id="editDateBtn" class="btn">📅 اختر يوم</button>
+<input type="date"  id="manualDate" style="display:none; margin-top:4px;">
+  <button id="editDateBtn" class="btn" style="margin-left:6px;">📅 اختر يوم</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -156,28 +155,36 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
 
-const todayDisplay = document.getElementById('todayDateDisplay');
-const editBtn = document.getElementById('editDateBtn');
+const displayEl = document.getElementById('todayDateDisplay');
 const manualDateEl = document.getElementById('manualDate');
+const editBtn = document.getElementById('editDateBtn');
+
 const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
-let currentDate = new Date();
-todayDisplay.textContent = `${days[currentDate.getDay()]} ${currentDate.getDate()}/${currentDate.getMonth()+1}/${currentDate.getFullYear()}`;
+// دالة لتحديث العرض
+function updateDateDisplay(date){
+  displayEl.textContent = `${days[date.getDay()]} ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+}
 
-editBtn.addEventListener('click', () => {
+// افتراضياً اليوم الحالي
+let currentDate = new Date();
+updateDateDisplay(currentDate);
+
+// عند الضغط على زر التحديد
+editBtn.addEventListener('click',()=>{
   manualDateEl.style.display = 'inline-block';
   manualDateEl.valueAsDate = currentDate;
-  manualDateEl.focus();
 });
 
-manualDateEl.addEventListener('change', () => {
+// عند تغيير التاريخ يدوياً
+manualDateEl.addEventListener('change',()=>{
   const selected = new Date(manualDateEl.value);
   if(!isNaN(selected)) {
     currentDate = selected;
-    todayDisplay.textContent = `${days[currentDate.getDay()]} ${currentDate.getDate()}/${currentDate.getMonth()+1}/${currentDate.getFullYear()}`;
+    updateDateDisplay(currentDate);
   }
-  manualDateEl.style.display = 'none';
 });
+
 const leaguesCSV='csv/leagues.csv';
 const commentatorsCSV='csv/commentators.csv';
 const channelsCSV='csv/channels.csv';
@@ -234,19 +241,24 @@ function loadTeams(leagueCode, cb){
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
-    // تهيئة Select2 للفرق
-    $('#homeTeam, #awayTeam').select2({
-      width: '100%',
-      dir: "rtl",
-      language: { noResults: () => "لا توجد نتائج مطابقة" }
-    });
+    // تهيئة Select2 للفرق وإعادة ربط حدث التغيير للمعاينة
+    setTimeout(()=>{
+      // إلغاء أي مستمع سابق لتجنب التكرار
+      $('#homeTeam, #awayTeam').off('change');
 
-    // ربط حدث التغيير
-    $('#homeTeam, #awayTeam').off('change').on('change', function() {
-      updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
-    });
+      $('#homeTeam, #awayTeam').select2({
+        width: '100%',
+        dir: "rtl",
+        language: { noResults: () => "لا توجد نتائج مطابقة" }
+      });
 
-    if(cb) cb(); // تأكد من أن callback يتم استدعاؤه بعد تهيئة Select2
+      $('#homeTeam, #awayTeam').on('change', function() {
+        updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
+      });
+
+      // استدعاء callback إن وُجد (مثلاً عند تعديل بطاقة)
+      if(typeof cb === 'function') cb();
+    }, 120); // مهلة صغيرة لتهيئة DOM
   });
 }
 
@@ -354,35 +366,40 @@ function render(){
 }
 
 window.editMatch = (index) => {
+  if (editIndex !== null) {
+    alert('هناك بطاقة قيد التعديل حالياً! يرجى حفظ أو إلغاء التعديل قبل تعديل مباراة أخرى.');
+    return;
+  }
+
   const m = matches[index];
 
-  // تحديد الدوري أولاً
+  // ضبط اختيار الدوري عبر Select2 (لكي يظهر اختيار الدوري المرئي)
   $('#leagueSelect').val(m.league).trigger('change.select2');
 
-  // تحميل الفرق ثم ضبط القيم بعد التأكد من التحميل
+  // نستخدم loadTeams مع callback لضمان أن الفرق محملة قبل ملء الحقول
   loadTeams(m.league, () => {
+    // الآن بعد أن تم تحميل الفرق وتهيئة Select2 لها، نعيّن القيم
     $('#homeTeam').val(m.home).trigger('change.select2');
     $('#awayTeam').val(m.away).trigger('change.select2');
 
-    // المعلق والقناة
+    // المعلّق والقناة - نضبطهما كذلك
     $('#commentator').val(m.comm).trigger('change.select2');
     $('#channel').val(m.chan).trigger('change.select2');
 
-    // الوقت
+    // الوقت (حقل نصي/وقت)
     document.getElementById('matchTime').value = m.time;
 
-    // تحديث معاينات الصور
+    // تحديث المعاينات (تأكد أن updatePreview تتعامل مع العنصر الأصلي أو dataset)
     updatePreview(document.getElementById('homeTeam'),'homePreview');
     updatePreview(document.getElementById('awayTeam'),'awayPreview');
 
+    // ضبط حالة التحرير: نحدد editIndex ونحذف العنصر من المصفوفة الآن
     editIndex = index;
     matches.splice(index, 1);
     localStorage.setItem('matches', JSON.stringify(matches));
     render();
   });
 };
-
-
 
 
 window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
@@ -406,6 +423,3 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
-
-
-
