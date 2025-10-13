@@ -68,25 +68,58 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 .channel-logo{position:absolute; bottom:6px; left:6px; width:auto; height:35px; object-fit:contain; z-index:3;}
 @media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
 
+/* تنسيق عام لصندوق الاختيار */
 .select2-container--default .select2-selection--single {
-  background-color: #;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: #fff;
+  background-color: #444444 !important;
+  border: 1px solid #666 !important;
   border-radius: 8px;
-  height: 38px;
+  height: 38px !important;
   display: flex;
   align-items: center;
 }
+
+/* النص الظاهر بعد الاختيار */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #ffffff !important;
+  line-height: 38px !important;
+  font-weight: 500;
+}
+
+/* السهم الصغير على اليمين */
+.select2-container--default .select2-selection__arrow b {
+  border-color: #ffffff transparent transparent transparent !important;
+}
+
+/* عناصر القوائم المنسدلة */
 .select2-container--default .select2-results__option {
-  background-color: #333;
-  color: #fff;
+  background-color: #444444 !important;
+  color: #ffffff !important;
+  font-weight: 500;
 }
+
+/* عند تمرير الماوس على خيار */
 .select2-container--default .select2-results__option--highlighted {
-  background-color: #3498db;
+  background-color: #3498db !important;
+  color: #ffffff !important;
 }
-.select2-search__field {
-  background-color: #555 !important;
-  color: #fff !important;
+
+/* مربع البحث داخل القائمة */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  background-color: #444444 !important;
+  color: #ffffff !important;
+  border: 1px solid #666 !important;
+}
+
+/* حدود القائمة المنسدلة */
+.select2-dropdown {
+  background-color: #444444 !important;
+  border: 1px solid #666 !important;
+}
+
+/* منع النص الرمادي الافتراضي */
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+  color: #ffffff !important;
+  opacity: 0.7;
 }
 
 </style>
@@ -417,5 +450,6 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
