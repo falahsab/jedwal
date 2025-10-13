@@ -354,29 +354,34 @@ function render(){
 }
 
 window.editMatch = (index) => {
-  if (editIndex !== null) { alert('هناك بطاقة قيد التعديل!'); return; }
-
   const m = matches[index];
+
+  // تحديد الدوري أولاً
   $('#leagueSelect').val(m.league).trigger('change.select2');
 
-  // استخدام callback بعد تحميل الفرق
+  // تحميل الفرق ثم ضبط القيم بعد التأكد من التحميل
   loadTeams(m.league, () => {
     $('#homeTeam').val(m.home).trigger('change.select2');
     $('#awayTeam').val(m.away).trigger('change.select2');
+
+    // المعلق والقناة
     $('#commentator').val(m.comm).trigger('change.select2');
     $('#channel').val(m.chan).trigger('change.select2');
 
+    // الوقت
     document.getElementById('matchTime').value = m.time;
 
+    // تحديث معاينات الصور
     updatePreview(document.getElementById('homeTeam'),'homePreview');
     updatePreview(document.getElementById('awayTeam'),'awayPreview');
 
     editIndex = index;
-    matches.splice(index,1);
-    localStorage.setItem('matches',JSON.stringify(matches));
+    matches.splice(index, 1);
+    localStorage.setItem('matches', JSON.stringify(matches));
     render();
   });
 };
+
 
 
 
@@ -401,5 +406,6 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
