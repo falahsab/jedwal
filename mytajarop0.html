@@ -67,37 +67,43 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 .action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
 .channel-logo{position:absolute; bottom:6px; left:6px; width:auto; height:35px; object-fit:contain; z-index:3;}
 @media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
+/* إجبار جميع عناصر Select2 على استخدام خط Tajawal */
+.select2-container,
+.select2-container *,
+.select2-dropdown,
+.select2-dropdown *,
+.select2-results__option,
+.select2-search__field,
+.select2-selection__rendered,
+.select2-selection__placeholder {
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 14px !important; /* يمكنك تعديل الحجم حسب رغبتك */
+  color: #ffffff !important;  /* للحفاظ على النص الأبيض */
+}
 
-/* تنسيق عام لصندوق الاختيار */
+/* خلفية الصندوق وخيارات القائمة */
 .select2-container--default .select2-selection--single {
   background-color: #444444 !important;
   border: 1px solid #666 !important;
-  border-radius: 8px;
+  border-radius: 8px !important;
   height: 38px !important;
-  display: flex;
-  align-items: center;
+  display: flex !important;
+  align-items: center !important;
 }
 
-/* النص الظاهر بعد الاختيار */
+/* نص الخيار المحدد داخل الصندوق */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
   color: #ffffff !important;
-  line-height: 38px !important;
-  font-weight: 500;
 }
 
-/* السهم الصغير على اليمين */
-.select2-container--default .select2-selection__arrow b {
-  border-color: #ffffff transparent transparent transparent !important;
-}
-
-/* عناصر القوائم المنسدلة */
+/* خيارات القائمة عند فتحها */
 .select2-container--default .select2-results__option {
   background-color: #444444 !important;
   color: #ffffff !important;
-  font-weight: 500;
 }
 
-/* عند تمرير الماوس على خيار */
+/* عند تمرير الماوس على الخيار */
 .select2-container--default .select2-results__option--highlighted {
   background-color: #3498db !important;
   color: #ffffff !important;
@@ -108,39 +114,6 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
   background-color: #444444 !important;
   color: #ffffff !important;
   border: 1px solid #666 !important;
-}
-
-/* حدود القائمة المنسدلة */
-.select2-dropdown {
-  background-color: #444444 !important;
-  border: 1px solid #666 !important;
-}
-
-/* منع النص الرمادي الافتراضي */
-.select2-container--default .select2-selection--single .select2-selection__placeholder {
-  color: #ffffff !important;
-  opacity: 0.7;
-}
-/* إجبار Select2 على استخدام خط Tajawal في جميع الحالات */
-.select2-container *,
-.select2-dropdown *,
-.select2-results__option,
-.select2-search__field,
-.select2-selection__rendered {
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-  font-weight: 500 !important;
-}
-
-/* لمنع إعادة تعيين النمط الافتراضي بعد التحميل */
-body .select2-container--default,
-body .select2-dropdown,
-body .select2-results__options {
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-}
-
-/* تثبيت الخط أيضًا عند الفتح أو الإغلاق (التأثير الانتقالي) */
-.select2-container--open .select2-dropdown {
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
 }
 
 
@@ -472,6 +445,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
