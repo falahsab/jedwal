@@ -125,14 +125,15 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
       <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
     </div>
 
-    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-      <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
-      <button id="nextDayBtn" class="btn" style="background:#6c5ce7;flex:0 0 auto;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
-    </div>
+<div style="display:flex; gap:6px; flex-wrap:wrap;">
+  <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
+  <button id="nextDayBtn" class="btn" style="flex:1; background:#6c5ce7;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
+</div>
 
-    <button id="toggleBtns" class="btn" style="margin-top:6px;">👁️ إظهار/إخفاء أزرار التعديل والحذف</button>
-    <button id="deleteAll" class="btn" style="margin-top:6px;">🗑️ حذف كل البطاقات</button>
-  </div>
+<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+  <button id="toggleBtns" class="btn" style="flex:1;">👁️ إظهار/إخفاء التعديل </button>
+  <button id="deleteAll" class="btn" style="flex:1;">🗑️ حذف كل البطاقات</button>
+</div>
 </div>
 
 <div class="matches-wrapper">
@@ -422,6 +423,7 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
