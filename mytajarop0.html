@@ -145,9 +145,10 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 </div>
 
 <div style="margin-top:4px;" >
+<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
   <span id="todayDateDisplay"></span>
-<input type="date"  id="manualDate" style="display:none; margin-top:4px;">
-  <button id="editDateBtn" class="btn" style="margin-left:6px;">📅 اختر يوم</button>
+  <input type="date" id="manualDate" style="display:none;">
+  <button id="editDateBtn" class="btn">📅 اختر يوم</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -155,36 +156,28 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
 
-const displayEl = document.getElementById('todayDateDisplay');
-const manualDateEl = document.getElementById('manualDate');
+const todayDisplay = document.getElementById('todayDateDisplay');
 const editBtn = document.getElementById('editDateBtn');
-
+const manualDateEl = document.getElementById('manualDate');
 const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
-// دالة لتحديث العرض
-function updateDateDisplay(date){
-  displayEl.textContent = `${days[date.getDay()]} ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
-}
-
-// افتراضياً اليوم الحالي
 let currentDate = new Date();
-updateDateDisplay(currentDate);
+todayDisplay.textContent = `${days[currentDate.getDay()]} ${currentDate.getDate()}/${currentDate.getMonth()+1}/${currentDate.getFullYear()}`;
 
-// عند الضغط على زر التحديد
-editBtn.addEventListener('click',()=>{
+editBtn.addEventListener('click', () => {
   manualDateEl.style.display = 'inline-block';
   manualDateEl.valueAsDate = currentDate;
+  manualDateEl.focus();
 });
 
-// عند تغيير التاريخ يدوياً
-manualDateEl.addEventListener('change',()=>{
+manualDateEl.addEventListener('change', () => {
   const selected = new Date(manualDateEl.value);
   if(!isNaN(selected)) {
     currentDate = selected;
-    updateDateDisplay(currentDate);
+    todayDisplay.textContent = `${days[currentDate.getDay()]} ${currentDate.getDate()}/${currentDate.getMonth()+1}/${currentDate.getFullYear()}`;
   }
+  manualDateEl.style.display = 'none';
 });
-
 const leaguesCSV='csv/leagues.csv';
 const commentatorsCSV='csv/commentators.csv';
 const channelsCSV='csv/channels.csv';
@@ -423,3 +416,4 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
