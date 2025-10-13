@@ -234,24 +234,19 @@ function loadTeams(leagueCode, cb){
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
-    // تهيئة Select2 للفرق وإعادة ربط حدث التغيير للمعاينة
-    setTimeout(()=>{
-      // إلغاء أي مستمع سابق لتجنب التكرار
-      $('#homeTeam, #awayTeam').off('change');
+    // تهيئة Select2 للفرق
+    $('#homeTeam, #awayTeam').select2({
+      width: '100%',
+      dir: "rtl",
+      language: { noResults: () => "لا توجد نتائج مطابقة" }
+    });
 
-      $('#homeTeam, #awayTeam').select2({
-        width: '100%',
-        dir: "rtl",
-        language: { noResults: () => "لا توجد نتائج مطابقة" }
-      });
+    // ربط حدث التغيير
+    $('#homeTeam, #awayTeam').off('change').on('change', function() {
+      updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
+    });
 
-      $('#homeTeam, #awayTeam').on('change', function() {
-        updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
-      });
-
-      // استدعاء callback إن وُجد (مثلاً عند تعديل بطاقة)
-      if(typeof cb === 'function') cb();
-    }, 120); // مهلة صغيرة لتهيئة DOM
+    if(cb) cb(); // تأكد من أن callback يتم استدعاؤه بعد تهيئة Select2
   });
 }
 
@@ -359,40 +354,30 @@ function render(){
 }
 
 window.editMatch = (index) => {
-  if (editIndex !== null) {
-    alert('هناك بطاقة قيد التعديل حالياً! يرجى حفظ أو إلغاء التعديل قبل تعديل مباراة أخرى.');
-    return;
-  }
+  if (editIndex !== null) { alert('هناك بطاقة قيد التعديل!'); return; }
 
   const m = matches[index];
-
-  // ضبط اختيار الدوري عبر Select2 (لكي يظهر اختيار الدوري المرئي)
   $('#leagueSelect').val(m.league).trigger('change.select2');
 
-  // نستخدم loadTeams مع callback لضمان أن الفرق محملة قبل ملء الحقول
+  // استخدام callback بعد تحميل الفرق
   loadTeams(m.league, () => {
-    // الآن بعد أن تم تحميل الفرق وتهيئة Select2 لها، نعيّن القيم
     $('#homeTeam').val(m.home).trigger('change.select2');
     $('#awayTeam').val(m.away).trigger('change.select2');
-
-    // المعلّق والقناة - نضبطهما كذلك
     $('#commentator').val(m.comm).trigger('change.select2');
     $('#channel').val(m.chan).trigger('change.select2');
 
-    // الوقت (حقل نصي/وقت)
     document.getElementById('matchTime').value = m.time;
 
-    // تحديث المعاينات (تأكد أن updatePreview تتعامل مع العنصر الأصلي أو dataset)
     updatePreview(document.getElementById('homeTeam'),'homePreview');
     updatePreview(document.getElementById('awayTeam'),'awayPreview');
 
-    // ضبط حالة التحرير: نحدد editIndex ونحذف العنصر من المصفوفة الآن
     editIndex = index;
-    matches.splice(index, 1);
-    localStorage.setItem('matches', JSON.stringify(matches));
+    matches.splice(index,1);
+    localStorage.setItem('matches',JSON.stringify(matches));
     render();
   });
 };
+
 
 
 window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
@@ -416,4 +401,5 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
