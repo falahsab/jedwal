@@ -144,10 +144,10 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 <a id="downloadLink"></a>
 </div>
 
-<div style="margin-top:4px;" >
+<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
   <span id="todayDateDisplay"></span>
-<input type="date"  id="manualDate" style="display:none; margin-top:4px;">
-  <button id="editDateBtn" class="btn" style="margin-left:6px;">📅 اختر يوم</button>
+  <input type="date" id="manualDate" style="display:none;">
+  <button id="editDateBtn" class="btn">📅 اختر يوم</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -423,3 +423,4 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
