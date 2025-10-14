@@ -138,17 +138,18 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
 
 <div class="matches-wrapper">
   <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
-  
-<button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل الجدول كصورة</button>
-<a id="downloadLink"></a>
 </div>
-
+  
+<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+  <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل </button>
+<a id="downloadLink"></a>
+<button id="swapSections" class="btn" style="margin-top:8px;">تبديل العرض ↔️
+</div>
 <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
   <span id="todayDateDisplay"></span>
   <input type="date" id="manualDate" style="display:none;">
   <button id="editDateBtn" class="btn">📅 اختر يوم</button>
 </div>
-<button id="swapSections" class="btn" style="margin-top:8px;">🔄 تبديل العرض (تحكم ↔️ مباريات)
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -455,6 +456,7 @@ swapBtn.addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
