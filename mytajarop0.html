@@ -454,12 +454,12 @@ swapBtn.addEventListener('click', () => {
     // المباريات فوق لوحة التحكم
     mainContent.insertBefore(matchesWrapper, grid);
     swapped = true;
-    swapBtn.textContent = "🔄 إعادة الترتيب (تحكم ↔️ مباريات)";
+    swapBtn.textContent = "🔄 إعادة الترتيب";
   } else {
     // لوحة التحكم فوق المباريات (الترتيب الافتراضي)
     mainContent.insertBefore(grid, matchesWrapper);
     swapped = false;
-    swapBtn.textContent = "🔄 تبديل العرض (تحكم ↔️ مباريات)";
+    swapBtn.textContent = "🔄 تبديل العرض";
   }
 });
 
@@ -468,3 +468,4 @@ swapBtn.addEventListener('click', () => {
 
 </body>
 </html>
+
