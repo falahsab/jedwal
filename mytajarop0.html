@@ -280,28 +280,41 @@ document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(
 if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
 document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
 
-document.getElementById('addMatch').onclick=()=>{
-  const league=document.getElementById('leagueSelect').value;
-  const home=document.getElementById('homeTeam').value;
-  const away=document.getElementById('awayTeam').value;
-  const time=document.getElementById('matchTime').value;
-  const comm=document.getElementById('commentator').value;
-  const chan=document.getElementById('channel').value;
-  let homeImg=document.getElementById('homeTeam').selectedOptions[0].dataset.img;
-  let awayImg=document.getElementById('awayTeam').selectedOptions[0].dataset.img;
-  if(!time){alert('ادخل وقت المباراة');return;}
+document.getElementById('addMatch').onclick = () => {
+  const league = document.getElementById('leagueSelect').value;
+  const home = document.getElementById('homeTeam').value;
+  const away = document.getElementById('awayTeam').value;
+  const time = document.getElementById('matchTime').value;
+  const comm = document.getElementById('commentator').value;
+  const chan = document.getElementById('channel').value;
+  let homeImg = document.getElementById('homeTeam').selectedOptions[0].dataset.img;
+  let awayImg = document.getElementById('awayTeam').selectedOptions[0].dataset.img;
 
-  toBase64(homeImg,b64Home=>{
-    homeImg=b64Home;
-    toBase64(awayImg,b64Away=>{
-      awayImg=b64Away;
-      const chanLogoUrl = channels.find(c=>c.name===chan)?.logo || '';
-      toBase64(chanLogoUrl, b64Chan=>{
-        const newMatch={league,home,away,time,comm,chan,homeImg,awayImg,chanLogo:b64Chan,nextDay:isNextDay};
-        if(editIndex!==null){matches.splice(editIndex,0,newMatch); editIndex=null;} else matches.push(newMatch);
-        localStorage.setItem('matches',JSON.stringify(matches));
+  if (!time) { alert('ادخل وقت المباراة'); return; }
+
+  toBase64(homeImg, b64Home => {
+    homeImg = b64Home;
+    toBase64(awayImg, b64Away => {
+      awayImg = b64Away;
+      const chanLogoUrl = channels.find(c => c.name === chan)?.logo || '';
+      toBase64(chanLogoUrl, b64Chan => {
+        const newMatch = { league, home, away, time, comm, chan, homeImg, awayImg, chanLogo: b64Chan, nextDay: isNextDay };
+
+        // ✅ تعديل الإضافة/التحديث
+        if (editIndex !== null) {
+          matches.splice(editIndex, 0, newMatch);
+          editIndex = null;
+        } else {
+          matches.push(newMatch);
+        }
+
+        localStorage.setItem('matches', JSON.stringify(matches));
         render();
-        document.getElementById('matchTime').value='';
+        document.getElementById('matchTime').value = '';
+
+        // ✅ إعادة زر اليوم التالي للوضع الافتراضي بعد الإضافة
+        isNextDay = false;
+        document.getElementById('nextDayState').textContent = '❌';
       });
     });
   });
@@ -423,4 +436,5 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
