@@ -149,6 +149,7 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
   <input type="date" id="manualDate" style="display:none;">
   <button id="editDateBtn" class="btn">📅 اختر يوم</button>
 </div>
+<button id="swapSections" class="btn" style="margin-top:8px;">🔄 تبديل العرض (تحكم ↔️ مباريات)
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -431,10 +432,30 @@ document.getElementById('downloadTable').addEventListener('click',()=>{
 
 });
 
+// ✅ تبديل أماكن لوحة التحكم والبطاقات فقط
+const grid = document.querySelector('.grid');
+const swapBtn = document.getElementById('swapSections');
+let swapped = false;
+
+swapBtn.addEventListener('click', () => {
+  const formCard = document.querySelector('.form');
+  const matchesWrapper = document.querySelector('.matches-wrapper');
+
+  if (!swapped) {
+    grid.appendChild(formCard);
+    swapped = true;
+    swapBtn.textContent = "🔄 إعادة الترتيب (مباريات ↔️ تحكم)";
+  } else {
+    grid.insertBefore(formCard, grid.firstElementChild);
+    swapped = false;
+    swapBtn.textContent = "🔄 تبديل العرض (تحكم ↔️ مباريات)";
+  }
+});
 
 </script>
 
 </body>
 </html>
+
 
 
