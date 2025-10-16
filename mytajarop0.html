@@ -413,9 +413,10 @@ function render(){
           </div>
 
 ${m.comm ? `
-  <div class="meta">
-    <div>🎙️ ${m.comm}</div>
-  </div>
+<div class="meta" style="min-height: 24px;">
+  ${m.comm ? `<div>🎙️ ${m.comm}</div>` : ''}
+</div>
+
 ` : ''}
 
 ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
@@ -514,6 +515,7 @@ swapBtn.addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
