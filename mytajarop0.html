@@ -101,6 +101,10 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
   flex-wrap: wrap;
 }
 
+.editable {
+  cursor: pointer;
+  border-bottom: 1px dashed #fff;
+}
 
 </style>
 </head>
@@ -120,6 +124,13 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
       <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
       <div style="width:120px"><label>الوقت</label><input id="matchTime" type="time" /></div>
     </div>
+   <div class="row">
+  <div style="flex:1">
+    <label>النتيجة</label>
+    <input type="text" id="matchResult" placeholder="مثلاً 2-1">
+  </div>
+</div>
+
     <div class="row">
       <div style="flex:1"><label>الفريق المضيف</label><select id="homeTeam"></select></div>
       <div style="width:40px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
@@ -342,6 +353,7 @@ document.getElementById('addMatch').onclick = () => {
   const chan = document.getElementById('channel').value;
   let homeImg = document.getElementById('homeTeam').selectedOptions[0].dataset.img;
   let awayImg = document.getElementById('awayTeam').selectedOptions[0].dataset.img;
+ result: document.getElementById('matchResult').value.trim(),
 
   if (!time) { alert('ادخل وقت المباراة'); return; }
 
@@ -394,23 +406,35 @@ function render(){
         displayHours = displayHours % 12 || 12;
 
         card.innerHTML=`
-          <div class="match_row">
-            <div class="team hometeam">
-              <span class="the_team">${m.home}</span>
-              <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
-            </div>
-            <div class="middle_column">
-              <div class="the_time">
-                <span>${displayHours}:${minutes}</span>
-                <span>${ampm}</span>
-              </div>
-              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
-            </div>
-            <div class="team awayteam">
-              <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-              <span class="the_team">${m.away}</span>
-            </div>
-          </div>
+         <div class="match_row">
+  <div class="team hometeam">
+    <span class="the_team">${m.home}</span>
+    <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+  </div>
+
+  <div class="middle_column">
+ <div class="the_time">
+  ${m.result 
+    ? `<span class="match-result editable" data-index="${matches.indexOf(m)}" data-field="result">${m.result}</span>` 
+    : `<span class="editable" data-index="${matches.indexOf(m)}" data-field="time">${displayHours}:${minutes} ${ampm}</span>`
+  }
+</div>
+
+    ${m.nextDay && !m.result ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+  </div>
+
+  <div class="team awayteam">
+    <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+    <span class="the_team">${m.away}</span>
+  </div>
+</div>
+
+${!m.result ? `
+  <div class="meta" style="min-height: 24px;">
+    ${m.comm ? `<div>🎙️ ${m.comm}</div>` : ''}
+  </div>
+  ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
+` : ''}
 
 <div class="meta" style="min-height: 24px;">
   ${m.comm ? `<div>🎙️ ${m.comm}</div>` : ''}
@@ -431,6 +455,31 @@ ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` 
     }
   });
 }
+document.addEventListener('click', (e) => {
+  if(e.target.classList.contains('editable')) {
+    const span = e.target;
+    const index = parseInt(span.dataset.index);
+    const field = span.dataset.field;
+    const oldValue = span.textContent;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = oldValue;
+    input.style.width = '60px';
+    input.style.textAlign = 'center';
+    span.replaceWith(input);
+    input.focus();
+
+    const save = () => {
+      matches[index][field] = input.value.trim();
+      localStorage.setItem('matches', JSON.stringify(matches));
+      render();
+    };
+
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', (ev) => { if(ev.key==='Enter') save(); });
+  }
+});
 
 window.editMatch = (index) => {
   if (editIndex !== null) {
@@ -512,6 +561,7 @@ swapBtn.addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
