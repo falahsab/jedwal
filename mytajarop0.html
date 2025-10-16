@@ -159,6 +159,16 @@ label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
   <button id="editDateBtn" class="btn">📅 اختر يوم</button>
 </div>
 
+<div class="row">
+  <div style="flex:1">
+    <label>شعار إضافي (Extra Logo)</label>
+    <select id="extraLogoSelect"></select>
+  </div>
+  <div style="width:60px">
+    <label>&nbsp;</label>
+    <div class="logo" id="extraPreview">🖼️</div>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -199,6 +209,10 @@ const leaguesCSV='csv/leagues.csv';
 const commentatorsCSV='csv/commentators.csv';
 const channelsCSV='csv/channels.csv';
 const teamsCSVFolder='https://falahsab.github.io/jedwal/teams/';
+ const extraLogosCSV = 'csv/extra_logos.csv';
+let extraLogos = [];
+let selectedExtraLogo = ""; // الشعار الافتراضي المستخدم
+
 let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
 let matches=[], editIndex=null, isNextDay=false;
 // بعد تحميل القوائم
@@ -215,6 +229,35 @@ setTimeout(() => {
       noResults: () => "لا توجد نتائج مطابقة"
     }
   });
+fetchExtraLogos();
+
+function fetchExtraLogos(){
+  fetchCSV(extraLogosCSV, data=>{
+    extraLogos = data;
+    const extraSelect = document.getElementById('extraLogoSelect');
+    extraSelect.innerHTML = data.map(x=>`<option value="${x.logo}">${x.name}</option>`).join('');
+
+    // ✅ افتراضياً استخدم أول شعار في القائمة
+    if (data.length > 0) {
+      selectedExtraLogo = data[0].logo;
+      document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra" style="max-height:40px;">`;
+    }
+
+    // تفعيل Select2 للبحث
+    $('#extraLogoSelect').select2({
+      width: '100%',
+      dir: 'rtl',
+      language: { noResults: () => "لا توجد نتائج مطابقة" }
+    });
+
+    // تغيير الشعار يحدّث المعاينة ويعيد عرض البطاقات
+    $('#extraLogoSelect').on('change', function(){
+      selectedExtraLogo = this.value;
+      document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra" style="max-height:40px;">`;
+      render();
+    });
+  });
+}
 
   // ✅ حدث اختيار الدوري
   $('#leagueSelect').on('select2:select', function (e) {
@@ -338,7 +381,7 @@ function render(){
     if(leagueMatches.length>0){
       const section=document.createElement('div'); section.className='matches-section';
       const header=document.createElement('div'); header.className='section-header';
-      const extraLogo=l.extraLogo||l.extra;
+     const extraLogo = selectedExtraLogo || l.extraLogo || l.extra;
       header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
       section.appendChild(header);
 
@@ -468,4 +511,5 @@ swapBtn.addEventListener('click', () => {
 
 </body>
 </html>
+
 
