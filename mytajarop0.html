@@ -143,7 +143,7 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 </div>
 
 <div class="matches-wrapper">
-  <div class="card"><div id="matchesContainer"><center>مع vip عيش المتعة .. اشترك الآن</center></div> </div>
+  <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
 </div>
 </div>
 
@@ -340,84 +340,73 @@ document.getElementById('addMatch').onclick = () => {
 };
 
 function render(){
-  // نحذف جميع الدوريات القديمة من الصفحة بالكامل
-  document.querySelectorAll('.matches-wrapper').forEach(e => e.remove());
-
-  leagues.forEach(l => {
-    const leagueMatches = matches.filter(m => m.league === l.code);
-    if(leagueMatches.length > 0){
-      // إنشاء div مستقل للدوري
-      const leagueWrapper = document.createElement('div');
-
-
-      // رأس الدوري
-      const header = document.createElement('div');
-      header.className = 'section-header';
+  const matchesContainer=document.getElementById('matchesContainer');
+  matchesContainer.innerHTML='';
+  leagues.forEach(l=>{
+    const leagueMatches=matches.filter(m=>m.league===l.code);
+    if(leagueMatches.length>0){
+      const section=document.createElement('div'); section.className='matches-section';
+      const header=document.createElement('div'); header.className='section-header';
       const extraLogo = selectedExtraLogo || l.extraLogo || l.extra;
-      header.innerHTML = `
-        <img src='${extraLogo}' class='extra-logo-header'>
-        <img src='${l.logo}' style='width:24px;height:24px;margin-left:6px'>
-        ${l.name}
-      `;
-      leagueWrapper.appendChild(header);
+      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+      section.appendChild(header);
 
-      // المباريات الخاصة بالدوري
-      leagueMatches.forEach(m => {
-        const card = document.createElement('div');
-        card.className = 'match-card';
-        card.style.background = l.color || '#191919';
+// داخل render()
+leagueMatches.forEach((m)=>{
+  const card=document.createElement('div'); 
+  card.className='match-card'; 
+  card.style.background=l.color||'#fdfdfd';
 
-        const [hours, minutes] = m.time.split(':');
-        let displayHours = parseInt(hours,10);
-        const ampm = displayHours >= 12 ? 'م' : 'ص';
-        displayHours = displayHours % 12 || 12;
+  const [hours, minutes] = m.time.split(':');
+  let displayHours = parseInt(hours,10);
+  const ampm = displayHours >= 12 ? 'م' : 'ص';
+  displayHours = displayHours % 12 || 12;
 
-        let bottomHTML = '';
-        if(m.comm || m.chanLogo){
-          bottomHTML = `
-            <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; position:relative;">
-              ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:30px; object-fit:contain;" alt="${m.chan}">` : ''}
-              ${m.comm ? `<div style="flex:1; text-align:center; font-weight:500; color:#efeded;">🎙️ ${m.comm}</div>` : ''}
-            </div>
-          `;
-        }
+  // السطر السفلي: المعلق في الوسط، شعار القناة على أقصى اليسار
+  let bottomHTML = '';
+  if(m.comm || m.chanLogo){
+    bottomHTML = `
+      <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; position:relative;">
+        ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:30px; object-fit:contain;" alt="${m.chan}">` : ''}
+        ${m.comm ? `<div style="flex:1; text-align:center; font-weight:500; color:#efeded;">🎙️ ${m.comm}</div>` : ''}
+      </div>
+    `;
+  }
 
-        card.innerHTML = `
-          <div class="match_row">
-            <div class="team hometeam">
-              <span class="the_team">${m.home}</span>
-              <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
-            </div>
-            <div class="middle_column">
-              <div class="the_time">
-                <span>${displayHours}:${minutes}</span>
-                <span>${ampm}</span>
-              </div>
-              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
-            </div>
-            <div class="team awayteam">
-              <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-              <span class="the_team">${m.away}</span>
-            </div>
-          </div>
+  card.innerHTML=`
+    <div class="match_row">
+      <div class="team hometeam">
+        <span class="the_team">${m.home}</span>
+        <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+      </div>
+      <div class="middle_column">
+        <div class="the_time">
+          <span>${displayHours}:${minutes}</span>
+          <span>${ampm}</span>
+        </div>
+        ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+      </div>
+      <div class="team awayteam">
+        <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+        <span class="the_team">${m.away}</span>
+      </div>
+    </div>
 
-          ${bottomHTML}
+    ${bottomHTML}
 
-          <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-            <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-            <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-          </div>
-        `;
+    <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+      <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+      <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+    </div>
+  `;
+  section.appendChild(card);
+});
 
-        leagueWrapper.appendChild(card);
-      });
 
-      // نضيف الدوري مباشرة داخل body
-      document.body.appendChild(leagueWrapper);
+      matchesContainer.appendChild(section);
     }
   });
 }
-
 
 window.editMatch = (index) => {
   if (editIndex !== null) {
@@ -461,8 +450,5 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
-
-
-
 
 
