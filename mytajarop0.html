@@ -412,13 +412,16 @@ function render(){
             </div>
           </div>
 
-${(m.comm || m.chanLogo) ? `
-  <div class="meta">
-    ${m.comm ? `<div>🎙️ ${m.comm}</div>` : ''}
-  </div>
-` : ''}
+// ✨ عرض المعلق والقناة فقط إذا وُجد أحدهما، مع الحفاظ على المسافات
+if (m.comm || m.chanLogo) {
+  card.innerHTML += `
+    <div class="meta" style="min-height:24px; display:flex; justify-content:center; align-items:center; gap:10px;">
+      ${m.comm ? `<div>🎙️ ${m.comm}</div>` : ''}
+    </div>
+    ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
+  `;
+}
 
-${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
 
           <div class="action-btns" style="display:${showBtns?'flex':'none'}">
             <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
@@ -513,4 +516,5 @@ swapBtn.addEventListener('click', () => {
 
 </body>
 </html>
+
 
