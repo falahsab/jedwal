@@ -362,7 +362,17 @@ leagueMatches.forEach((m)=>{
   const ampm = displayHours >= 12 ? 'م' : 'ص';
   displayHours = displayHours % 12 || 12;
 
-  // محتوى البطاقة الأساسي
+  // إذا كان هناك معلّق أو شعار القناة، نحتفظ بالسطر السفلي
+  let bottomHTML = '';
+  if(m.comm || m.chanLogo){
+    bottomHTML = `
+      <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; gap:10px; position:relative;">
+        ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" style="position:absolute; left:6px; height:35px;" alt="${m.chan}">` : ''}
+        ${m.comm ? `<div style="flex:1; text-align:center;">🎙️ ${m.comm}</div>` : ''}
+      </div>
+    `;
+  }
+
   card.innerHTML=`
     <div class="match_row">
       <div class="team hometeam">
@@ -382,12 +392,7 @@ leagueMatches.forEach((m)=>{
       </div>
     </div>
 
-    ${ (m.comm || m.chanLogo) ? `
-      <div class="meta" style="min-height: 24px;">
-        ${m.comm ? `<div>🎙️ ${m.comm}</div>` : ''}
-      </div>
-      ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
-    ` : ''}
+    ${bottomHTML}
 
     <div class="action-btns" style="display:${showBtns?'flex':'none'}">
       <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
@@ -396,7 +401,6 @@ leagueMatches.forEach((m)=>{
   `;
   section.appendChild(card);
 });
-
 
       matchesContainer.appendChild(section);
     }
@@ -445,4 +449,5 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
