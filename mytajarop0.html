@@ -362,13 +362,13 @@ leagueMatches.forEach((m)=>{
   const ampm = displayHours >= 12 ? 'م' : 'ص';
   displayHours = displayHours % 12 || 12;
 
-  // إذا كان هناك معلّق أو شعار القناة، نحتفظ بالسطر السفلي
+  // السطر السفلي: المعلق في الوسط، شعار القناة على أقصى اليسار
   let bottomHTML = '';
   if(m.comm || m.chanLogo){
     bottomHTML = `
-      <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; gap:10px; position:relative;">
-        ${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" style="position:absolute; left:6px; height:35px;" alt="${m.chan}">` : ''}
-        ${m.comm ? `<div style="flex:1; text-align:center;">🎙️ ${m.comm}</div>` : ''}
+      <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; position:relative;">
+        ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:24px; object-fit:contain;" alt="${m.chan}">` : ''}
+        ${m.comm ? `<div style="flex:1; text-align:center; font-weight:500; color:#efeded;">🎙️ ${m.comm}</div>` : ''}
       </div>
     `;
   }
@@ -401,6 +401,7 @@ leagueMatches.forEach((m)=>{
   `;
   section.appendChild(card);
 });
+
 
       matchesContainer.appendChild(section);
     }
@@ -449,5 +450,6 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
