@@ -367,7 +367,7 @@ leagueMatches.forEach((m)=>{
   if(m.comm || m.chanLogo){
     bottomHTML = `
       <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; position:relative;">
-        ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:24px; object-fit:contain;" alt="${m.chan}">` : ''}
+        ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:30px; object-fit:contain;" alt="${m.chan}">` : ''}
         ${m.comm ? `<div style="flex:1; text-align:center; font-weight:500; color:#efeded;">🎙️ ${m.comm}</div>` : ''}
       </div>
     `;
@@ -450,6 +450,7 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
