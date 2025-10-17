@@ -340,26 +340,26 @@ document.getElementById('addMatch').onclick = () => {
 };
 
 function render(){
-  const matchesContainer = document.getElementById('matchesContainer');
-  matchesContainer.innerHTML = '';
+  const mainContainer = document.getElementById('matchesContainer');
+  mainContainer.innerHTML = '';
 
   leagues.forEach(l => {
     const leagueMatches = matches.filter(m => m.league === l.code);
     if(leagueMatches.length > 0){
-      // إنشاء بطاقة للدوري
-      const leagueCard = document.createElement('div');
-      leagueCard.className = 'card matches-section';
-      leagueCard.style.marginBottom = '16px';
+      // wrapper خاص بالدوري
+      const leagueWrapper = document.createElement('div');
+      leagueWrapper.className = 'matches-wrapper card'; // كل دوري كبطاقة مستقلة
+      leagueWrapper.style.marginBottom = '20px';
 
-      // رأس البطاقة مع شعار الدوري والشعار الإضافي
+      // رأس الدوري مع الشعار الإضافي والشعار الرسمي
       const header = document.createElement('div');
       header.className = 'section-header';
       const extraLogo = selectedExtraLogo || l.extraLogo || l.extra;
       header.innerHTML = `<img src='${extraLogo}' class='extra-logo-header'> 
                           <img src='${l.logo}' style='width:24px;height:24px;margin-left:6px'> ${l.name}`;
-      leagueCard.appendChild(header);
+      leagueWrapper.appendChild(header);
 
-      // إضافة كل المباريات داخل البطاقة
+      // إضافة المباريات داخل wrapper الدوري
       leagueMatches.forEach(m => {
         const card = document.createElement('div');
         card.className = 'match-card';
@@ -370,7 +370,6 @@ function render(){
         const ampm = displayHours >= 12 ? 'م' : 'ص';
         displayHours = displayHours % 12 || 12;
 
-        // أسفل البطاقة: المعلق في الوسط، شعار القناة على أقصى اليسار
         let bottomHTML = '';
         if(m.comm || m.chanLogo){
           bottomHTML = `
@@ -408,10 +407,10 @@ function render(){
           </div>
         `;
 
-        leagueCard.appendChild(card);
+        leagueWrapper.appendChild(card);
       });
 
-      matchesContainer.appendChild(leagueCard);
+      mainContainer.appendChild(leagueWrapper);
     }
   });
 }
@@ -458,7 +457,5 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
-
-
 
 
