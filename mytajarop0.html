@@ -340,26 +340,30 @@ document.getElementById('addMatch').onclick = () => {
 };
 
 function render(){
-  const mainContainer = document.getElementById('matchesContainer');
-  mainContainer.innerHTML = '';
+  // نحذف جميع الدوريات القديمة من الصفحة بالكامل
+  document.querySelectorAll('.matches-wrapper').forEach(e => e.remove());
 
   leagues.forEach(l => {
     const leagueMatches = matches.filter(m => m.league === l.code);
     if(leagueMatches.length > 0){
-      // wrapper خاص بالدوري
+      // إنشاء div مستقل للدوري
       const leagueWrapper = document.createElement('div');
-      leagueWrapper.className = 'matches-wrapper card'; // كل دوري كبطاقة مستقلة
-      leagueWrapper.style.marginBottom = '20px';
+      leagueWrapper.className = 'matches-wrapper card';
+      leagueWrapper.style.margin = '20px auto';
+      leagueWrapper.style.maxWidth = '800px';
 
-      // رأس الدوري مع الشعار الإضافي والشعار الرسمي
+      // رأس الدوري
       const header = document.createElement('div');
       header.className = 'section-header';
       const extraLogo = selectedExtraLogo || l.extraLogo || l.extra;
-      header.innerHTML = `<img src='${extraLogo}' class='extra-logo-header'> 
-                          <img src='${l.logo}' style='width:24px;height:24px;margin-left:6px'> ${l.name}`;
+      header.innerHTML = `
+        <img src='${extraLogo}' class='extra-logo-header'>
+        <img src='${l.logo}' style='width:24px;height:24px;margin-left:6px'>
+        ${l.name}
+      `;
       leagueWrapper.appendChild(header);
 
-      // إضافة المباريات داخل wrapper الدوري
+      // المباريات الخاصة بالدوري
       leagueMatches.forEach(m => {
         const card = document.createElement('div');
         card.className = 'match-card';
@@ -410,10 +414,12 @@ function render(){
         leagueWrapper.appendChild(card);
       });
 
-      mainContainer.appendChild(leagueWrapper);
+      // نضيف الدوري مباشرة داخل body
+      document.body.appendChild(leagueWrapper);
     }
   });
 }
+
 
 window.editMatch = (index) => {
   if (editIndex !== null) {
@@ -457,6 +463,7 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
