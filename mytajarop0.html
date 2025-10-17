@@ -340,70 +340,78 @@ document.getElementById('addMatch').onclick = () => {
 };
 
 function render(){
-  const matchesContainer=document.getElementById('matchesContainer');
-  matchesContainer.innerHTML='';
-  leagues.forEach(l=>{
-    const leagueMatches=matches.filter(m=>m.league===l.code);
-    if(leagueMatches.length>0){
-      const section=document.createElement('div'); section.className='matches-section';
-      const header=document.createElement('div'); header.className='section-header';
+  const matchesContainer = document.getElementById('matchesContainer');
+  matchesContainer.innerHTML = '';
+
+  leagues.forEach(l => {
+    const leagueMatches = matches.filter(m => m.league === l.code);
+    if(leagueMatches.length > 0){
+      // إنشاء بطاقة للدوري
+      const leagueCard = document.createElement('div');
+      leagueCard.className = 'card matches-section';
+      leagueCard.style.marginBottom = '16px';
+
+      // رأس البطاقة مع شعار الدوري والشعار الإضافي
+      const header = document.createElement('div');
+      header.className = 'section-header';
       const extraLogo = selectedExtraLogo || l.extraLogo || l.extra;
-      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
-      section.appendChild(header);
+      header.innerHTML = `<img src='${extraLogo}' class='extra-logo-header'> 
+                          <img src='${l.logo}' style='width:24px;height:24px;margin-left:6px'> ${l.name}`;
+      leagueCard.appendChild(header);
 
-// داخل render()
-leagueMatches.forEach((m)=>{
-  const card=document.createElement('div'); 
-  card.className='match-card'; 
-  card.style.background=l.color||'#fdfdfd';
+      // إضافة كل المباريات داخل البطاقة
+      leagueMatches.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        card.style.background = l.color || '#191919';
 
-  const [hours, minutes] = m.time.split(':');
-  let displayHours = parseInt(hours,10);
-  const ampm = displayHours >= 12 ? 'م' : 'ص';
-  displayHours = displayHours % 12 || 12;
+        const [hours, minutes] = m.time.split(':');
+        let displayHours = parseInt(hours,10);
+        const ampm = displayHours >= 12 ? 'م' : 'ص';
+        displayHours = displayHours % 12 || 12;
 
-  // السطر السفلي: المعلق في الوسط، شعار القناة على أقصى اليسار
-  let bottomHTML = '';
-  if(m.comm || m.chanLogo){
-    bottomHTML = `
-      <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; position:relative;">
-        ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:30px; object-fit:contain;" alt="${m.chan}">` : ''}
-        ${m.comm ? `<div style="flex:1; text-align:center; font-weight:500; color:#efeded;">🎙️ ${m.comm}</div>` : ''}
-      </div>
-    `;
-  }
+        // أسفل البطاقة: المعلق في الوسط، شعار القناة على أقصى اليسار
+        let bottomHTML = '';
+        if(m.comm || m.chanLogo){
+          bottomHTML = `
+            <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; position:relative;">
+              ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:30px; object-fit:contain;" alt="${m.chan}">` : ''}
+              ${m.comm ? `<div style="flex:1; text-align:center; font-weight:500; color:#efeded;">🎙️ ${m.comm}</div>` : ''}
+            </div>
+          `;
+        }
 
-  card.innerHTML=`
-    <div class="match_row">
-      <div class="team hometeam">
-        <span class="the_team">${m.home}</span>
-        <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
-      </div>
-      <div class="middle_column">
-        <div class="the_time">
-          <span>${displayHours}:${minutes}</span>
-          <span>${ampm}</span>
-        </div>
-        ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
-      </div>
-      <div class="team awayteam">
-        <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-        <span class="the_team">${m.away}</span>
-      </div>
-    </div>
+        card.innerHTML = `
+          <div class="match_row">
+            <div class="team hometeam">
+              <span class="the_team">${m.home}</span>
+              <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+            </div>
+            <div class="middle_column">
+              <div class="the_time">
+                <span>${displayHours}:${minutes}</span>
+                <span>${ampm}</span>
+              </div>
+              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+            </div>
+            <div class="team awayteam">
+              <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+              <span class="the_team">${m.away}</span>
+            </div>
+          </div>
 
-    ${bottomHTML}
+          ${bottomHTML}
 
-    <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-      <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-      <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-    </div>
-  `;
-  section.appendChild(card);
-});
+          <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+            <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+            <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+          </div>
+        `;
 
+        leagueCard.appendChild(card);
+      });
 
-      matchesContainer.appendChild(section);
+      matchesContainer.appendChild(leagueCard);
     }
   });
 }
@@ -450,6 +458,7 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
