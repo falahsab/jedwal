@@ -7,42 +7,26 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
 <!-- مكتبة Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <style>
- html, body, * {
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-  -webkit-text-size-adjust: 100%;
-}
-@font-face {
-  font-family: 'Tajawal';
-  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff2') format('woff2'),
-       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Tajawal';
-  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff2') format('woff2'),
-       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-body { background:#333; padding:0px; color:#ffffff; min-height:100vh; display:flex; flex-direction:column; }
+ html, body, * { font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important; -webkit-text-size-adjust: 100%; }
+body { background:#333; padding:0; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
 header { background:#070607; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
+#mainContent { display:none; } /* إخفاء المحتوى حتى التحقق */
+.auth-container { text-align:center; margin-top:50px; }
+.auth-container input { padding:8px; border-radius:6px; border:1px solid #ccc; width:200px; }
+.auth-container button { padding:8px 12px; margin-left:6px; border:none; border-radius:6px; background:#3498db; color:#fff; cursor:pointer; }
 .grid{display:grid; grid-template-columns:1fr 400px; gap:14px;margin-bottom: 20px;}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .card{background:#252525;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
 .row{display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
-select,input[type="time"]{background:#444444; border:1px solid rgba(255,255,25,0.12); padding:8px; border-radius:8px; color:#ffffff; width:100%;}
-label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
+select,input[type="time"]{background:#444;border:1px solid rgba(255,255,25,0.12);padding:8px;border-radius:8px;color:#fff;width:100%;}
+label{font-size:13px;color:#fff;display:block;margin-bottom:4px;}
 .logo{height: auto; max-width: 100%;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
 .logo img{width:100%;height:100%;object-fit:contain; transition:width 0.3s,height 0.3s;}
 .btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
@@ -67,52 +51,35 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 .action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
 .channel-logo{width:auto; height:35px; object-fit:contain; z-index:3; align-self:flex-start; margin-top:8px;}
 .match-bottom-area{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:8px; min-height:38px; padding-top:6px; flex-wrap:wrap;}
-@media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
-
-.select2-container--default .select2-selection--single {
-  background-color: #444;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: #fff;
-  border-radius: 8px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-}
-.select2-container--default .select2-results__option {
-  background-color: #333;
-  color: #fff;
-}
-.select2-container--default .select2-results__option--highlighted {
-  background-color: #3498db;
-}
-.select2-search__field {
-  background-color: #555 !important;
-  color: #fff !important;
-}
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-  color: #ffffff !important;
-}
-
-.bottom-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
+.select2-container--default .select2-selection--single { background-color: #444; border: 1px solid rgba(255,255,255,0.12); color: #fff; border-radius: 8px; height: 38px; display: flex; align-items: center; }
+.select2-container--default .select2-results__option { background-color: #333; color: #fff; }
+.select2-container--default .select2-results__option--highlighted { background-color: #3498db; }
+.select2-search__field { background-color: #555 !important; color: #fff !important; }
+.select2-container--default .select2-selection--single .select2-selection__rendered { color: #ffffff !important; }
+.bottom-buttons { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
 </style>
 </head>
 <body>
 
+<!-- واجهة التحقق -->
+<div id="authContainer" class="auth-container">
+  <h3>🔒 أدخل رمز الدخول</h3>
+  <input id="accessKey" type="text" placeholder="رمز الدخول">
+  <button id="checkAccess">دخول</button>
+  <p id="authMessage"></p>
+</div>
+
+<!-- المحتوى الأساسي -->
+<div id="mainContent">
 <header>
 ⚽ أهم مباريات اليوم
 <div style="margin-top:4px;">
   <span id="todayDateDisplay" style="font-size:16px;font-weight:400;margin-top:4px;"></span>
 </div>
 </header>
-<div id="mainContent">
+
 <div class="grid">
+  <!-- نموذج إضافة مباراة -->
   <div class="card form">
     <div class="row">
       <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
@@ -131,50 +98,85 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
       <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
     </div>
 
-<div style="display:flex; gap:6px; flex-wrap:wrap;">
-  <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
-  <button id="nextDayBtn" class="btn" style="flex:1; background:#6c5ce7;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
-</div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+      <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
+      <button id="nextDayBtn" class="btn" style="flex:1; background:#6c5ce7;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
+    </div>
 
-<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
-  <button id="toggleBtns" class="btn" style="flex:1;">👁️ تعديل/حذف </button>
-  <button id="deleteAll" class="btn" style="flex:1;">🗑️ حذف كل البطاقات</button>
-</div>
-</div>
-
-<div class="matches-wrapper">
- <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</p> عبر الواتساب: 738092209</center></div>
-</div>
-
-<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
-  <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل </button>
-  <a id="downloadLink"></a>
-  <button id="swapSections" class="btn" style="margin-top:8px;">تبديل العرض ↔️</button>
-</div>
-
-<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
-  <span id="todayDateDisplay"></span>
-  <input type="date" id="manualDate" style="display:none;">
-  <button id="editDateBtn" class="btn">📅 اختر يوم</button>
-</div>
-
-<div class="row">
-  <div style="flex:1">
-    <label>شعار إضافي (Extra Logo)</label>
-    <select id="extraLogoSelect"></select>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+      <button id="toggleBtns" class="btn" style="flex:1;">👁️ تعديل/حذف </button>
+      <button id="deleteAll" class="btn" style="flex:1;">🗑️ حذف كل البطاقات</button>
+    </div>
   </div>
-  <div style="width:60px">
-    <label>&nbsp;</label>
-    <div class="logo" id="extraPreview">🖼️</div>
+
+  <div class="matches-wrapper">
+    <div class="card"><div id="matchesContainer"></div> 
+    <center>مع vip عيش المتعة .. اشترك الآن عبر الواتساب: 738092209</center>
+    </div>
+  </div>
+
+  <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+    <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل </button>
+    <a id="downloadLink"></a>
+    <button id="swapSections" class="btn" style="margin-top:8px;">تبديل العرض ↔️</button>
+  </div>
+
+  <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+    <span id="todayDateDisplay"></span>
+    <input type="date" id="manualDate" style="display:none;">
+    <button id="editDateBtn" class="btn">📅 اختر يوم</button>
+  </div>
+
+  <div class="row">
+    <div style="flex:1">
+      <label>شعار إضافي (Extra Logo)</label>
+      <select id="extraLogoSelect"></select>
+    </div>
+    <div style="width:60px">
+      <label>&nbsp;</label>
+      <div class="logo" id="extraPreview">🖼️</div>
+    </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
 <script>
-// ==========================
-// الكود الجافاسكربت الأساسي مع تعديل عرض المعلق والقناة
-// ==========================
+// =======================
+// نظام حماية بالرمز من CSV
+// =======================
+const accessCSV = 'https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/csv/macs.csv';
+let allowedKeys = [];
+
+fetch(accessCSV)
+  .then(res => res.text())
+  .then(text => {
+    const rows = text.split('\n').map(r => r.trim()).filter(r => r && r !== 'key');
+    allowedKeys = rows;
+  });
+
+document.getElementById('checkAccess').addEventListener('click', () => {
+  const enteredKey = document.getElementById('accessKey').value.trim();
+  if (allowedKeys.includes(enteredKey)) {
+    localStorage.setItem('authKey', enteredKey);
+    document.getElementById('authContainer').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+  } else {
+    document.getElementById('authMessage').textContent = '❌ الرمز غير صحيح';
+  }
+});
+
+window.addEventListener('load', () => {
+  const savedKey = localStorage.getItem('authKey');
+  if (savedKey && allowedKeys.includes(savedKey)) {
+    document.getElementById('authContainer').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+  } else {
+    document.getElementById('authContainer').style.display = 'block';
+    document.getElementById('mainContent').style.display = 'none';
+  }
+});
 document.addEventListener('DOMContentLoaded',()=>{
 
 const displayEl = document.getElementById('todayDateDisplay');
@@ -449,13 +451,3 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
