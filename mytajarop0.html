@@ -58,9 +58,12 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 .team.hometeam{justify-content:flex-end;}
 .team.awayteam{justify-content:flex-start;}
 .team_logo{width:clamp(25px,4vw,38px); height:clamp(25px,4vw,38px); object-fit:contain;}
-.the_team{font-weight:700; font-size:clamp(13px,2vw,17px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.middle_column{display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:clamp(15px,2vw,22px); line-height:1.1;}
-.the_time{display:flex; align-items:center; gap:4px; justify-content:center;}
+.the_team {
+  flex-shrink: 1;
+  text-align: center;
+  max-width: 100px;
+}
+.middle_column { display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: clamp(15px, 2vw, 22px); line-height: 1.1; width: 75px; /* 👈 عرض ثابت يجعل الفرق مصطفة */ }.the_time{display:flex; align-items:center; gap:4px; justify-content:center;}
 .next-day-label{font-size:10px; color:#98999a; margin-top:0; line-height:1;}
 .meta{display:flex; justify-content:center; align-items:center; gap:20px; font-size:13px; color:#efeded; margin-top:6px; font-weight:500; flex-wrap:wrap; text-align:center;}
 .action-btns{display:flex; gap:6px; margin-top:6px; justify-content:center; flex-wrap:wrap;}
@@ -449,3 +452,4 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
+
