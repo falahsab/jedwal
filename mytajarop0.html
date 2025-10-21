@@ -58,7 +58,17 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 .team.hometeam{justify-content:flex-end;}
 .team.awayteam{justify-content:flex-start;}
 .team_logo{width:clamp(25px,4vw,38px); height:clamp(25px,4vw,38px); object-fit:contain;}
-.the_team{font-weight:700; font-size:clamp(13px,2vw,17px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.the_team {
+  font-weight:600;
+  font-size:clamp(11px,1.6vw,14px); /* 👈 تصغير الخط قليلاً */
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex-shrink:1;
+  text-align:center;
+  max-width:100px;
+}
+
 .middle_column{display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:clamp(15px,2vw,22px); line-height:1.1;  width: 55px; }
 .the_time{display:flex; align-items:center; gap:4px; justify-content:center;}
 .next-day-label{font-size:10px; color:#98999a; margin-top:0; line-height:1;}
@@ -449,3 +459,4 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
+
