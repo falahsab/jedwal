@@ -202,6 +202,52 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
+ /* ===========================
+   تسجيل Service Worker بدون console.log
+=========================== */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+
+/* ===========================
+   زر تثبيت التطبيق PWA
+=========================== */
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const installBtn = document.createElement('button');
+  installBtn.textContent = "📲 ثبّت التطبيق";
+  installBtn.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #3498db;
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 9999;
+  `;
+  document.body.appendChild(installBtn);
+
+  installBtn.addEventListener('click', async () => {
+    installBtn.remove();
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  });
+});
+
+/* ===========================
+   بقية كود جافاسكربت الصفحة الأصلي
+   ضع هنا كل الكود الأصلي للجافاسكربت كما أعطيتني سابقاً
+=========================== */
+
 // ==========================
 // الكود الجافاسكربت الأساسي مع تعديل عرض المعلق والقناة
 // ==========================
@@ -478,51 +524,10 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </script
  
-<script>
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  // منع المتصفح من عرض البانر التلقائي
-  e.preventDefault();
-  deferredPrompt = e;
-
-  // إنشاء زر التثبيت
-  const installBtn = document.createElement('button');
-  installBtn.textContent = "📲 ثبّت التطبيق";
-  installBtn.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #3498db;
-    color: #fff;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 9999;
-  `;
-  document.body.appendChild(installBtn);
-
-  installBtn.addEventListener('click', async () => {
-    installBtn.remove();
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log('User response to install prompt:', outcome);
-    deferredPrompt = null;
-  });
-});
-</script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-
-</script>
 
 </body>
 </html>
+
 
 
 
