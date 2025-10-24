@@ -4,20 +4,22 @@
 }
 @font-face {
   font-family: 'Tajawal';
-  src: url('fonts/Tajawal-Regular.woff2') format('woff2'),
-       url('fonts/Tajawal-Regular.woff') format('woff');
+  src: url('../fonts/Tajawal-Regular.woff2') format('woff2'),
+       url('../fonts/Tajawal-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Tajawal';
-  src: url('fonts/Tajawal-Bold.woff2') format('woff2'),
-       url('fonts/Tajawal-Bold.woff') format('woff');
+  src: url('../fonts/Tajawal-Bold.woff2') format('woff2'),
+       url('../fonts/Tajawal-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
+
 
 body { background:#333; padding:0px; color:#ffffff; min-height:100vh; display:flex; flex-direction:column; }
 header { background:#070607; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
