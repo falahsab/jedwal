@@ -1,0 +1,341 @@
+html, body, * {
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+  -webkit-text-size-adjust: 100%;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('fonts/Tajawal-Regular.woff2') format('woff2'),
+       url('fonts/Tajawal-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('fonts/Tajawal-Bold.woff2') format('woff2'),
+       url('fonts/Tajawal-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  background:#333;
+  padding:0px;
+  color:#ffffff;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+header {
+  background:#070607;
+  color:#fff;
+  padding:12px 16px;
+  border-radius:8px;
+  margin-bottom:18px;
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:1fr 400px;
+  gap:14px;
+  margin-bottom: 20px;
+}
+
+@media(max-width:900px){
+  .grid { grid-template-columns:1fr }
+}
+
+.card {
+  background:#252525;
+  border-radius:12px;
+  padding:14px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08);
+}
+
+.row {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+
+select,input[type="time"] {
+  background:#444444;
+  border:1px solid rgba(255,255,25,0.12);
+  padding:8px;
+  border-radius:8px;
+  color:#ffffff;
+  width:100%;
+}
+
+label {
+  font-size:13px;
+  color:#ffffff;
+  display:block;
+  margin-bottom:4px;
+}
+
+.logo {
+  height: auto;
+  max-width: 100%;
+  border-radius:8px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.logo img {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  transition:width 0.3s,height 0.3s;
+}
+
+.btn {
+  background:#3498db;
+  color:#fff;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  width:100%;
+}
+
+.matches-wrapper {
+  margin-top: -9px;
+  margin-bottom: 20px;
+}
+
+.matches-section {
+  margin-bottom:16px;
+}
+
+.section-header {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:700;
+  font-size:15px;
+  margin-bottom:8px;
+  position:relative;
+  padding-left:40px;
+}
+
+.extra-logo-header {
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translateY(-50%);
+  width:auto;
+  height:24px;
+}
+
+.match-card {
+  display:flex;
+  flex-direction:column;
+  border-radius:7px;
+  border:1px solid rgba(0,0,0,0.05);
+  padding:4px;
+  margin-bottom:2px;
+  position:relative;
+  overflow:hidden;
+  background-color:#191919;
+  padding-bottom:4px;
+}
+
+.match-card::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat0.png');
+  background-repeat:repeat;
+  background-size:60px auto;
+  opacity:0.04;
+  pointer-events:none;
+  z-index:0;
+  background-color:#191919;
+}
+
+.match-card>* {
+  position:relative;
+  z-index:1;
+}
+
+.match_row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.team {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex:1;
+  min-width:0;
+  white-space:nowrap;
+}
+
+.team.hometeam { justify-content:flex-end; }
+.team.awayteam { justify-content:flex-start; }
+
+.team_logo {
+  width:clamp(25px,4vw,38px);
+  height:clamp(25px,4vw,38px);
+  object-fit:contain;
+}
+
+.the_team {
+  font-weight:600;
+  font-size:clamp(11px,1.6vw,14px);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex-shrink:1;
+  text-align:center;
+  max-width:100px;
+}
+
+.middle_column {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:clamp(12px,2vw,22px);
+  line-height:1.1;
+  width: 48px;
+}
+
+.the_time {
+  display:flex;
+  align-items:center;
+  gap:4px;
+  justify-content:center;
+}
+
+.next-day-label {
+  font-size:8px;
+  color:#98999a;
+  margin-top:0;
+  line-height:1;
+}
+
+.meta {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:20px;
+  font-size:12px;
+  color:#efeded;
+  margin-top:0px;
+  font-weight:500;
+  flex-wrap:wrap;
+  text-align:center;
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+}
+
+.action-btns {
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.action-btns button {
+  padding:4px 8px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.channel-logo {
+  width:auto;
+  height:35px;
+  object-fit:contain;
+  z-index:3;
+  align-self:flex-start;
+  margin-top:8px;
+}
+
+.match-bottom-area {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:8px;
+  min-height:38px;
+  padding-top:6px;
+  flex-wrap:wrap;
+}
+
+@media print {
+  .action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn {
+    display:none !important;
+  }
+}
+
+/* Select2 Custom Styles */
+.select2-container--default .select2-selection--single {
+  background-color: #444;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  border-radius: 8px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.select2-container--default .select2-results__option {
+  background-color: #333;
+  color: #fff;
+}
+
+.select2-container--default .select2-results__option--highlighted {
+  background-color: #3498db;
+}
+
+.select2-search__field {
+  background-color: #555 !important;
+  color: #fff !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #ffffff !important;
+}
+
+.bottom-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.commentator {
+  flex: 1;
+  text-align: center;
+  font-weight: 500;
+  color: #efeded;
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+  font-size: 13px;
+  line-height: 1.3;
+}
