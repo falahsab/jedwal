@@ -1,0 +1,20 @@
+{
+  "name": "صانع جدول",
+  "short_name": "جدولي",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f1724",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/jedwal0.png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/jedwal1.png"
+    }
+  ]
+}
