@@ -476,35 +476,54 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 });
 });
 
+</script
  
- let deferredPrompt;
-window.addEventListener("beforeinstallprompt", (e) => {
+<script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // منع المتصفح من عرض البانر التلقائي
   e.preventDefault();
   deferredPrompt = e;
 
-  const btn = document.createElement("button");
-  btn.textContent = "📲 ثبّت التطبيق";
-  btn.style.cssText = "background:#3498db;color:#fff;padding:12px;margin:12px;";
-  document.body.appendChild(btn);
+  // إنشاء زر التثبيت
+  const installBtn = document.createElement('button');
+  installBtn.textContent = "📲 ثبّت التطبيق";
+  installBtn.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #3498db;
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 9999;
+  `;
+  document.body.appendChild(installBtn);
 
-  btn.addEventListener("click", () => {
-    btn.remove();
+  installBtn.addEventListener('click', async () => {
+    installBtn.remove();
     deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('User response to install prompt:', outcome);
+    deferredPrompt = null;
   });
 });
-
-</script
- 
+</script>
 
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js")
-  .then(()=>console.log("Service Worker Registered"));
+  navigator.serviceWorker.register("sw.js");
 }
+
 </script>
 
 </body>
 </html>
+
 
 
 
