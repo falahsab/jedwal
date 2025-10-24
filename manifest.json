@@ -1,18 +1,19 @@
 {
-  "name": "صانع جدول",
-  "short_name": "جدولي",
-  "start_url": "/index.html",
+  "name": "جدول مباريات ",
+  "short_name": "جدول المباريات",
+  "description": "لوحة تحكم لإنشاء جدول مباريات للدوريات العالمية والعربية",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#0f1724",
+  "background_color": "#333333",
+  "theme_color": "#6c5ce7",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/img/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/jedwal0.png"
     },
     {
-      "src": "icon-512.png",
+      "src": "/img/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/jedwal1.png"
     }
