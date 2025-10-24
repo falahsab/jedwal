@@ -474,25 +474,35 @@ document.getElementById('swapSections').addEventListener('click',()=>{
   wrapper.parentNode.insertBefore(wrapper, wrapper.parentNode.firstChild===wrapper?wrapper.nextSibling:wrapper.parentNode.firstChild);
 });
 });
-</script>
-<script>
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
+
+ 
+ let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  let btn = document.getElementById("installBtn");
-  btn.style.display = "block";
-  btn.onclick = () => {
-    btn.style.display = "none";
-    deferredPrompt.prompt();
-  };
-});
-</script>
 
-<button id="installBtn" style="display:none;">📲 تثبيت التطبيق</button>
+  const btn = document.createElement("button");
+  btn.textContent = "📲 ثبّت التطبيق";
+  btn.style.cssText = "background:#3498db;color:#fff;padding:12px;margin:12px;";
+  document.body.appendChild(btn);
+
+  btn.addEventListener("click", () => {
+    btn.remove();
+    deferredPrompt.prompt();
+  });
+});
+
+</script
+ 
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
 
 </body>
 </html>
+
 
 
 
