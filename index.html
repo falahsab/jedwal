@@ -202,16 +202,16 @@ label{font-size:13px;color:#ffffff;display:block;margin-bottom:4px;}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
- /* ===========================
-   تسجيل Service Worker بدون console.log
-=========================== */
+// ============================
+// Service Worker PWA
+// ============================
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
 
-/* ===========================
-   زر تثبيت التطبيق PWA
-=========================== */
+// ============================
+// زر تثبيت التطبيق أسفل الصفحة
+// ============================
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -222,15 +222,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
   installBtn.textContent = "📲 ثبّت التطبيق";
   installBtn.style.cssText = `
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     background: #3498db;
     color: #fff;
     border: none;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 16px;
+    padding: 14px 0;
+    font-size: 18px;
     cursor: pointer;
+    text-align: center;
+    font-weight: bold;
     z-index: 9999;
   `;
   document.body.appendChild(installBtn);
@@ -242,12 +244,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
     deferredPrompt = null;
   });
 });
-
-/* ===========================
-   بقية كود جافاسكربت الصفحة الأصلي
-   ضع هنا كل الكود الأصلي للجافاسكربت كما أعطيتني سابقاً
-=========================== */
-
 // ==========================
 // الكود الجافاسكربت الأساسي مع تعديل عرض المعلق والقناة
 // ==========================
@@ -527,6 +523,7 @@ document.getElementById('swapSections').addEventListener('click',()=>{
 
 </body>
 </html>
+
 
 
 
