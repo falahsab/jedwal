@@ -23,6 +23,8 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <link rel="stylesheet" href="css/styles.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#070607">
 
 </head>
 <body>
@@ -96,6 +98,15 @@
  
 <!-- سكربتك الرئيسي -->
 <script src="/js/script.js"></script>
+<!-- سكربتك التطبيق -->
+ <script>
+  if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .then(() => console.log('Service Worker Registered'))
+    .catch(err => console.error('Service Worker registration failed:', err));
+}
+</script>
 </body>
 </html>
+
 
