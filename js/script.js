@@ -259,8 +259,9 @@ window.editMatch = (index) => {
     $('#commentator').val(m.comm).trigger('change.select2');
     $('#channel').val(m.chan).trigger('change.select2');
     document.getElementById('matchTime').value = m.time;
-    updatePreview(document.getElementById('homeTeam'),'homePreview');
-    updatePreview(document.getElementById('awayTeam'),'awayPreview');
+    updatePreview(document.getElementById('homeTeam'), 'homePreview');
+    updatePreview(document.getElementById('awayTeam'), 'awayPreview');
+
     editIndex = index;
     matches.splice(index, 1);
     localStorage.setItem('matches', JSON.stringify(matches));
