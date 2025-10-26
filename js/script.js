@@ -92,7 +92,9 @@ function loadTeams(leagueCode, cb){
     teams[leagueCode]=data;
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
-    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
+    homeTeam.innerHTML = awayTeam.innerHTML = data.map(t =>
+       `<option value='${t.name}'>${t.name}</option>`
+      ).join('');
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
@@ -148,8 +150,9 @@ document.getElementById('addMatch').onclick = () => {
   const time = document.getElementById('matchTime').value;
   const comm = document.getElementById('commentator').value;
   const chan = document.getElementById('channel').value;
-  let homeImg = document.getElementById('homeTeam').selectedOptions[0].dataset.img;
-  let awayImg = document.getElementById('awayTeam').selectedOptions[0].dataset.img;
+  let homeImg = `teams_images/${home}.png`;
+  let awayImg = `teams_images/${away}.png`;
+
 
   if (!time) { alert('ادخل وقت المباراة'); return; }
 
