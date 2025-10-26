@@ -112,13 +112,25 @@ function loadTeams(leagueCode, cb){
 
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
-function updatePreview(selectEl,previewId){
-  const s=selectEl.selectedOptions[0];
-  const img=s.dataset.img;
-  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
-  else document.getElementById(previewId).innerHTML='⚽';
-}
+function updatePreview(selectEl, previewId){
+  const teamName = selectEl.value;
+  const imgUrl = `teams_images/${teamName}.png`; // مجلد عام لجميع الصور
 
+  const previewEl = document.getElementById(previewId);
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext('2d').drawImage(img, 0, 0);
+    previewEl.innerHTML = `<img src="${canvas.toDataURL()}" alt="${teamName}">`;
+  };
+  img.onerror = () => {
+    previewEl.innerHTML = '⚽'; // إذا لم توجد صورة
+  };
+  img.src = imgUrl;
+}
 populateLeagues(); fetchCommentators(); fetchChannels();
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
