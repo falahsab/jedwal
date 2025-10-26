@@ -131,6 +131,8 @@ function updatePreview(selectEl, previewId){
   };
   img.src = imgUrl;
 }
+
+
 populateLeagues(); fetchCommentators(); fetchChannels();
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
@@ -146,9 +148,8 @@ document.getElementById('addMatch').onclick = () => {
   const time = document.getElementById('matchTime').value;
   const comm = document.getElementById('commentator').value;
   const chan = document.getElementById('channel').value;
-  let homeImg = `teams_images/${home}.png`;
-  let awayImg = `teams_images/${away}.png`;
-
+  let homeImg = document.getElementById('homeTeam').selectedOptions[0].dataset.img;
+  let awayImg = document.getElementById('awayTeam').selectedOptions[0].dataset.img;
 
   if (!time) { alert('ادخل وقت المباراة'); return; }
 
