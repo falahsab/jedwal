@@ -32,7 +32,7 @@ const commentatorsCSV='csv/commentators.csv';
 const channelsCSV='csv/channels.csv';
 const teamsCSVFolder='teams/';
 const extraLogosCSV = 'csv/extra_logos.csv';
-const imgUrl = `/teams_images/${teamName}.png`;
+const imgUrl = `teams_images/${teamName}.png`;
 let extraLogos = [];
 let selectedExtraLogo = "";
 let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
