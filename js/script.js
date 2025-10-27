@@ -68,6 +68,10 @@ setTimeout(() => {
     loadTeams(leagueCode);
   });
 }, 800);
+function getTeamImageFromGeneralFolder(teamName, callback){
+  const imgUrl = `teams_images/${teamName}.png`; // اسم الصورة = اسم الفريق
+  toBase64(imgUrl, b64 => callback(b64));
+}
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
 function toBase64(url, callback){
@@ -135,8 +139,17 @@ function updatePreview(selectEl, previewId){
 
 populateLeagues(); fetchCommentators(); fetchChannels();
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
-document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
-document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
+document.getElementById('homeTeam').addEventListener('change', function(){
+  getTeamImageFromGeneralFolder(this.value, b64=>{
+    document.getElementById('homePreview').innerHTML = `<img src="${b64}" alt="${this.value}">`;
+  });
+});
+
+document.getElementById('awayTeam').addEventListener('change', function(){
+  getTeamImageFromGeneralFolder(this.value, b64=>{
+    document.getElementById('awayPreview').innerHTML = `<img src="${b64}" alt="${this.value}">`;
+  });
+});
 
 if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
 document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
