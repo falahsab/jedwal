@@ -93,9 +93,10 @@ function loadTeams(leagueCode, cb){
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
 homeTeam.innerHTML = awayTeam.innerHTML = data.map(t=>{
-const imgPath = `teams_images/${t.name}.png`;
+  const imgPath = `teams_images/${t.name}.png`;
   return `<option value='${t.name}' data-img='${imgPath}'>${t.name}</option>`;
 }).join('');
+
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
@@ -124,7 +125,7 @@ function updatePreview(selectEl,previewId){
 }
 
 
-populateLeagues(); fetchCommentators(); fetchChannels();
+
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
 document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
@@ -251,8 +252,14 @@ window.editMatch = (index) => {
     $('#commentator').val(m.comm).trigger('change.select2');
     $('#channel').val(m.chan).trigger('change.select2');
     document.getElementById('matchTime').value = m.time;
-    updatePreview(document.getElementById('homeTeam'),'homePreview');
-    updatePreview(document.getElementById('awayTeam'),'awayPreview');
+const homeSel = document.getElementById('homeTeam').selectedOptions[0];
+homeSel.dataset.img = `teams_images/${homeSel.value}.png`;
+const awaySel = document.getElementById('awayTeam').selectedOptions[0];
+awaySel.dataset.img = `teams_images/${awaySel.value}.png`;
+
+updatePreview(document.getElementById('homeTeam'),'homePreview');
+updatePreview(document.getElementById('awayTeam'),'awayPreview');
+
     editIndex = index;
     matches.splice(index, 1);
     localStorage.setItem('matches', JSON.stringify(matches));
