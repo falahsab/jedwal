@@ -93,8 +93,8 @@ function loadTeams(leagueCode, cb){
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
 homeTeam.innerHTML = awayTeam.innerHTML = data.map(t=>{
-  const encoded = encodeURIComponent(t.name);
-  const imgPath = `teams_images/${encoded}.png`;
+const imgPath = `teams_images/${t.name}.png`;
+
   return `<option value="${t.name}" data-img="${imgPath}">${t.name}</option>`;
 }).join('');
 
