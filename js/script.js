@@ -68,10 +68,6 @@ setTimeout(() => {
     loadTeams(leagueCode);
   });
 }, 800);
-function getTeamImageFromGeneralFolder(teamName, callback){
-  const imgUrl = `teams_images/${teamName}.png`; // اسم الصورة = اسم الفريق
-  toBase64(imgUrl, b64 => callback(b64));
-}
 
 function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
 function toBase64(url, callback){
@@ -96,9 +92,7 @@ function loadTeams(leagueCode, cb){
     teams[leagueCode]=data;
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
-homeTeam.innerHTML = awayTeam.innerHTML = data.map(t =>
-  `<option value='${t.name}'>${t.name}</option>`
-).join('');
+    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
@@ -118,40 +112,17 @@ homeTeam.innerHTML = awayTeam.innerHTML = data.map(t =>
 
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
-function updatePreview(selectEl, previewId){
-  const teamName = selectEl.value;
-  const imgUrl = `teams_images/${teamName}.png`; // مجلد عام لجميع الصور
-
-  const previewEl = document.getElementById(previewId);
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.onload = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    canvas.getContext('2d').drawImage(img, 0, 0);
-    previewEl.innerHTML = `<img src="${canvas.toDataURL()}" alt="${teamName}">`;
-  };
-  img.onerror = () => {
-    previewEl.innerHTML = '⚽'; // إذا لم توجد صورة
-  };
-  img.src = imgUrl;
+function updatePreview(selectEl,previewId){
+  const s=selectEl.selectedOptions[0];
+  const img=s.dataset.img;
+  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
+  else document.getElementById(previewId).innerHTML='⚽';
 }
 
-
-
+populateLeagues(); fetchCommentators(); fetchChannels();
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
-document.getElementById('homeTeam').addEventListener('change', function(){
-  getTeamImageFromGeneralFolder(this.value, b64=>{
-    document.getElementById('homePreview').innerHTML = `<img src="${b64}" alt="${this.value}">`;
-  });
-});
-
-document.getElementById('awayTeam').addEventListener('change', function(){
-  getTeamImageFromGeneralFolder(this.value, b64=>{
-    document.getElementById('awayPreview').innerHTML = `<img src="${b64}" alt="${this.value}">`;
-  });
-});
+document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
+document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
 
 if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
 document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
@@ -163,26 +134,26 @@ document.getElementById('addMatch').onclick = () => {
   const time = document.getElementById('matchTime').value;
   const comm = document.getElementById('commentator').value;
   const chan = document.getElementById('channel').value;
-
-  let homeImg = `teams_images/${home}.png`;
-  let awayImg = `teams_images/${away}.png`;
+  let homeImg = document.getElementById('homeTeam').selectedOptions[0].dataset.img;
+  let awayImg = document.getElementById('awayTeam').selectedOptions[0].dataset.img;
 
   if (!time) { alert('ادخل وقت المباراة'); return; }
 
   toBase64(homeImg, b64Home => {
+    homeImg = b64Home;
     toBase64(awayImg, b64Away => {
+      awayImg = b64Away;
       const chanLogoUrl = channels.find(c => c.name === chan)?.logo || '';
       toBase64(chanLogoUrl, b64Chan => {
+        const newMatch = { league, home, away, time, comm, chan, homeImg, awayImg, chanLogo: b64Chan, nextDay: isNextDay };
 
-        const newMatch = {
-          league, home, away, time, comm, chan,
-          homeImg: b64Home,
-          awayImg: b64Away,
-          chanLogo: b64Chan,
-          nextDay: isNextDay
-        };
+        if (editIndex !== null) {
+          matches.splice(editIndex, 0, newMatch);
+          editIndex = null;
+        } else {
+          matches.push(newMatch);
+        }
 
-        matches.push(newMatch);
         localStorage.setItem('matches', JSON.stringify(matches));
         render();
         document.getElementById('matchTime').value = '';
@@ -192,8 +163,6 @@ document.getElementById('addMatch').onclick = () => {
     });
   });
 };
-
-
 
 function render(){
   const matchesContainer=document.getElementById('matchesContainer');
@@ -301,8 +270,7 @@ document.getElementById('swapSections').addEventListener('click',()=>{
   const wrapper=document.querySelector('.matches-wrapper');
   wrapper.parentNode.insertBefore(wrapper, wrapper.parentNode.firstChild===wrapper?wrapper.nextSibling:wrapper.parentNode.firstChild);
 });
-});
-// تسجيل Service Worker
+});// تسجيل Service Worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/sw.js")
     .then(() => console.log("Service Worker Registered"))
