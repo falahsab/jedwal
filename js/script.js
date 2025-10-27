@@ -94,8 +94,9 @@ function loadTeams(leagueCode, cb){
     const awayTeam=document.getElementById('awayTeam');
 homeTeam.innerHTML = awayTeam.innerHTML = data.map(t=>{
   const imgPath = `teams_images/${t.name}.png`;
-  return `<option value='${t.name}' data-img='${imgPath}'>${t.name}</option>`;
+  return `<option value="${t.name}" data-img="${imgPath}">${t.name}</option>`;
 }).join('');
+
 
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
@@ -116,13 +117,21 @@ homeTeam.innerHTML = awayTeam.innerHTML = data.map(t=>{
 
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
-function updatePreview(selectEl,previewId){
+function updatePreview(selectEl, previewId) {
   const s = selectEl.selectedOptions[0];
   const img = s.dataset.img;
-  document.getElementById(previewId).innerHTML = img 
-    ? `<img src='${img}'/>`
-    : '⚽';
+  const previewEl = document.getElementById(previewId);
+
+  const logo = new Image();
+  logo.src = img;
+  logo.onload = () => {
+    previewEl.innerHTML = `<img src="${img}" style="max-width:50px;max-height:50px;" alt="logo">`;
+  };
+  logo.onerror = () => {
+    previewEl.innerHTML = '⚽';
+  };
 }
+
 
 
 
