@@ -93,10 +93,10 @@ function loadTeams(leagueCode, cb){
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
 homeTeam.innerHTML = awayTeam.innerHTML = data.map(t=>{
-  const imgPath = `teams_images/${t.name}.png`;
+  const encoded = encodeURIComponent(t.name);
+  const imgPath = `teams_images/${encoded}.png`;
   return `<option value="${t.name}" data-img="${imgPath}">${t.name}</option>`;
 }).join('');
-
 
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
@@ -125,12 +125,13 @@ function updatePreview(selectEl, previewId) {
   const logo = new Image();
   logo.src = img;
   logo.onload = () => {
-    previewEl.innerHTML = `<img src="${img}" style="max-width:50px;max-height:50px;" alt="logo">`;
+    previewEl.innerHTML = `<img src="${img}" style="max-height:50px;">`;
   };
   logo.onerror = () => {
     previewEl.innerHTML = '⚽';
   };
 }
+
 
 
 
