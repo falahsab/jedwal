@@ -1,5 +1,5 @@
 // ==========================
-// الكود الجافاسكربت الأساسي مع تعديل عرض المعلق والقناة
+// 🔥 الكود الجافاسكربت الكامل والمعدل كما طلبت 🔥
 // ==========================
 document.addEventListener('DOMContentLoaded',()=>{
 
@@ -30,10 +30,12 @@ manualDateEl.addEventListener('change',()=>{
 const leaguesCSV='csv/leagues.csv';
 const commentatorsCSV='csv/commentators.csv';
 const channelsCSV='csv/channels.csv';
-const teamsCSVFolder='teams/';
+const teamsCSVFolder='csv/teams/';
 const extraLogosCSV = 'csv/extra_logos.csv';
+
 let extraLogos = [];
 let selectedExtraLogo = "";
+
 let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
 let matches=[], editIndex=null, isNextDay=false;
 
@@ -42,7 +44,11 @@ fetchCommentators();
 fetchChannels();
 
 setTimeout(() => {
-  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({width: '100%', dir: "rtl", language: { noResults: () => "لا توجد نتائج مطابقة" }});
+  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
+    width:'100%',
+    dir:'rtl',
+    language:{noResults:()=> "لا توجد نتائج مطابقة"}
+  });
   fetchExtraLogos();
 
   function fetchExtraLogos(){
@@ -52,12 +58,12 @@ setTimeout(() => {
       extraSelect.innerHTML = data.map(x=>`<option value="${x.logo}">${x.name}</option>`).join('');
       if (data.length > 0) {
         selectedExtraLogo = data[0].logo;
-        document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra" style="max-height:40px;">`;
+        document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" style="max-height:40px;">`;
       }
-      $('#extraLogoSelect').select2({ width: '100%', dir: 'rtl', language: { noResults: () => "لا توجد نتائج مطابقة" } });
+      $('#extraLogoSelect').select2({ width:'100%', dir:'rtl' });
       $('#extraLogoSelect').on('change', function(){
         selectedExtraLogo = this.value;
-        document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra" style="max-height:40px;">`;
+        document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" style="max-height:40px;">`;
         render();
       });
     });
@@ -69,79 +75,85 @@ setTimeout(() => {
   });
 }, 800);
 
-function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
+function fetchCSV(url,callback){
+  Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});
+}
+
+// ✅ تحميل الفرق وصورهم مباشرة حسب الاسم
+function loadTeams(leagueCode, cb){
+  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`, data=>{
+    teams[leagueCode]=data;
+
+    const home=document.getElementById('homeTeam');
+    const away=document.getElementById('awayTeam');
+
+    home.innerHTML = away.innerHTML = data.map(t=>{
+      const imgPath = `teams_images/${t.name}.png`; // 🔥 بدون ترميز أو تعديل
+      return `<option value="${t.name}" data-img="${imgPath}">${t.name}</option>`;
+    }).join('');
+
+    updatePreview(home,'homePreview');
+    updatePreview(away,'awayPreview');
+
+    setTimeout(()=>{
+      $('#homeTeam, #awayTeam').off('change');
+      $('#homeTeam, #awayTeam').select2({ width:'100%', dir:'rtl' });
+      $('#homeTeam, #awayTeam').on('change', function(){
+        updatePreview(this, this.id==='homeTeam'?'homePreview':'awayPreview');
+      });
+      if(cb) cb();
+    },120);
+  });
+}
+
+function fetchCommentators(){
+  fetchCSV(commentatorsCSV,data=>{
+    document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');
+  });
+}
+
+function fetchChannels(){
+  fetchCSV(channelsCSV,data=>{
+    channels=data;
+    document.getElementById('channel').innerHTML=data.map(c=>`<option value="${c.name}" data-logo="${c.logo}">${c.name}</option>`).join('');
+  });
+}
+
 function toBase64(url, callback){
   const img = new Image();
   img.crossOrigin = 'Anonymous';
-  img.onload = () => { const canvas = document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; canvas.getContext('2d').drawImage(img,0,0); callback(canvas.toDataURL()); };
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width=img.width; canvas.height=img.height;
+    canvas.getContext('2d').drawImage(img,0,0);
+    callback(canvas.toDataURL());
+  };
   img.onerror = () => callback('');
   img.src = url;
 }
 
-function populateLeagues(){
-  fetchCSV(leaguesCSV,data=>{
-    leagues=data;
-    const leagueSelect=document.getElementById('leagueSelect');
-    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
-    loadTeams(leagueSelect.value);
-  });
-}
-
-function loadTeams(leagueCode, cb){
-  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`, data=>{
-    teams[leagueCode]=data;
-    const homeTeam=document.getElementById('homeTeam');
-    const awayTeam=document.getElementById('awayTeam');
-homeTeam.innerHTML = awayTeam.innerHTML = data.map(t=>{
-const imgPath = `teams_images/${t.name}.png`;
-
-  return `<option value="${t.name}" data-img="${imgPath}">${t.name}</option>`;
-}).join('');
-
-    updatePreview(homeTeam,'homePreview'); 
-    updatePreview(awayTeam,'awayPreview');
-
-    setTimeout(()=>{
-      $('#homeTeam, #awayTeam').off('change');
-
-      $('#homeTeam, #awayTeam').select2({ width: '100%', dir: "rtl", language: { noResults: () => "لا توجد نتائج مطابقة" } });
-
-      $('#homeTeam, #awayTeam').on('change', function() {
-        updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
-      });
-
-      if(typeof cb === 'function') cb();
-    }, 120);
-  });
-}
-
-function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
-function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
-function updatePreview(selectEl, previewId) {
+function updatePreview(selectEl, previewId){
   const s = selectEl.selectedOptions[0];
   const img = s.dataset.img;
   const previewEl = document.getElementById(previewId);
 
-  const logo = new Image();
-  logo.src = img;
-  logo.onload = () => {
-    previewEl.innerHTML = `<img src="${img}" style="max-height:50px;">`;
-  };
-  logo.onerror = () => {
-    previewEl.innerHTML = '⚽';
-  };
+  const logo=new Image();
+  logo.src=img;
+  logo.onload=()=>{previewEl.innerHTML=`<img src="${img}" style="max-height:50px;">`;}
+  logo.onerror=()=>{previewEl.innerHTML='⚽';}
 }
 
-
-
-
-
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
-document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
-document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
 
-if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
-document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
+if(localStorage.getItem('matches')){
+  matches=JSON.parse(localStorage.getItem('matches'));
+  render();
+}
+
+document.getElementById('nextDayBtn').onclick=()=>{
+  isNextDay=!isNextDay;
+  document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';
+};
 
 document.getElementById('addMatch').onclick = () => {
   const league = document.getElementById('leagueSelect').value;
@@ -159,9 +171,11 @@ document.getElementById('addMatch').onclick = () => {
     homeImg = b64Home;
     toBase64(awayImg, b64Away => {
       awayImg = b64Away;
-      const chanLogoUrl = channels.find(c => c.name === chan)?.logo || '';
+
+      const chanLogoUrl = channels.find(c=>c.name===chan)?.logo || '';
+
       toBase64(chanLogoUrl, b64Chan => {
-        const newMatch = { league, home, away, time, comm, chan, homeImg, awayImg, chanLogo: b64Chan, nextDay: isNextDay };
+        const newMatch = { league, home, away, time, comm, chan, homeImg, awayImg, chanLogo: b64Chan, nextDay:isNextDay };
 
         if (editIndex !== null) {
           matches.splice(editIndex, 0, newMatch);
@@ -172,9 +186,9 @@ document.getElementById('addMatch').onclick = () => {
 
         localStorage.setItem('matches', JSON.stringify(matches));
         render();
-        document.getElementById('matchTime').value = '';
-        isNextDay = false;
-        document.getElementById('nextDayState').textContent = '❌';
+        document.getElementById('matchTime').value='';
+        isNextDay=false;
+        document.getElementById('nextDayState').textContent='❌';
       });
     });
   });
@@ -183,66 +197,62 @@ document.getElementById('addMatch').onclick = () => {
 function render(){
   const matchesContainer=document.getElementById('matchesContainer');
   matchesContainer.innerHTML='';
+
   leagues.forEach(l=>{
     const leagueMatches=matches.filter(m=>m.league===l.code);
     if(leagueMatches.length>0){
       const section=document.createElement('div'); section.className='matches-section';
       const header=document.createElement('div'); header.className='section-header';
+
       const extraLogo = selectedExtraLogo || l.extraLogo || l.extra;
-      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
+      header.innerHTML=`<img src="${extraLogo}" class="extra-logo-header"> <img src="${l.logo}" style="width:24px;height:24px"> ${l.name}`;
       section.appendChild(header);
 
-// داخل render()
-leagueMatches.forEach((m)=>{
-  const card=document.createElement('div'); 
-  card.className='match-card'; 
-  card.style.background=l.color||'#fdfdfd';
+      leagueMatches.forEach((m)=>{
+        const card=document.createElement('div'); 
+        card.className='match-card'; 
+        card.style.background=l.color||'#fdfdfd';
 
-  const [hours, minutes] = m.time.split(':');
-  let displayHours = parseInt(hours,10);
-  const ampm = displayHours >= 12 ? 'م' : 'ص';
-  displayHours = displayHours % 12 || 12;
+        const [hours,minutes]=m.time.split(':');
+        let displayHours=parseInt(hours,10);
+        const ampm=displayHours>=12?'م':'ص';
+        displayHours = displayHours % 12 || 12;
 
-  // السطر السفلي: المعلق في الوسط، شعار القناة على أقصى اليسار
-  let bottomHTML = '';
-  if(m.comm || m.chanLogo){
-    bottomHTML = `
-      <div class="meta" style="min-height: 24px; display:flex; align-items:center; justify-content:center; position:relative;">
-        ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:30px; object-fit:contain;" alt="${m.chan}">` : ''}
-        ${m.comm ? `<div style="flex:1; text-align:center; font-weight:500; color:#efeded;font-family:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif;">🎙️ ${m.comm}</div>` : ''}
-      </div>
-    `;
-  }
+        let bottomHTML='';
+        if(m.comm || m.chanLogo){
+          bottomHTML = `
+            <div class="meta" style="min-height:24px;display:flex;align-items:center;justify-content:center;position:relative;">
+              ${m.chanLogo? `<img src="${m.chanLogo}" style="position:absolute;left:6px;height:30px;object-fit:contain;">` : ''}
+              ${m.comm? `<div style="flex:1;text-align:center;font-weight:500;color:#efeded;">🎙️ ${m.comm}</div>` : ''}
+            </div>`;
+        }
 
-  card.innerHTML=`
-    <div class="match_row">
-      <div class="team hometeam">
-        <span class="the_team">${m.home}</span>
-        <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
-      </div>
-      <div class="middle_column">
-        <div class="the_time">
-          <span>${displayHours}:${minutes}</span>
-          <span>${ampm}</span>
+        card.innerHTML=
+        `<div class="match_row">
+          <div class="team hometeam">
+            <span class="the_team">${m.home}</span>
+            <img src="${m.homeImg}" class="team_logo">
+          </div>
+          <div class="middle_column">
+            <div class="the_time">
+              <span>${displayHours}:${minutes}</span>
+              <span>${ampm}</span>
+            </div>
+            ${m.nextDay? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
+          </div>
+          <div class="team awayteam">
+            <img src="${m.awayImg}" class="team_logo">
+            <span class="the_team">${m.away}</span>
+          </div>
         </div>
-        ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
-      </div>
-      <div class="team awayteam">
-        <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-        <span class="the_team">${m.away}</span>
-      </div>
-       </div>
+        ${bottomHTML}
+        <div class="action-btns" style="display:${showBtns?'flex':'none'}">
+          <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
+          <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
+        </div>`;
 
-    ${bottomHTML}
-
-    <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-      <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-      <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-    </div>
-  `;
-  section.appendChild(card);
-});
-
+        section.appendChild(card);
+      });
 
       matchesContainer.appendChild(section);
     }
@@ -250,76 +260,52 @@ leagueMatches.forEach((m)=>{
 }
 
 window.editMatch = (index) => {
-  if (editIndex !== null) {
-    alert('هناك بطاقة قيد التعديل حالياً! يرجى حفظ أو إلغاء التعديل قبل تعديل مباراة أخرى.');
-    return;
-  }
-  const m = matches[index];
+  if(editIndex!==null){alert('يوجد تعديل مفتوح حالياً');return;}
+  const m=matches[index];
+
   $('#leagueSelect').val(m.league).trigger('change.select2');
-  loadTeams(m.league, () => {
+  loadTeams(m.league, ()=>{
+
     $('#homeTeam').val(m.home).trigger('change.select2');
     $('#awayTeam').val(m.away).trigger('change.select2');
     $('#commentator').val(m.comm).trigger('change.select2');
     $('#channel').val(m.chan).trigger('change.select2');
-    document.getElementById('matchTime').value = m.time;
-const homeSel = document.getElementById('homeTeam').selectedOptions[0];
-homeSel.dataset.img = `teams_images/${homeSel.value}.png`;
-const awaySel = document.getElementById('awayTeam').selectedOptions[0];
-awaySel.dataset.img = `teams_images/${awaySel.value}.png`;
 
-updatePreview(document.getElementById('homeTeam'),'homePreview');
-updatePreview(document.getElementById('awayTeam'),'awayPreview');
+    document.getElementById('matchTime').value=m.time;
 
-    editIndex = index;
-    matches.splice(index, 1);
-    localStorage.setItem('matches', JSON.stringify(matches));
+    editIndex=index;
+    matches.splice(index,1);
+    localStorage.setItem('matches',JSON.stringify(matches));
     render();
   });
 };
 
-window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
+window.deleteMatch=(index)=>{
+  if(confirm('هل تريد حذف هذه المباراة؟')){
+    matches.splice(index,1);
+    localStorage.setItem('matches',JSON.stringify(matches));
+    render();
+  }
+};
+
 document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns; render();});
-document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[]; localStorage.setItem('matches','[]'); render();}});
+document.getElementById('deleteAll').addEventListener('click',()=>{
+  if(confirm('حذف جميع المباريات؟')){
+    matches=[]; localStorage.setItem('matches','[]'); render();
+  }
+});
+
 document.getElementById('downloadTable').addEventListener('click',()=>{
-  html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
+  html2canvas(document.querySelector('.matches-wrapper'),{useCORS:true, allowTaint:true}).then(canvas=>{
     const link=document.getElementById('downloadLink');
     link.href=canvas.toDataURL('image/png');
     link.download=`matches_${currentDate.getTime()}.png`;
     link.click();
   });
 });
-document.getElementById('swapSections').addEventListener('click',()=>{
-  const wrapper=document.querySelector('.matches-wrapper');
-  wrapper.parentNode.insertBefore(wrapper, wrapper.parentNode.firstChild===wrapper?wrapper.nextSibling:wrapper.parentNode.firstChild);
-});
-});// تسجيل Service Worker
+
+}); 
+// تسجيل Service Worker
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js")
-    .then(() => console.log("Service Worker Registered"))
-    .catch((err) => console.error("SW registration failed:", err));
+  navigator.serviceWorker.register("/sw.js");
 }
-
-// زر تثبيت التطبيق
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  const installBtn = document.createElement("button");
-  installBtn.textContent = "تثبيت التطبيق";
-  installBtn.className = "btn";
-  installBtn.style.position = "fixed";
-  installBtn.style.bottom = "10px";
-  installBtn.style.left = "50%";
-  installBtn.style.transform = "translateX(-50%)";
-  installBtn.style.zIndex = "10000";
-  document.body.appendChild(installBtn);
-
-  installBtn.addEventListener("click", async () => {
-    installBtn.remove();
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(outcome === "accepted" ? "تم التثبيت" : "تم رفض التثبيت");
-    deferredPrompt = null;
-  });
-});
