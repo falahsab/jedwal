@@ -92,7 +92,10 @@ function loadTeams(leagueCode, cb){
     teams[leagueCode]=data;
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
-    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
+homeTeam.innerHTML = awayTeam.innerHTML = data.map(t=>{
+const imgPath = `teams_images/${t.name}.png`;
+  return `<option value='${t.name}' data-img='${imgPath}'>${t.name}</option>`;
+}).join('');
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
@@ -113,11 +116,13 @@ function loadTeams(leagueCode, cb){
 function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
 function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
 function updatePreview(selectEl,previewId){
-  const s=selectEl.selectedOptions[0];
-  const img=s.dataset.img;
-  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
-  else document.getElementById(previewId).innerHTML='⚽';
+  const s = selectEl.selectedOptions[0];
+  const img = s.dataset.img;
+  document.getElementById(previewId).innerHTML = img 
+    ? `<img src='${img}'/>`
+    : '⚽';
 }
+
 
 populateLeagues(); fetchCommentators(); fetchChannels();
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
