@@ -73,12 +73,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const home = document.getElementById('homeTeam');
     const away = document.getElementById('awayTeam');
 
-    const origin = window.location.origin.replace(/\/$/, '');
-
     home.innerHTML = away.innerHTML = data.map(t => {
-      const imgPath = `${origin}/teams_images/${encodeURIComponent(t.name)}.png`;
+      const imgPath = `https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/teams_images/${encodeURIComponent(t.name)}.png`;
       return `<option value="${t.name}" data-img="${imgPath}">${t.name}</option>`;
     }).join('');
+
+    updatePreview(home, 'homePreview');
+    updatePreview(away, 'awayPreview');
+
+    setTimeout(() => {
+      $('#homeTeam, #awayTeam').off('change').select2({ width: '100%', dir: 'rtl' });
+      $('#homeTeam, #awayTeam').on('change', function(){
+        updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
+      });
+      if (typeof cb === 'function') cb();
+    }, 120);
+  });
+}
+
 
     updatePreview(home, 'homePreview');
     updatePreview(away, 'awayPreview');
