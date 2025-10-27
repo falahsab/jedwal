@@ -96,7 +96,9 @@ function loadTeams(leagueCode, cb){
     teams[leagueCode]=data;
     const homeTeam=document.getElementById('homeTeam');
     const awayTeam=document.getElementById('awayTeam');
-    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
+homeTeam.innerHTML = awayTeam.innerHTML = data.map(t =>
+  `<option value='${t.name}'>${t.name}</option>`
+).join('');
     updatePreview(homeTeam,'homePreview'); 
     updatePreview(awayTeam,'awayPreview');
 
