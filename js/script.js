@@ -277,6 +277,7 @@ if ("serviceWorker" in navigator) {
     .catch((err) => console.error("SW registration failed:", err));
 }
 
+
 // زر تثبيت التطبيق
 let deferredPrompt;
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -286,13 +287,26 @@ window.addEventListener("beforeinstallprompt", (e) => {
   const installBtn = document.createElement("button");
   installBtn.textContent = "تثبيت التطبيق";
   installBtn.className = "btn";
+
+  // ستايل الزر
   installBtn.style.position = "fixed";
   installBtn.style.bottom = "10px";
   installBtn.style.left = "50%";
   installBtn.style.transform = "translateX(-50%)";
   installBtn.style.zIndex = "10000";
+  installBtn.style.transition = "opacity 0.5s ease"; // للfade-out
+
   document.body.appendChild(installBtn);
 
+  // إخفاء الزر بعد 5 ثوانٍ
+  setTimeout(() => {
+    installBtn.style.opacity = 0; // تأثير تلاشي
+    setTimeout(() => {
+      installBtn.remove(); // إزالة الزر من الصفحة بعد التلاشي
+    }, 500); // 500ms يساوي مدة التلاشي
+  }, 5000); // 5 ثوانٍ عرض
+
+  // عند الضغط على الزر لتثبيت التطبيق
   installBtn.addEventListener("click", async () => {
     installBtn.remove();
     deferredPrompt.prompt();
@@ -301,6 +315,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
     deferredPrompt = null;
   });
 });
+
 
     window.addEventListener('load', () => {
       setTimeout(() => {
