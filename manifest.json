@@ -8,12 +8,12 @@
   "theme_color": "#6c5ce7",
   "icons": [
     {
-      "src": "https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/img/jedwal0.png",
+      "src": "img/jedwal000.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/img/jedwal1.png",
+      "src": "img/jedwal111.png",
       "sizes": "512x512",
       "type": "image/png"
     }
