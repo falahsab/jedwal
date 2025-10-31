@@ -285,7 +285,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
   deferredPrompt = e;
 
   const installBtn = document.createElement("button");
-  installBtn.textContent = "تثبيت التطبيق";
+  installBtn.textContent = "ثبت صانع الجدول على جهازك";
   installBtn.className = "btn";
 
   // ستايل الزر
@@ -304,7 +304,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
     setTimeout(() => {
       installBtn.remove(); // إزالة الزر من الصفحة بعد التلاشي
     }, 500); // 500ms يساوي مدة التلاشي
-  }, 5000); // 5 ثوانٍ عرض
+  }, 10000); // 5 ثوانٍ عرض
 
   // عند الضغط على الزر لتثبيت التطبيق
   installBtn.addEventListener("click", async () => {
