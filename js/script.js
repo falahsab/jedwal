@@ -284,70 +284,77 @@ window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  // عرض الزر تدريجيًا بعد 6 ثوانٍ
+  // عرض الزر بعد 6 ثوانٍ
   setTimeout(() => {
+    // إنشاء عنصر container للـ Shadow DOM
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+
+    // إنشاء Shadow Root
+    const shadow = container.attachShadow({ mode: "open" });
+
+    // إنشاء الزر داخل Shadow DOM
     const installBtn = document.createElement("button");
-    installBtn.innerHTML = "⚡ تثبيت التطبيق";
-    installBtn.className = "install-btn";
+    installBtn.textContent = "⚡ تثبيت التطبيق";
 
-    // ستايل احترافي متوافق مع الموقع الداكن
-    Object.assign(installBtn.style, {
-      position: "fixed",
-      bottom: "20px",
-      left: "50%",
-      transform: "translateX(-50%) scale(0)", // البداية مصغرة
-      zIndex: "10000",
-      padding: "12px 28px",
-      fontSize: "16px",
-      fontWeight: "700",
-      color: "#fff",
-      background: "linear-gradient(135deg, #1f1f1f, #333333)",
-      border: "1px solid #6c5ce7",
-      borderRadius: "25px",
-      cursor: "pointer",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
-      transition: "all 0.4s ease, opacity 0.5s ease"
-    });
+    // CSS مستقل داخل Shadow DOM
+    const style = document.createElement("style");
+    style.textContent = `
+      button {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        z-index: 10000;
+        padding: 12px 28px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, #1f1f1f, #333333);
+        border: 1px solid #6c5ce7;
+        border-radius: 25px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        opacity: 0;
+        transition: all 0.4s ease, opacity 0.5s ease;
+      }
+      button:hover {
+        transform: translateX(-50%) scale(1.05);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.7);
+        background: linear-gradient(135deg, #333333, #444444);
+      }
+    `;
 
-    document.body.appendChild(installBtn);
+    // إضافة style والزر للـ Shadow DOM
+    shadow.appendChild(style);
+    shadow.appendChild(installBtn);
 
-    // ظهور تدريجي (scale + opacity)
+    // ظهور تدريجي
     requestAnimationFrame(() => {
       installBtn.style.transform = "translateX(-50%) scale(1)";
       installBtn.style.opacity = "1";
-    });
-
-    // تأثير hover
-    installBtn.addEventListener("mouseenter", () => {
-      installBtn.style.transform = "translateX(-50%) scale(1.05)";
-      installBtn.style.boxShadow = "0 6px 18px rgba(0,0,0,0.7)";
-      installBtn.style.background = "linear-gradient(135deg, #333333, #444444)";
-    });
-    installBtn.addEventListener("mouseleave", () => {
-      installBtn.style.transform = "translateX(-50%) scale(1)";
-      installBtn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.5)";
-      installBtn.style.background = "linear-gradient(135deg, #1f1f1f, #333333)";
     });
 
     // إخفاء الزر بعد 10 ثوانٍ من ظهوره
     setTimeout(() => {
       installBtn.style.opacity = 0;
       installBtn.style.transform = "translateX(-50%) scale(0.8)";
-      setTimeout(() => installBtn.remove(), 500); // إزالة بعد fade-out
+      setTimeout(() => container.remove(), 500); // إزالة container كامل بعد fade-out
     }, 10000);
 
-    // عند الضغط لتثبيت التطبيق
+    // عند الضغط على الزر لتثبيت التطبيق
     installBtn.addEventListener("click", async () => {
-      installBtn.remove();
+      container.remove();
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       console.log(outcome === "accepted" ? "تم التثبيت" : "تم رفض التثبيت");
       deferredPrompt = null;
     });
 
-  }, 6000); // 6 ثوانٍ قبل الظهور
+  }, 6000); // ← 6 ثوانٍ قبل ظهور الزر
 });
 
+// ← خاص بضهو اسبلاش
 
 
 
