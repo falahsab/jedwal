@@ -4,8 +4,6 @@
   "description": "لوحة تحكم لإنشاء جدول مباريات للدوريات العالمية والعربية",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#333333",
-  "theme_color": "#6c5ce7",
   "icons": [
     {
       "src": "img/jedwal000.png",
