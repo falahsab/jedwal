@@ -36,7 +36,7 @@
   </div>
 
   <!-- 👇 محتوى الموقع  -->
- <div id="content">
+ 
 <header>
 ⚽ أهم مباريات اليوم
 <div style="margin-top:4px;">
@@ -100,28 +100,17 @@
     <div class="logo" id="extraPreview">🖼️</div>
   </div>
 </div>
-</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
  
-<!-- سكربتك الرئيسي -->
+<!-- سكربت الرئيسي -->
 <script src="/js/script.js"></script>
-<!-- 👇 كود إخفاء شاشة البداية بعد ثانيتين -->
- <script>
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash');
-        splash.style.opacity = '0';
-        setTimeout(() => {
-          splash.style.display = 'none';
-          document.getElementById('content').style.opacity = '1';
-          document.body.style.overflow = 'auto';
-        }, 1000);
-      }, 2000); // ← مدة العرض (2 ثانية)
-    });
-  </script>
+
+
 </body>
 </html>
+
 
 
 
