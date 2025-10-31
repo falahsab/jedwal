@@ -301,3 +301,15 @@ window.addEventListener("beforeinstallprompt", (e) => {
     deferredPrompt = null;
   });
 });
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash');
+        splash.style.opacity = '0';
+        setTimeout(() => {
+          splash.style.display = 'none';
+          document.getElementById('content').style.opacity = '1';
+          document.body.style.overflow = 'auto';
+        }, 1000);
+      }, 2000); // ← مدة العرض (2 ثانية)
+    });
