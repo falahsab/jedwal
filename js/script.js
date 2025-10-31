@@ -284,37 +284,42 @@ window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  const installBtn = document.createElement("button");
-  installBtn.textContent = "ثبت صانع الجدول على جهازك";
-  installBtn.className = "btn";
-
-  // ستايل الزر
-  installBtn.style.position = "fixed";
-  installBtn.style.bottom = "10px";
-  installBtn.style.left = "50%";
-  installBtn.style.transform = "translateX(-50%)";
-  installBtn.style.zIndex = "10000";
-  installBtn.style.transition = "opacity 0.5s ease"; // للfade-out
-
-  document.body.appendChild(installBtn);
-
-  // إخفاء الزر بعد 5 ثوانٍ
+  // ننتظر 6 ثوانٍ قبل إنشاء الزر
   setTimeout(() => {
-    installBtn.style.opacity = 0; // تأثير تلاشي
-    setTimeout(() => {
-      installBtn.remove(); // إزالة الزر من الصفحة بعد التلاشي
-    }, 500); // 500ms يساوي مدة التلاشي
-  }, 10000); // 5 ثوانٍ عرض
+    const installBtn = document.createElement("button");
+    installBtn.textContent = "تثبيت التطبيق";
+    installBtn.className = "btn";
 
-  // عند الضغط على الزر لتثبيت التطبيق
-  installBtn.addEventListener("click", async () => {
-    installBtn.remove();
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(outcome === "accepted" ? "تم التثبيت" : "تم رفض التثبيت");
-    deferredPrompt = null;
-  });
+    // ستايل الزر
+    installBtn.style.position = "fixed";
+    installBtn.style.bottom = "10px";
+    installBtn.style.left = "50%";
+    installBtn.style.transform = "translateX(-50%)";
+    installBtn.style.zIndex = "10000";
+    installBtn.style.transition = "opacity 0.5s ease";
+
+    document.body.appendChild(installBtn);
+
+    // إخفاء الزر بعد 10 ثوانٍ من ظهوره
+    setTimeout(() => {
+      installBtn.style.opacity = 0; // تأثير التلاشي
+      setTimeout(() => {
+        installBtn.remove();
+      }, 500); // مدة fade-out
+    }, 10000); // 10 ثوانٍ عرض الزر
+
+    // عند الضغط على الزر لتثبيت التطبيق
+    installBtn.addEventListener("click", async () => {
+      installBtn.remove();
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(outcome === "accepted" ? "تم التثبيت" : "تم رفض التثبيت");
+      deferredPrompt = null;
+    });
+
+  }, 6000); // ← 6 ثوانٍ قبل الظهور
 });
+
 
 
     window.addEventListener('load', () => {
