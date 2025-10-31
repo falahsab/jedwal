@@ -2,7 +2,7 @@
   "name": "جدول مباريات",
   "short_name": "جدول المباريات",
   "description": "لوحة تحكم لإنشاء جدول مباريات للدوريات العالمية والعربية",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#333333",
   "theme_color": "#6c5ce7",
