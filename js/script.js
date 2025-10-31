@@ -284,31 +284,59 @@ window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  // ننتظر 6 ثوانٍ قبل إنشاء الزر
+  // عرض الزر تدريجيًا بعد 6 ثوانٍ
   setTimeout(() => {
     const installBtn = document.createElement("button");
-    installBtn.textContent = "تثبيت التطبيق";
-    installBtn.className = "btn";
+    installBtn.innerHTML = "⚡ تثبيت التطبيق";
+    installBtn.className = "install-btn";
 
-    // ستايل الزر
-    installBtn.style.position = "fixed";
-    installBtn.style.bottom = "10px";
-    installBtn.style.left = "50%";
-    installBtn.style.transform = "translateX(-50%)";
-    installBtn.style.zIndex = "10000";
-    installBtn.style.transition = "opacity 0.5s ease";
+    // ستايل احترافي متوافق مع الموقع الداكن
+    Object.assign(installBtn.style, {
+      position: "fixed",
+      bottom: "20px",
+      left: "50%",
+      transform: "translateX(-50%) scale(0)", // البداية مصغرة
+      zIndex: "10000",
+      padding: "12px 28px",
+      fontSize: "16px",
+      fontWeight: "700",
+      color: "#fff",
+      background: "linear-gradient(135deg, #1f1f1f, #333333)",
+      border: "1px solid #6c5ce7",
+      borderRadius: "25px",
+      cursor: "pointer",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+      transition: "all 0.4s ease, opacity 0.5s ease"
+    });
 
     document.body.appendChild(installBtn);
 
+    // ظهور تدريجي (scale + opacity)
+    requestAnimationFrame(() => {
+      installBtn.style.transform = "translateX(-50%) scale(1)";
+      installBtn.style.opacity = "1";
+    });
+
+    // تأثير hover
+    installBtn.addEventListener("mouseenter", () => {
+      installBtn.style.transform = "translateX(-50%) scale(1.05)";
+      installBtn.style.boxShadow = "0 6px 18px rgba(0,0,0,0.7)";
+      installBtn.style.background = "linear-gradient(135deg, #333333, #444444)";
+    });
+    installBtn.addEventListener("mouseleave", () => {
+      installBtn.style.transform = "translateX(-50%) scale(1)";
+      installBtn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.5)";
+      installBtn.style.background = "linear-gradient(135deg, #1f1f1f, #333333)";
+    });
+
     // إخفاء الزر بعد 10 ثوانٍ من ظهوره
     setTimeout(() => {
-      installBtn.style.opacity = 0; // تأثير التلاشي
-      setTimeout(() => {
-        installBtn.remove();
-      }, 500); // مدة fade-out
-    }, 10000); // 10 ثوانٍ عرض الزر
+      installBtn.style.opacity = 0;
+      installBtn.style.transform = "translateX(-50%) scale(0.8)";
+      setTimeout(() => installBtn.remove(), 500); // إزالة بعد fade-out
+    }, 10000);
 
-    // عند الضغط على الزر لتثبيت التطبيق
+    // عند الضغط لتثبيت التطبيق
     installBtn.addEventListener("click", async () => {
       installBtn.remove();
       deferredPrompt.prompt();
@@ -317,8 +345,9 @@ window.addEventListener("beforeinstallprompt", (e) => {
       deferredPrompt = null;
     });
 
-  }, 6000); // ← 6 ثوانٍ قبل الظهور
+  }, 6000); // 6 ثوانٍ قبل الظهور
 });
+
 
 
 
