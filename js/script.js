@@ -119,7 +119,7 @@ function updatePreview(selectEl,previewId){
   else document.getElementById(previewId).innerHTML='⚽';
 }
 
-
+populateLeagues(); fetchCommentators(); fetchChannels();
 document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
 document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
 document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
