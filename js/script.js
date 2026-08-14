@@ -358,14 +358,24 @@ window.addEventListener("beforeinstallprompt", (e) => {
 
 
 
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash');
-        splash.style.opacity = '0';
-        setTimeout(() => {
-          splash.style.display = 'none';
-          document.getElementById('content').style.opacity = '1';
-          document.body.style.overflow = 'auto';
-        }, 1000);
-      }, 2000); // ← مدة العرض (2 ثانية)
-    });
+ window.addEventListener('load', () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splash');
+
+    splash.style.opacity = '0';
+
+    setTimeout(() => {
+      splash.style.display = 'none';
+
+      const mainContent = document.getElementById('mainContent');
+
+      if (mainContent) {
+        mainContent.style.opacity = '1';
+      }
+
+      document.body.style.overflow = 'auto';
+
+    }, 1000);
+
+  }, 2000);// مدة العرض2 ث
+});
