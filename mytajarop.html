@@ -24,6 +24,7 @@
   <!-- JS Libraries -->
   <script src="js/jquery.min.js"></script>
   <script src="js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="js/papaparse.min.js"></script>
 
@@ -909,98 +910,29 @@
     }
 
     // === تحميل الجدول كصورة Full HD عالية الوضوح ===
-   // === دالة مساعدة لرسم النص العربي كصورة متصلة الحروف 100% ===
-function convertArabicTextToImage(clonedEl, originalEl, scale = 2.5) {
-  const text = originalEl.textContent.trim();
-  if (!text) return;
-
-  const style = window.getComputedStyle(originalEl);
-  const fontSize = parseFloat(style.fontSize) || 14;
-  const fontWeight = style.fontWeight || '700';
-  const color = style.color || '#ffffff';
-  const fontFamily = "'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif";
-
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
-  const targetFontSize = fontSize * scale;
-  ctx.font = `${fontWeight} ${targetFontSize}px ${fontFamily}`;
-
-  // قياس أبعاد النص بدقة
-  const metrics = ctx.measureText(text);
-  const textWidth = Math.ceil(metrics.width);
-  const textHeight = Math.ceil(fontSize * 1.6 * scale);
-
-  // إضافة هامش بسيط لمنع قص أطراف الحروف مثل (ي، ر، و)
-  const paddingX = 8 * scale;
-  canvas.width = Math.max(1, textWidth + (paddingX * 2));
-  canvas.height = Math.max(1, textHeight);
-
-  // إعادة تعيين الخصائص بعد تغيير أبعاد الكانفاس (ضروري جداً)
-  ctx.font = `${fontWeight} ${targetFontSize}px ${fontFamily}`;
-  ctx.fillStyle = color;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.direction = 'rtl';
-
-  // رسم النص بالكامل ككتلة واحدة (المتصفح سيقوم بتشبيك الحروف تلقائياً وبشكل سليم)
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-
-  // استبدال النص بالصورة فائقة الدقة في النسخة المستنسخة فقط
-  const img = clonedEl.ownerDocument.createElement('img');
-  img.src = canvas.toDataURL('image/png');
-  img.style.width = `${(textWidth + (paddingX * 2)) / scale}px`;
-  img.style.height = `${textHeight / scale}px`;
-  img.style.display = 'inline-block';
-  img.style.verticalAlign = 'middle';
-  img.style.maxWidth = '100%';
-
-  clonedEl.style.overflow = 'visible';
-  clonedEl.innerHTML = '';
-  clonedEl.appendChild(img);
-}
-
-// === حدث زر تحميل الجدول كصورة ===
-document.getElementById('downloadTable').addEventListener('click', async () => {
+    document.getElementById('downloadTable').addEventListener('click', async () => {
   const exportArea = document.getElementById('exportArea');
-  
-  // إخفاء أزرار التعديل والحذف قبل البدء
+
+  // إخفاء الأزرار أثناء التصوير
   const actionBtns = exportArea.querySelectorAll('.action-btns');
   actionBtns.forEach(btn => btn.style.display = 'none');
 
   try {
-    // التأكد من جاهزية الخطوط
     await document.fonts.ready;
 
-    const canvas = await html2canvas(exportArea, {
-      useCORS: true,
-      scale: 2.5, // دقة ممتازة ونقية
-      backgroundColor: '#181818',
-      // تم إيقاف foreignObjectRendering لمنع مشكلة الشاشة السوداء نهائياً
-      onclone: (clonedDoc) => {
-        // 1. إخفاء الأزرار في النسخة المصورة
-        clonedDoc.querySelectorAll('.action-btns').forEach(b => b.style.display = 'none');
-
-        // 2. معالجة أسماء الفرق وأسماء الدوريات لحل مشكلة تفكك الحروف العربية
-        const origTeams = exportArea.querySelectorAll('.the_team, .section-header span');
-        const clonedTeams = clonedDoc.querySelectorAll('.the_team, .section-header span');
-
-        clonedTeams.forEach((clonedEl, i) => {
-          const origEl = origTeams[i] || clonedEl;
-          convertArabicTextToImage(clonedEl, origEl, 2.5);
-        });
-      }
+    // التقاط الصورة بدقة فائقة وبحروف عربية متصلة 100%
+    const dataUrl = await htmlToImage.toPng(exportArea, {
+      pixelRatio: 3, // جودة 4K حادة جداً
+      backgroundColor: '#181818'
     });
 
-    // تحميل الصورة
     const link = document.createElement('a');
     link.download = `جدول_مباريات_${currentDate.toISOString().slice(0, 10)}.png`;
-    link.href = canvas.toDataURL('image/png');
+    link.href = dataUrl;
     link.click();
-
-  } catch (err) {
-    console.error('Export Error:', err);
-    alert('حدث خطأ أثناء تحميل الصورة.');
+  } catch (error) {
+    console.error('Error exporting image:', error);
+    alert('حدث خطأ أثناء تصدير الصورة.');
   } finally {
     if (showBtns) {
       actionBtns.forEach(btn => btn.style.display = 'flex');
