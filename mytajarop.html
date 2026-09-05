@@ -16,7 +16,7 @@
   <!-- Google Fonts: Tajawal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="css/select2.min.css">
@@ -37,7 +37,7 @@
     }
 
     body {
-      background: #181818;
+      background: #121212;
       margin: 0;
       padding: 0;
       color: #ffffff;
@@ -46,17 +46,23 @@
       flex-direction: column;
     }
 
-    header {
-      background: #070607;
+    /* الهيدر العلوي للموقع */
+    .site-header {
+      background: #080808;
       color: #fff;
-      padding: 14px 16px;
+      padding: 12px 16px;
       text-align: center;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       position: sticky;
       top: 0;
       z-index: 1000;
-      border-bottom: 1px solid #2a2a2a;
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .container {
@@ -68,17 +74,17 @@
 
     .grid {
       display: grid;
-      grid-template-columns: 1fr 420px;
+      grid-template-columns: 1fr 440px;
       gap: 16px;
       margin-bottom: 20px;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 950px) {
       .grid { grid-template-columns: 1fr; }
     }
 
     .card {
-      background: #232323;
+      background: #1f1f1f;
       border-radius: 12px;
       padding: 16px;
       border: 1px solid #333;
@@ -94,7 +100,7 @@
     }
 
     select, input[type="time"], input[type="date"] {
-      background: #333333;
+      background: #2b2b2b;
       border: 1px solid #444;
       padding: 9px 12px;
       border-radius: 8px;
@@ -111,8 +117,8 @@
 
     label {
       font-size: 13px;
-      font-weight: 500;
-      color: #ddd;
+      font-weight: 600;
+      color: #ccc;
       display: block;
       margin-bottom: 6px;
     }
@@ -121,7 +127,7 @@
       width: 42px;
       height: 42px;
       border-radius: 8px;
-      background: #333;
+      background: #2a2a2a;
       border: 1px solid #444;
       display: flex;
       align-items: center;
@@ -151,23 +157,148 @@
       transition: all 0.2s;
     }
 
-    .btn:hover {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
+    .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
 
     .btn-purple { background: #6c5ce7; }
     .btn-danger { background: #e74c3c; }
-    .btn-secondary { background: #4a4a4a; }
-    .btn-success { background: #2ecc71; }
+    .btn-secondary { background: #3a3a3a; }
+    .btn-success { background: #27ae60; }
 
-    /* Match Presentation Cards */
-    .matches-wrapper {
-      margin-bottom: 20px;
+    /* =======================================
+       🎨 نظام الثيمات المتقدم لمنطقة الصورة
+       ======================================= */
+    #exportArea {
+      border-radius: 12px;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+    }
+
+    /* 1. ثيم كلاسيكي داكن (Dark Obsidian) */
+    #exportArea.theme-dark {
+      --bg-main: #141414;
+      --card-bg: #1c1c1c;
+      --accent: #3498db;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --header-grad: linear-gradient(135deg, #1b2636, #0e1217);
+      --time-color: #f1c40f;
+    }
+
+    /* 2. ثيم كحلي ملكي (Royal Navy) */
+    #exportArea.theme-navy {
+      --bg-main: #0a111a;
+      --card-bg: #101c2b;
+      --accent: #00d2d3;
+      --border-color: rgba(0, 210, 211, 0.18);
+      --header-grad: linear-gradient(135deg, #0e2947, #07101a);
+      --time-color: #f6b93b;
+    }
+
+    /* 3. ثيم الزمرد الرياضي (Stadium Emerald) */
+    #exportArea.theme-emerald {
+      --bg-main: #081711;
+      --card-bg: #0f271d;
+      --accent: #2ecc71;
+      --border-color: rgba(46, 204, 113, 0.18);
+      --header-grad: linear-gradient(135deg, #0f3d28, #07140e);
+      --time-color: #f1c40f;
+    }
+
+    /* 4. ثيم الياقوت الناري (Crimson Fire) */
+    #exportArea.theme-crimson {
+      --bg-main: #18090b;
+      --card-bg: #270f14;
+      --accent: #ff4757;
+      --border-color: rgba(255, 71, 87, 0.2);
+      --header-grad: linear-gradient(135deg, #440d16, #150608);
+      --time-color: #ffa502;
+    }
+
+    /* 5. ثيم بنفسجي نيون (Cyber Violet) */
+    #exportArea.theme-violet {
+      --bg-main: #0f0b1a;
+      --card-bg: #1a132e;
+      --accent: #a29bfe;
+      --border-color: rgba(162, 155, 254, 0.22);
+      --header-grad: linear-gradient(135deg, #2e1a5a, #0c0817);
+      --time-color: #fdcb6e;
+    }
+
+    /* 6. ثيم أسود وذهبي فاخر (Luxury Gold) */
+    #exportArea.theme-gold {
+      --bg-main: #121212;
+      --card-bg: #1b1915;
+      --accent: #d4af37;
+      --border-color: rgba(212, 175, 55, 0.25);
+      --header-grad: linear-gradient(135deg, #33270d, #111111);
+      --time-color: #f9ca24;
+    }
+
+    #exportArea {
+      background-color: var(--bg-main) !important;
+      border: 1px solid var(--border-color) !important;
+    }
+
+    /* =======================================
+       ✨ تصميم الهيدر الجمالي داخل الصورة المصدرة
+       ======================================= */
+    .poster-header {
+      background: var(--header-grad);
+      padding: 16px 14px 14px;
+      text-align: center;
+      position: relative;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .poster-header::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: var(--accent);
+      filter: blur(4px);
+      opacity: 0.8;
+    }
+
+    .poster-badge {
+      display: inline-block;
+      padding: 3px 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .poster-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .poster-date {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    /* محتوى البطاقات */
+    .poster-body {
+      padding: 14px;
     }
 
     .matches-section {
@@ -179,18 +310,18 @@
       align-items: center;
       gap: 8px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14px;
       margin-bottom: 8px;
       padding: 6px 12px;
-      background: #1b1b1b;
+      background: rgba(0, 0, 0, 0.35);
       border-radius: 6px;
-      border-right: 4px solid #3498db;
+      border-right: 4px solid var(--accent);
       position: relative;
     }
 
     .extra-logo-header {
       margin-right: auto;
-      height: 24px;
+      height: 22px;
       object-fit: contain;
     }
 
@@ -202,25 +333,8 @@
       margin-bottom: 6px;
       position: relative;
       overflow: hidden;
-      background-color: #191919;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .match-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url('https://falahsab.github.io/jedwal/img/yemen-sat0.png');
-      background-repeat: repeat;
-      background-size: 60px auto;
-      opacity: 0.03;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .match-card > * {
-      position: relative;
-      z-index: 1;
+      background-color: var(--card-bg) !important;
+      border: 1px solid var(--border-color);
     }
 
     .match_row {
@@ -248,7 +362,6 @@
       flex-shrink: 0;
     }
 
-    /* 👈 اسم الفريق في الوضع الافتراضي */
     .the_team {
       font-weight: 700;
       font-size: clamp(11px, 1.7vw, 14px);
@@ -259,7 +372,7 @@
       flex: 1;
     }
 
-    /* 👈 وضع التصدير: عرض الاسم كاملاً وتوسيع الجدول لاستيعاب أطول الأسماء */
+    /* 👈 وضع التصدير: استيعاب أطول أسماء الفرق بدون قص */
     #exportArea.export-mode {
       width: 520px !important;
       max-width: 520px !important;
@@ -279,7 +392,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
+      font-weight: 800;
       font-size: clamp(14px, 2.2vw, 18px);
       min-width: 75px;
     }
@@ -289,7 +402,7 @@
       align-items: center;
       gap: 4px;
       direction: ltr;
-      color: #f1c40f;
+      color: var(--time-color);
     }
 
     .next-day-label {
@@ -307,7 +420,7 @@
       position: relative;
       margin-top: 4px;
       padding-top: 4px;
-      border-top: 1px dashed rgba(255,255,255,0.07);
+      border-top: 1px dashed rgba(255,255,255,0.06);
     }
 
     .action-btns {
@@ -326,9 +439,18 @@
       font-weight: bold;
     }
 
+    .poster-footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 12px;
+      color: #aaa;
+      border-top: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.2);
+    }
+
     /* Select2 Customization */
     .select2-container--default .select2-selection--single {
-      background-color: #333 !important;
+      background-color: #2b2b2b !important;
       border: 1px solid #444 !important;
       border-radius: 8px !important;
       height: 40px !important;
@@ -343,7 +465,7 @@
     }
 
     .select2-dropdown {
-      background-color: #2a2a2a !important;
+      background-color: #252525 !important;
       border: 1px solid #444 !important;
       color: #fff !important;
     }
@@ -353,7 +475,7 @@
     }
 
     .select2-container--default .select2-search--dropdown .select2-search__field {
-      background-color: #3a3a3a !important;
+      background-color: #333 !important;
       color: #fff !important;
       border: 1px solid #555 !important;
       border-radius: 6px;
@@ -387,8 +509,8 @@
 
     .empty-state {
       text-align: center;
-      padding: 30px;
-      color: #888;
+      padding: 40px 20px;
+      color: #777;
       font-size: 14px;
     }
   </style>
@@ -402,22 +524,35 @@
     <p style="color:#aaa; font-size:13px; position:absolute; bottom:20px;">www.yemensat.com</p>
   </div>
 
-  <!-- الهيدر الرئيسي -->
-  <header>
-    ⚽ أهم مباريات اليوم
-    <div style="font-size:15px; font-weight:400; margin-top:4px; color:#3498db;">
-      <span id="todayDateDisplay"></span>
-    </div>
+  <!-- الهيدر الثابت للموقع -->
+  <header class="site-header">
+    <div>⚽ لوحة تحكم جدول المباريات</div>
+    <div style="font-size:14px; font-weight:400; color:#3498db;" id="siteHeaderDate"></div>
   </header>
 
   <div class="container" id="mainContent">
     <div class="grid">
       
-      <!-- نموذج إدخال المباراة -->
+      <!-- نموذج إدخال المباراة والتحكم -->
       <div class="card form">
         <h3 style="margin-top:0; margin-bottom:14px; font-size:16px; border-bottom:1px solid #333; padding-bottom:8px;">
           📝 بيانات المباراة
         </h3>
+
+        <!-- اختيار الثيم المفضل -->
+        <div class="row">
+          <div style="flex:1;">
+            <label for="themeSelect">🎨 ثيم الجدول (اختر مظهر التصميم)</label>
+            <select id="themeSelect">
+              <option value="theme-dark">🖤 كلاسيكي داكن (Dark Obsidian)</option>
+              <option value="theme-navy">🔷 كحلي ملكي (Royal Navy)</option>
+              <option value="theme-emerald">🟢 زمردي رياضي (Stadium Emerald)</option>
+              <option value="theme-crimson">🔴 ياقوتي ناري (Crimson Fire)</option>
+              <option value="theme-violet">🟣 بنفسجي نيون (Cyber Violet)</option>
+              <option value="theme-gold">👑 ذهبي فاخر (Luxury Gold)</option>
+            </select>
+          </div>
+        </div>
 
         <div class="row">
           <div style="flex:1;">
@@ -477,7 +612,6 @@
 
         <hr style="border:0; border-top:1px solid #333; margin:16px 0;">
 
-        <!-- خيارات إضافية -->
         <div class="row">
           <div style="flex:1;">
             <label for="extraLogoSelect">الشعار الجانبي (Extra Logo)</label>
@@ -497,15 +631,26 @@
         </div>
       </div>
 
-      <!-- عرض الجدول والمعاينة للتحميل -->
+      <!-- عرض الجدول ومعاينة التصدير -->
       <div>
         <div class="matches-wrapper">
-          <div class="card" id="exportArea" style="background:#1e1e1e; border: 1px solid #333;">
-            <div id="matchesContainer"></div>
+          <div id="exportArea" class="theme-dark">
             
-            <div style="text-align:center; padding:12px; font-size:12px; color:#aaa; border-top:1px solid #2a2a2a; margin-top:10px;">
-              مع VIP عيش المتعة .. اشترك الآن<br>
-              عبر الواتساب: <strong style="color:#2ecc71;">738092209</strong>
+            <!-- ✨ الهيدر الجمالي الذي سيظهر داخل الصورة الملتقطة ✨ -->
+            <div class="poster-header">
+              <span class="poster-badge">مباريات اليوم</span>
+              <h1 class="poster-title">⚽ أهم مباريات اليوم</h1>
+              <div class="poster-date" id="posterDateDisplay"></div>
+            </div>
+
+            <!-- محتوى البطاقات -->
+            <div class="poster-body">
+              <div id="matchesContainer"></div>
+            </div>
+            
+            <!-- تذييل الصورة -->
+            <div class="poster-footer">
+              مع VIP عيش المتعة .. اشترك الآن | عبر الواتساب: <strong style="color:#2ecc71;">738092209</strong>
             </div>
           </div>
         </div>
@@ -523,15 +668,18 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
 
-    // === تهيئة التاريخ واليوم ===
-    const displayEl = document.getElementById('todayDateDisplay');
+    // === إدارة التاريخ واليوم ===
+    const siteHeaderDate = document.getElementById('siteHeaderDate');
+    const posterDateDisplay = document.getElementById('posterDateDisplay');
     const manualDateEl = document.getElementById('manualDate');
     const editBtn = document.getElementById('editDateBtn');
     const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
     let currentDate = new Date();
     function updateDateDisplay(date) {
-      displayEl.textContent = `${days[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      const formatted = `${days[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      siteHeaderDate.textContent = formatted;
+      posterDateDisplay.textContent = `📅 ${formatted}`;
     }
     updateDateDisplay(currentDate);
 
@@ -550,6 +698,21 @@
       }
     });
 
+    // === إدارة الثيمات ===
+    const themeSelect = document.getElementById('themeSelect');
+    const exportArea = document.getElementById('exportArea');
+
+    // استعادة الثيم المحفوظ
+    const savedTheme = localStorage.getItem('selectedTheme') || 'theme-dark';
+    themeSelect.value = savedTheme;
+    exportArea.className = savedTheme;
+
+    themeSelect.addEventListener('change', (e) => {
+      const theme = e.target.value;
+      exportArea.className = theme;
+      localStorage.setItem('selectedTheme', theme);
+    });
+
     // === مسارات الملفات والمتغيرات العامة ===
     const leaguesCSV = 'csv/leagues.csv';
     const commentatorsCSV = 'csv/commentators.csv';
@@ -564,7 +727,7 @@
     let isNextDay = false;
     let showBtns = true;
 
-    // === دالة مساعدة لجلب ملفات CSV عبر Promise ===
+    // جلب ملفات CSV
     function loadCSV(url) {
       return new Promise((resolve) => {
         Papa.parse(url, {
@@ -577,7 +740,7 @@
       });
     }
 
-    // === تحويل الصور إلى Base64 بأمان ===
+    // تحويل الصور إلى Base64
     function toBase64(url) {
       return new Promise((resolve) => {
         if (!url || url.startsWith('data:')) {
@@ -603,7 +766,7 @@
       });
     }
 
-    // === تحديث مربعات معاينة الشعارات في النموذج ===
+    // تحديث المعاينة للشعارات
     function updatePreview(selectEl, previewId, fallbackIcon) {
       if (!selectEl || !selectEl.selectedOptions || selectEl.selectedOptions.length === 0) {
         document.getElementById(previewId).innerHTML = fallbackIcon;
@@ -617,7 +780,7 @@
       }
     }
 
-    // === تحميل الفرق لدوري محدد ===
+    // تحميل فرق الدوري المحدد
     async function loadTeams(leagueCode) {
       if (!teams[leagueCode]) {
         teams[leagueCode] = await loadCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`);
@@ -637,16 +800,14 @@
       updatePreview(awayTeam, 'awayPreview', '⚽');
     }
 
-    // === التهيئة الأولى وتحميل كل البيانات مرة واحدة ===
+    // تهيئة البيانات
     async function init() {
-      // إعداد مكونات Select2
       $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel, #extraLogoSelect').select2({
         width: '100%',
         dir: 'rtl',
         language: { noResults: () => "لا توجد نتائج مطابقة" }
       });
 
-      // جلب البيانات المتوازية
       const [leaguesData, commsData, chansData, extrasData] = await Promise.all([
         loadCSV(leaguesCSV),
         loadCSV(commentatorsCSV),
@@ -662,7 +823,7 @@
       // تعبئة الدوريات
       const leagueSelect = document.getElementById('leagueSelect');
       leagueSelect.innerHTML = leagues.map(l => 
-        `<option value="${l.code}" data-logo="${l.logo || ''}" data-color="${l.color || '#1e1e1e'}" data-extra="${l.extraLogo || ''}">${l.name}</option>`
+        `<option value="${l.code}" data-logo="${l.logo || ''}" data-color="${l.color || ''}" data-extra="${l.extraLogo || ''}">${l.name}</option>`
       ).join('');
 
       // تعبئة المعلقين
@@ -679,7 +840,6 @@
         document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra">`;
       }
 
-      // أحداث التغيير لـ Select2
       $('#leagueSelect').on('select2:select', function () {
         loadTeams(this.value);
       });
@@ -693,7 +853,6 @@
         render();
       });
 
-      // تحميل فرق أول دوري
       if (leagues.length > 0) {
         await loadTeams(leagues[0].code);
       }
@@ -701,13 +860,13 @@
       render();
     }
 
-    // === زر اليوم التالي ===
+    // زر اليوم التالي
     document.getElementById('nextDayBtn').onclick = () => {
       isNextDay = !isNextDay;
       document.getElementById('nextDayState').textContent = isNextDay ? '✅' : '❌';
     };
 
-    // === إضافة أو حفظ تعديل المباراة ===
+    // إضافة أو حفظ تعديل مباراة
     document.getElementById('addMatch').onclick = async () => {
       const league = document.getElementById('leagueSelect').value;
       const home = document.getElementById('homeTeam').value;
@@ -730,7 +889,6 @@
       const awayImgRaw = document.getElementById('awayTeam').selectedOptions[0]?.dataset?.img || '';
       const chanLogoRaw = channels.find(c => c.name === chan)?.logo || '';
 
-      // تحويل متوازي للصور لتسريع الحفظ
       const [homeImg, awayImg, chanLogo] = await Promise.all([
         toBase64(homeImgRaw),
         toBase64(awayImgRaw),
@@ -738,14 +896,12 @@
       ]);
 
       if (editMatchId) {
-        // تحديث مباراة قائمة
         const idx = matches.findIndex(m => m.id === editMatchId);
         if (idx !== -1) {
           matches[idx] = { ...matches[idx], league, home, away, time, comm, chan, homeImg, awayImg, chanLogo, nextDay: isNextDay };
         }
         resetEditMode();
       } else {
-        // إضافة مباراة جديدة بمعرف فريد
         const newMatch = {
           id: 'm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
           league, home, away, time, comm, chan,
@@ -758,13 +914,12 @@
       localStorage.setItem('matches', JSON.stringify(matches));
       render();
 
-      // إعادة ضبط الحقول
       document.getElementById('matchTime').value = '';
       isNextDay = false;
       document.getElementById('nextDayState').textContent = '❌';
     };
 
-    // === وضع التعديل ===
+    // وضع التعديل
     window.editMatch = async (id) => {
       const match = matches.find(m => m.id === id);
       if (!match) return;
@@ -797,7 +952,7 @@
 
     document.getElementById('cancelEditBtn').onclick = resetEditMode;
 
-    // === حذف مباراة ===
+    // حذف مباراة
     window.deleteMatch = (id) => {
       if (confirm('هل أنت متأكد من حذف هذه المباراة؟')) {
         matches = matches.filter(m => m.id !== id);
@@ -807,7 +962,7 @@
       }
     };
 
-    // === تفريغ الجدول بالكامل ===
+    // تفريغ الجدول
     document.getElementById('deleteAll').onclick = () => {
       if (matches.length === 0) return;
       if (confirm('⚠️ هل تريد حذف جميع المباريات الموجودة في الجدول؟')) {
@@ -818,25 +973,25 @@
       }
     };
 
-    // === إخفاء وإظهار أزرار التعديل والحذف ===
+    // إخفاء/إظهار الإجراءات
     document.getElementById('toggleBtns').onclick = () => {
       showBtns = !showBtns;
       render();
     };
 
-    // === تبديل ترتيب القسمين في الصفحة ===
+    // تبديل ترتيب القسمين
     document.getElementById('swapSections').onclick = () => {
       const grid = document.querySelector('.grid');
       grid.appendChild(grid.firstElementChild);
     };
 
-    // === توليد وعرض بطاقات المباريات ===
+    // توليد وعرض بطاقات المباريات
     function render() {
       const container = document.getElementById('matchesContainer');
       container.innerHTML = '';
 
       if (matches.length === 0) {
-        container.innerHTML = '<div class="empty-state">لا توجد مباريات مضافة حالياً. ابدأ بإضافة مباريات اليوم من النموذج!</div>';
+        container.innerHTML = '<div class="empty-state">لا توجد مباريات مضافة حالياً.<br>أضف مبارياتك اليوم من النموذج وستظهر هنا فوراً!</div>';
         return;
       }
 
@@ -852,7 +1007,7 @@
         
         const extraLogo = selectedExtraLogo || l.extraLogo || '';
         header.innerHTML = `
-          <img src="${l.logo || ''}" style="width:24px;height:24px;object-fit:contain;" alt="">
+          <img src="${l.logo || ''}" style="width:22px;height:22px;object-fit:contain;" alt="">
           <span>${l.name}</span>
           ${extraLogo ? `<img src="${extraLogo}" class="extra-logo-header" alt="">` : ''}
         `;
@@ -862,10 +1017,10 @@
           const card = document.createElement('div');
           card.className = 'match-card';
           
-          // تأكيد خلفية داكنة آمنة دائماً
-          card.style.backgroundColor = (l.color && l.color !== '#fdfdfd') ? l.color : '#191919';
+          if (l.color && l.color !== '#fdfdfd') {
+            card.style.backgroundColor = l.color;
+          }
 
-          // تنسيق التوقيت
           const [hours, minutes] = (m.time || "00:00").split(':');
           let displayHours = parseInt(hours, 10);
           const ampm = displayHours >= 12 ? 'م' : 'ص';
@@ -916,24 +1071,23 @@
       });
     }
 
-    // === تحميل الجدول كصورة Full HD عالية الوضوح مع الأسماء كاملة ===
+    // === تحميل الجدول كصورة Full HD بالهيدر والثيم والأسماء كاملة ===
     document.getElementById('downloadTable').addEventListener('click', async () => {
-      const exportArea = document.getElementById('exportArea');
-
-      // إخفاء الأزرار أثناء التصوير
       const actionBtns = exportArea.querySelectorAll('.action-btns');
       actionBtns.forEach(btn => btn.style.display = 'none');
 
-      // 👈 تفعيل وضع التصدير لإظهار أسماء الفرق كاملة
+      // تفعيل وضع التصدير لعرض الأسماء كاملة وتوسيع الكرت
       exportArea.classList.add('export-mode');
 
       try {
         await document.fonts.ready;
 
-        // التقاط الصورة بدقة فائقة وبحروف عربية متصلة 100%
+        // جلب لون خلفية الثيم الحالي ديناميكياً
+        const computedBg = window.getComputedStyle(exportArea).backgroundColor || '#141414';
+
         const dataUrl = await htmlToImage.toPng(exportArea, {
-          pixelRatio: 3, // جودة 4K حادة جداً
-          backgroundColor: '#181818'
+          pixelRatio: 3, // دقة 4K حادة جداً
+          backgroundColor: computedBg
         });
 
         const link = document.createElement('a');
@@ -944,7 +1098,6 @@
         console.error('Error exporting image:', error);
         alert('حدث خطأ أثناء تصدير الصورة.');
       } finally {
-        // 👈 إعادة الجدول لوضعه الأصلي
         exportArea.classList.remove('export-mode');
         if (showBtns) {
           actionBtns.forEach(btn => btn.style.display = 'flex');
@@ -952,10 +1105,8 @@
       }
     });
 
-    // تشغيل التهيئة
     init();
 
-    // إخفاء شاشة البداية بنعومة
     setTimeout(() => {
       const splash = document.getElementById('splash');
       splash.style.opacity = '0';
@@ -964,12 +1115,9 @@
 
   });
 
-  // تسجيل الـ Service Worker إن وجد
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js")
-        .then(() => console.log("SW Registered"))
-        .catch(() => {});
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
     });
   }
   </script>
