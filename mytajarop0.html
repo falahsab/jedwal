@@ -32,8 +32,7 @@
 
   <style>
     :root {
-      /* مسار العلامة المائية الافتراضي */
-      --watermark-url: url('img/yemen-sat-white.png');
+      --watermark-url: none;
     }
 
     *, *::before, *::after {
@@ -182,15 +181,14 @@
       border: 1px solid var(--border-color) !important;
     }
 
-    /* 🛡️ العلامة المائية المتكررة لخلفية البوستر بالكامل */
+    /* 🛡️ العلامة المائية المتكررة المتباعدة لخلفية البوستر */
     #exportArea::before {
       content: "";
       position: absolute;
       inset: 0;
       background-image: var(--watermark-url);
       background-repeat: repeat;
-      background-size: 46px auto; /* حجم صغير متكرر */
-      opacity: 0.035;
+      opacity: 0.045;
       pointer-events: none;
       z-index: 0;
     }
@@ -343,7 +341,7 @@
       object-fit: contain;
     }
 
-    /* 🛡️ بطاقة المباراة مع علامتها المائية المتكررة المدمجة */
+    /* 🛡️ بطاقة المباراة مع علامة مائية متكررة ذات مسافات مريحة */
     .match-card {
       display: flex;
       flex-direction: column;
@@ -363,8 +361,7 @@
       inset: 0;
       background-image: var(--watermark-url);
       background-repeat: repeat;
-      background-size: 38px auto; /* حجم صغير جداً داخل البطاقات */
-      opacity: 0.045;
+      opacity: 0.055;
       pointer-events: none;
       z-index: 0;
     }
@@ -479,7 +476,7 @@
     }
 
     /* ===================================================
-       🎯 وضع التصدير الاحترافي مع العلامة المائية
+       🎯 وضع التصدير الاحترافي بمقاسات الفوتوشوب
        =================================================== */
     #exportArea.export-mode {
       width: 470px !important;
@@ -707,7 +704,7 @@
               <div class="poster-date" id="posterDateDisplay"></div>
             </div>
 
-            <!-- محتوى البطاقات مع العلامة المائية المدمجة -->
+            <!-- محتوى البطاقات -->
             <div class="poster-body">
               <div id="matchesContainer"></div>
             </div>
@@ -830,6 +827,37 @@
       });
     }
 
+    // 🛡️ دالة ذكية لتوليد علامة مائية متباعدة بمسافات متساوية من كل الجهات
+    function createSpacedWatermark(url, logoSize = 34, gap = 55) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+          const aspect = img.naturalHeight / img.naturalWidth || 1;
+          const logoW = logoSize;
+          const logoH = logoSize * aspect;
+
+          // إضافة مسافة محيطة متساوية من كل الجهات
+          const tileW = Math.round(logoW + gap);
+          const tileH = Math.round(logoH + gap);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = tileW;
+          canvas.height = tileH;
+          const ctx = canvas.getContext('2d');
+
+          // رسم الشعار في منتصف البلاطة لترك فراغ متساوٍ (أعلى، أسفل، يمين، يسار)
+          const x = (tileW - logoW) / 2;
+          const y = (tileH - logoH) / 2;
+          ctx.drawImage(img, x, y, logoW, logoH);
+
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => resolve(url);
+        img.src = url;
+      });
+    }
+
     // تحديث المعاينة للشعارات
     function updatePreview(selectEl, previewId, fallbackIcon) {
       if (!selectEl || !selectEl.selectedOptions || selectEl.selectedOptions.length === 0) {
@@ -864,7 +892,7 @@
       updatePreview(awayTeam, 'awayPreview', '⚽');
     }
 
-    // تهيئة البيانات وتحميل العلامة المائية بأمان
+    // تهيئة البيانات وتوليد العلامة المائية المتباعدة
     async function init() {
       $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel, #extraLogoSelect').select2({
         width: '100%',
@@ -872,8 +900,8 @@
         language: { noResults: () => "لا توجد نتائج مطابقة" }
       });
 
-      // 🛡️ تجهيز العلامة المائية بصيغة Base64 لدقة 100% بدون أي أخطاء
-      toBase64(watermarkPath).then(b64 => {
+      // 🛡️ إنشاء وتطبيق العلامة المائية المتباعدة فوراً
+      createSpacedWatermark(watermarkPath, 34, 55).then(b64 => {
         if (b64) {
           document.documentElement.style.setProperty('--watermark-url', `url(${b64})`);
         }
@@ -1142,7 +1170,7 @@
       });
     }
 
-    // === تحميل الجدول كصورة Full HD بتصميم فوتوشوب وعلامة مائية متكررة ===
+    // === تحميل الجدول كصورة Full HD ===
     document.getElementById('downloadTable').addEventListener('click', async () => {
       const actionBtns = exportArea.querySelectorAll('.action-btns');
       actionBtns.forEach(btn => btn.style.display = 'none');
@@ -1155,7 +1183,7 @@
         const computedBg = window.getComputedStyle(exportArea).backgroundColor || '#121212';
 
         const dataUrl = await htmlToImage.toPng(exportArea, {
-          pixelRatio: 3, // دقة 4K فائقة الوضوح
+          pixelRatio: 3,
           backgroundColor: computedBg
         });
 
