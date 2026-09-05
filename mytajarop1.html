@@ -1,515 +1,1291 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>جدول مباريات اليوم - لوحة التحكم</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>جدول مباريات اليوم - لوحة التحكم</title>
+  
+  <meta name="description" content="لوحة تحكم لإنشاء وتصميم جدول مباريات اليوم للدوريات العالمية والعربية.">
+  <meta property="og:title" content="صانع جدول مباريات" />
+  <meta property="og:description" content="لوحة تحكم من خلالها تنشئ جدول مباريات للدوريات العالمية والعربية مدعومة من يمن ستلايت" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/img/yemen-sat.png" />
+  <meta property="og:url" content="https://jedwal.yemensat.com/" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/png" href="img/jedwal000.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-<!-- مكتبة Select2 -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- Google Fonts: Tajawal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
-<style>
- html, body, * {
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif !important;
-  -webkit-text-size-adjust: 100%; /* لمنع تصغير الخط في Safari */
-}
-@font-face {
-  font-family: 'Tajawal';
-  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff2') format('woff2'),
-       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Tajawal';
-  src: url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff2') format('woff2'),
-       url('https://falahsab.github.io/jedwal/fonts/Tajawal-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" href="css/select2.min.css">
 
-body { background:#ffffff; padding:1px; color:#ffffff; min-height:100vh; display:flex; flex-direction:column; }
-header { background:#070607; color:#fff; padding:12px 16px; border-radius:8px; margin-bottom:18px; text-align:center; font-size:22px; font-weight:700; position:sticky; top:0; z-index:1000; }
-.grid{display:grid; grid-template-columns:1fr 400px; gap:14px;margin-bottom: 20px;}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-.card{background:#252525;border-radius:12px;padding:14px;box-shadow:0 4px 15px rgba(0,0,0,0.08);}
-.row{display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
-select,input[type="time"]{background:#444444; border:1px solid rgba(255,255,25,0.12); padding:8px; border-radius:8px; color:#ffffff; width:100%;}
-label{font-size:13px;color:##ffffff;display:block;margin-bottom:4px;}
-.logo{height: auto; max-width: 100%;border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center;}
-.logo img{width:100%;height:100%;object-fit:contain; transition:width 0.3s,height 0.3s;}
-.btn{background:#3498db;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;width:100%;}
-.matches-wrapper{margin-top: 12px;margin-bottom: 20px;} /* ← هذه المسافة تجعلها منفصلة عن grid بعد التبديل */
-.matches-section{margin-bottom:16px;}
-.section-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:8px;position:relative;padding-left:40px;}
-.extra-logo-header{position:absolute; left:0; top:50%; transform:translateY(-50%); width:auto; height:24px;}
-.match-card{display:flex;flex-direction:column;border-radius:7px;border:1px solid rgba(0,0,0,0.05);padding:10px;margin-bottom:2px;position:relative; overflow:hidden;background-color:#191919}
-.match-card::before{content:""; position:absolute; inset:0; background-image:url('https://falahsab.github.io/jedwal/img/yemen-sat0.png'); background-repeat:repeat; background-size:60px auto; opacity:0.04; pointer-events:none; z-index:0;background-color:#191919;}
-.match-card>*{position:relative; z-index:1;}
-.match_row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;}
-.team{display:flex; align-items:center; gap:6px; flex:1; min-width:0; white-space:nowrap;}
-.team.hometeam{justify-content:flex-end;}
-.team.awayteam{justify-content:flex-start;}
-.team_logo{width:clamp(25px,4vw,38px); height:clamp(25px,4vw,38px); object-fit:contain;}
-.the_team{font-weight:700; font-size:clamp(13px,2vw,17px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.middle_column{display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:clamp(15px,2vw,22px); line-height:1.1;}
-.the_time{display:flex; align-items:center; gap:4px; justify-content:center;}
-.next-day-label{font-size:10px; color:#98999a; margin-top:0; line-height:1;}
-.meta{display:flex; justify-content:center; align-items:center; gap:20px; font-size:13px; color:#efeded; margin-top:6px; font-weight:500; flex-wrap:wrap; text-align:center;}
-.action-btns{display:flex; gap:6px; margin-top:6px; justify-content:center; flex-wrap:wrap;}
-.action-btns button{padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-size:12px;}
-.channel-logo{position:absolute; bottom:6px; left:6px; width:auto; height:35px; object-fit:contain; z-index:3;}
-@media print{.action-btns, #downloadTable, #finalView, .form, #toggleBtns, #deleteAll, #nextDayBtn{display:none !important;}}
+  <!-- JS Libraries -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js"></script>
+  <script src="js/papaparse.min.js"></script>
 
-.select2-container--default .select2-selection--single {
-  background-color: #444;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: #fff;
-  border-radius: 8px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-}
-.select2-container--default .select2-results__option {
-  background-color: #333;
-  color: #fff;
-}
-.select2-container--default .select2-results__option--highlighted {
-  background-color: #3498db;
-}
-.select2-search__field {
-  background-color: #555 !important;
-  color: #fff !important;
-}
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-  color: #ffffff !important;
-}
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#070607">
 
-.bottom-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
+  <style>
+    :root {
+      --watermark-url: none;
+    }
 
+    *, *::before, *::after {
+      box-sizing: border-box;
+      font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
 
-</style>
+    body {
+      background: #0f0f0f;
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* الهيدر العلوي للموقع */
+    .site-header {
+      background: #080808;
+      color: #fff;
+      padding: 12px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 460px;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 950px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #1c1c1c;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #2e2e2e;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    select, input[type="time"], input[type="date"] {
+      background: #282828;
+      border: 1px solid #3d3d3d;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #ffffff;
+      width: 100%;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, input:focus { border-color: #3498db; }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ccc;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .logo-preview {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: #252525;
+      border: 1px solid #3d3d3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .btn {
+      background: #3498db;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-purple { background: #6c5ce7; }
+    .btn-danger { background: #e74c3c; }
+    .btn-secondary { background: #333333; }
+    .btn-success { background: #27ae60; }
+
+    /* =========================================================
+       🎨 ثيمات الدوريات والبطولات العالمية الرسمية للبوستر
+       ========================================================= */
+    #exportArea {
+      position: relative;
+      border-radius: 14px;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.6);
+      transition: all 0.3s ease;
+      background-color: var(--bg-main) !important;
+      border: 1px solid var(--border-color) !important;
+    }
+
+    /* العلامة المائية المتباعدة */
+    #exportArea::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--watermark-url);
+      background-repeat: repeat;
+      opacity: 0.045;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 1. ⭐ دوري أبطال أوروبا (UEFA Champions League) */
+    #exportArea.theme-ucl {
+      --bg-main: #030818;
+      --card-bg: #07122b;
+      --accent: #00e5ff;
+      --border-color: rgba(0, 229, 255, 0.22);
+      --header-grad: linear-gradient(135deg, #0b2254, #020716);
+      --time-color: #00e5ff;
+    }
+
+    /* 2. 🦁 الدوري الإنجليزي الممتاز (Premier League) */
+    #exportArea.theme-pl {
+      --bg-main: #18001e;
+      --card-bg: #270131;
+      --accent: #00ff85;
+      --border-color: rgba(0, 255, 133, 0.22);
+      --header-grad: linear-gradient(135deg, #38003c, #130018);
+      --time-color: #00ff85;
+    }
+
+    /* 3. 🇪🇸 الدوري الإسباني (LaLiga EA Sports) */
+    #exportArea.theme-laliga {
+      --bg-main: #111114;
+      --card-bg: #1c1c22;
+      --accent: #ff4b44;
+      --border-color: rgba(255, 75, 68, 0.25);
+      --header-grad: linear-gradient(135deg, #330f14, #0e0e11);
+      --time-color: #ff4b44;
+    }
+
+    /* 4. 🇮🇹 الدوري الإيطالي (Serie A Enilive) */
+    #exportArea.theme-serie-a {
+      --bg-main: #020d1c;
+      --card-bg: #071a33;
+      --accent: #0088ff;
+      --border-color: rgba(0, 136, 255, 0.22);
+      --header-grad: linear-gradient(135deg, #0a2b54, #020914);
+      --time-color: #48dbfb;
+    }
+
+    /* 5. 🇩🇪 الدوري الألماني (Bundesliga) */
+    #exportArea.theme-bundesliga {
+      --bg-main: #121212;
+      --card-bg: #1e1b1b;
+      --accent: #e30613;
+      --border-color: rgba(227, 6, 19, 0.25);
+      --header-grad: linear-gradient(135deg, #3d070b, #111111);
+      --time-color: #ff4757;
+    }
+
+    /* 6. 🇫🇷 الدوري الفرنسي (Ligue 1) */
+    #exportArea.theme-ligue1 {
+      --bg-main: #040a1a;
+      --card-bg: #091736;
+      --accent: #18f192;
+      --border-color: rgba(24, 241, 146, 0.22);
+      --header-grad: linear-gradient(135deg, #0e275c, #030814);
+      --time-color: #18f192;
+    }
+
+    /* 7. 🇸🇦 دوري روشن السعودي (Saudi Pro League) */
+    #exportArea.theme-roshn {
+      --bg-main: #04140e;
+      --card-bg: #08261b;
+      --accent: #00d26a;
+      --border-color: rgba(0, 210, 106, 0.24);
+      --header-grad: linear-gradient(135deg, #0c3d2b, #03110b);
+      --time-color: #f1c40f;
+    }
+
+    /* 8. 🇹🇷 الدوري التركي (Trendyol Süper Lig) */
+    #exportArea.theme-superlig {
+      --bg-main: #160608;
+      --card-bg: #270b10;
+      --accent: #e30a17;
+      --border-color: rgba(227, 10, 23, 0.25);
+      --header-grad: linear-gradient(135deg, #440a0f, #130305);
+      --time-color: #ff6b6b;
+    }
+
+    /* 9. 🌏 كأس أمم آسيا (AFC Asian Cup) */
+    #exportArea.theme-asian-cup {
+      --bg-main: #14070a;
+      --card-bg: #240c12;
+      --accent: #f39c12;
+      --border-color: rgba(243, 156, 18, 0.28);
+      --header-grad: linear-gradient(135deg, #3d0f19, #100508);
+      --time-color: #f1c40f;
+    }
+
+    /* 10. 🌍 كأس أمم إفريقيا (TotalEnergies AFCON) */
+    #exportArea.theme-afcon {
+      --bg-main: #07170b;
+      --card-bg: #0f2c16;
+      --accent: #2ecc71;
+      --border-color: rgba(46, 204, 113, 0.26);
+      --header-grad: linear-gradient(135deg, #174523, #051208);
+      --time-color: #f1c40f;
+    }
+
+    /* 11. 🏆 كأس العالم والذهب (FIFA Luxury Gold) */
+    #exportArea.theme-fifa {
+      --bg-main: #110f0c;
+      --card-bg: #1c1813;
+      --accent: #d4af37;
+      --border-color: rgba(212, 175, 55, 0.3);
+      --header-grad: linear-gradient(135deg, #3a2e0e, #0e0c0a);
+      --time-color: #f9ca24;
+    }
+
+    /* 12. 🖤 كلاسيكي داكن محايد (Dark Neutral) */
+    #exportArea.theme-dark {
+      --bg-main: #121212;
+      --card-bg: #1c1c1c;
+      --accent: #3498db;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --header-grad: linear-gradient(135deg, #182332, #0d1218);
+      --time-color: #f1c40f;
+    }
+
+    /* =======================================
+       ✨ هيدر الصورة بتنسيق رياضي فخم
+       ======================================= */
+    .poster-header {
+      background: var(--header-grad);
+      padding: 16px 14px 14px;
+      text-align: center;
+      position: relative;
+      border-bottom: 2px solid var(--accent);
+      z-index: 1;
+    }
+
+    .poster-header::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background: var(--accent);
+      filter: blur(4px);
+      opacity: 0.9;
+    }
+
+    .poster-badge {
+      display: inline-block;
+      padding: 3px 14px;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .poster-title {
+      margin: 0;
+      font-size: 23px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .poster-date {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 5px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+
+    .poster-body {
+      padding: 12px 12px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .matches-section {
+      margin-bottom: 14px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 14.5px;
+      margin-bottom: 8px;
+      padding: 7px 12px;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 6px;
+      border-right: 4px solid var(--accent);
+      position: relative;
+      color: #fff;
+    }
+
+    .extra-logo-header {
+      margin-right: auto;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    /* بطاقة المباراة مع علامتها المائية المتباعدة */
+    .match-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 9px;
+      padding: 10px 12px;
+      margin-bottom: 7px;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--card-bg) !important;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    }
+
+    .match-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--watermark-url);
+      background-repeat: repeat;
+      opacity: 0.055;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .match-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .match_row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .team.hometeam { justify-content: flex-end; text-align: left; }
+    .team.awayteam { justify-content: flex-start; text-align: right; }
+
+    .team_logo {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+
+    .the_team {
+      font-weight: 800;
+      font-size: 14.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      flex: 1;
+      text-align: center;
+    }
+
+    .middle_column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      min-width: 76px;
+      padding: 0 4px;
+    }
+
+    .the_time {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      direction: ltr;
+      color: var(--time-color);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    }
+
+    .next-day-label {
+      font-size: 9px;
+      color: #ff7675;
+      margin-top: 2px;
+      font-weight: bold;
+    }
+
+    .meta {
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(255,255,255,0.07);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      justify-content: center;
+    }
+
+    .action-btns button {
+      padding: 4px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .poster-footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #bbb;
+      border-top: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* وضع التصدير الفوتوشوبي */
+    #exportArea.export-mode {
+      width: 470px !important;
+      max-width: 470px !important;
+    }
+
+    #exportArea.export-mode .match-card {
+      padding: 11px 14px !important;
+      margin-bottom: 8px !important;
+    }
+
+    #exportArea.export-mode .team_logo {
+      width: 38px !important;
+      height: 38px !important;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6)) !important;
+    }
+
+    #exportArea.export-mode .the_team {
+      max-width: none !important;
+      width: auto !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      white-space: nowrap !important;
+      font-size: 15px !important;
+      font-weight: 800 !important;
+    }
+
+    #exportArea.export-mode .the_time {
+      font-size: 19px !important;
+      font-weight: 900 !important;
+    }
+
+    /* Select2 Customization */
+    .select2-container--default .select2-selection--single {
+      background-color: #282828 !important;
+      border: 1px solid #3d3d3d !important;
+      border-radius: 8px !important;
+      height: 40px !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: #ffffff !important;
+      line-height: 38px !important;
+      padding-right: 10px !important;
+    }
+
+    .select2-dropdown {
+      background-color: #222222 !important;
+      border: 1px solid #3d3d3d !important;
+      color: #fff !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted {
+      background-color: #3498db !important;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+      background-color: #303030 !important;
+      color: #fff !important;
+      border: 1px solid #555 !important;
+      border-radius: 6px;
+    }
+
+    /* Splash Screen */
+    #splash {
+      position: fixed;
+      inset: 0;
+      background: #0d0d0d;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #splash img {
+      width: 100px;
+      height: 100px;
+      border-radius: 20px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #777;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
 
-<header>
-⚽ أهم مباريات اليوم
-<div style="margin-top:4px;">
-  <span id="todayDateDisplay"style="font-size:16px;font-weight:400;margin-top:4px;"></span>
-  
-</div>
-</header>
-<div id="mainContent">
-<div class="grid">
-  <div class="card form">
-    <div class="row">
-      <div style="flex:1"><label>الدوري</label><select id="leagueSelect"></select></div>
-      <div style="width:120px"><label>الوقت</label><input id="matchTime" type="time" /></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>الفريق المضيف</label><select id="homeTeam"></select></div>
-      <div style="width:40px"><label>&nbsp;</label><div class="logo" id="homePreview">🏠</div></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>الفريق الضيف</label><select id="awayTeam"></select></div>
-      <div style="width:40px"><label>&nbsp;</label><div class="logo" id="awayPreview">⚽</div></div>
-    </div>
-    <div class="row">
-      <div style="flex:1"><label>المعلق</label><select id="commentator"></select></div>
-      <div style="width:180px"><label>القناة الناقلة</label><select id="channel"></select></div>
-    </div>
-
-<div style="display:flex; gap:6px; flex-wrap:wrap;">
-  <button id="addMatch" class="btn" style="flex:1;">➕ إضافة المباراة</button>
-  <button id="nextDayBtn" class="btn" style="flex:1; background:#6c5ce7;">📅 اليوم التالي: <span id="nextDayState">❌</span></button>
-</div>
-
-<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
-  <button id="toggleBtns" class="btn" style="flex:1;">👁️ تعديل/حذف </button>
-  <button id="deleteAll" class="btn" style="flex:1;">🗑️ حذف كل البطاقات</button>
-</div>
-</div>
-
-<div class="matches-wrapper">
-  <div class="card"><div id="matchesContainer"></div> <center>مع vip عيش المتعة .. اشترك الآن</center></div>
+  <!-- شاشة البداية -->
+  <div id="splash">
+    <img src="img/jedwal000.png" alt="شعار التطبيق" onerror="this.style.display='none'">
+    <h2 style="margin-top:16px;">⚽ صانع جدول المباريات</h2>
+    <p style="color:#aaa; font-size:13px; position:absolute; bottom:20px;">www.yemensat.com</p>
   </div>
+
+  <!-- الهيدر الثابت للموقع -->
+  <header class="site-header">
+    <div>⚽ لوحة تحكم جدول المباريات</div>
+    <div style="font-size:14px; font-weight:400; color:#3498db;" id="siteHeaderDate"></div>
+  </header>
+
+  <div class="container" id="mainContent">
+    <div class="grid">
+      
+      <!-- نموذج إدخال المباراة والتحكم -->
+      <div class="card form">
+        <h3 style="margin-top:0; margin-bottom:14px; font-size:16px; border-bottom:1px solid #333; padding-bottom:8px;">
+          📝 بيانات المباراة
+        </h3>
+
+        <!-- اختيار ثيم البطولة والدوريات الكبرى -->
+        <div class="row">
+          <div style="flex:1;">
+            <label for="themeSelect">🏆 هوية وثيم البطولة (اختر الدوري أو المسابقة)</label>
+            <select id="themeSelect">
+              <optgroup label="⭐ البطولات القارية والعالمية الكبرى">
+                <option value="theme-ucl">⭐ دوري أبطال أوروبا (Champions League)</option>
+                <option value="theme-fifa">🏆 كأس العالم والذهب (FIFA Luxury Gold)</option>
+                <option value="theme-asian-cup">🌏 كأس أمم آسيا (AFC Asian Cup)</option>
+                <option value="theme-afcon">🌍 كأس أمم إفريقيا (TotalEnergies AFCON)</option>
+              </optgroup>
+              <optgroup label="⚽ الدوريات الأوروبية الخمسة الكبرى">
+                <option value="theme-pl">🦁 الدوري الإنجليزي (Premier League)</option>
+                <option value="theme-laliga">🇪🇸 الدوري الإسباني (LaLiga EA Sports)</option>
+                <option value="theme-serie-a">🇮🇹 الدوري الإيطالي (Serie A Enilive)</option>
+                <option value="theme-bundesliga">🇩🇪 الدوري الألماني (Bundesliga)</option>
+                <option value="theme-ligue1">🇫🇷 الدوري الفرنسي (Ligue 1)</option>
+                <option value="theme-superlig">🇹🇷 الدوري التركي (Trendyol Süper Lig)</option>
+              </optgroup>
+              <optgroup label="🌴 الدوريات العربية والمحلية">
+                <option value="theme-roshn">🇸🇦 دوري روشن السعودي (Saudi Pro League)</option>
+                <option value="theme-dark">🖤 كلاسيكي داكن محايد (Dark Neutral)</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="leagueSelect">الدوري</label>
+            <select id="leagueSelect"></select>
+          </div>
+          <div style="width:130px;">
+            <label for="matchTime">الوقت</label>
+            <input id="matchTime" type="time" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="homeTeam">الفريق المضيف</label>
+            <select id="homeTeam"></select>
+          </div>
+          <div style="width:42px;">
+            <label>&nbsp;</label>
+            <div class="logo-preview" id="homePreview">🏠</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="awayTeam">الفريق الضيف</label>
+            <select id="awayTeam"></select>
+          </div>
+          <div style="width:42px;">
+            <label>&nbsp;</label>
+            <div class="logo-preview" id="awayPreview">⚽</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="commentator">المعلق</label>
+            <select id="commentator"></select>
+          </div>
+          <div style="flex:1;">
+            <label for="channel">القناة الناقلة</label>
+            <select id="channel"></select>
+          </div>
+        </div>
+
+        <!-- أزرار الإضافة والتحكم -->
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <button id="addMatch" class="btn" style="flex:2;">➕ إضافة المباراة</button>
+          <button id="cancelEditBtn" class="btn btn-secondary" style="flex:1; display:none;">❌ إلغاء</button>
+          <button id="nextDayBtn" class="btn btn-purple" style="flex:1.5;">📅 الغد: <span id="nextDayState">❌</span></button>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button id="toggleBtns" class="btn btn-secondary" style="flex:1;">👁️ إخفاء/إظهار الإجراءات</button>
+          <button id="deleteAll" class="btn btn-danger" style="flex:1;">🗑️ تفريغ الجدول</button>
+        </div>
+
+        <hr style="border:0; border-top:1px solid #333; margin:16px 0;">
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="extraLogoSelect">الشعار الجانبي (Extra Logo)</label>
+            <select id="extraLogoSelect"></select>
+          </div>
+          <div style="width:42px;">
+            <label>&nbsp;</label>
+            <div class="logo-preview" id="extraPreview">🖼️</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-bottom:0;">
+          <div style="flex:1;">
+            <input type="date" id="manualDate" style="display:none; margin-bottom:8px;">
+            <button id="editDateBtn" class="btn btn-secondary" style="width:100%;">📅 تخصيص التاريخ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- عرض الجدول ومعاينة التصدير -->
+      <div>
+        <div class="matches-wrapper">
+          <div id="exportArea" class="theme-ucl">
+            
+            <!-- ✨ الهيدر الجمالي داخل الصورة الملتقطة ✨ -->
+            <div class="poster-header">
+              <span class="poster-badge">مباريات اليوم</span>
+              <h1 class="poster-title">⚽ أهم مباريات اليوم</h1>
+              <div class="poster-date" id="posterDateDisplay"></div>
+            </div>
+
+            <!-- محتوى البطاقات -->
+            <div class="poster-body">
+              <div id="matchesContainer"></div>
+            </div>
+            
+            <!-- تذييل الصورة -->
+            <div class="poster-footer">
+              مع VIP عيش المتعة .. اشترك الآن | عبر الواتساب: <strong style="color:#2ecc71;">738092209</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- أزرار الإخراج -->
+        <div style="display:flex; gap:8px;">
+          <button id="downloadTable" class="btn btn-success" style="flex:2;">📸 تحميل كصورة (Full HD)</button>
+          <button id="swapSections" class="btn btn-secondary" style="flex:1;">تبديل الموضع ↔️</button>
+        </div>
+      </div>
+
+    </div>
   </div>
-<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
-  <button id="downloadTable" class="btn" style="margin-top:8px;">📸 تحميل </button>
-<a id="downloadLink"></a>
-<button id="swapSections" class="btn" style="margin-top:8px;">تبديل العرض ↔️
-</div>
-<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
-  <span id="todayDateDisplay"></span>
-  <input type="date" id="manualDate" style="display:none;">
-  <button id="editDateBtn" class="btn">📅 اختر يوم</button>
-</div>
 
-<div class="row">
-  <div style="flex:1">
-    <label>شعار إضافي (Extra Logo)</label>
-    <select id="extraLogoSelect"></select>
-  </div>
-  <div style="width:60px">
-    <label>&nbsp;</label>
-    <div class="logo" id="extraPreview">🖼️</div>
-  </div>
-</div>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
+    // === إدارة التاريخ واليوم ===
+    const siteHeaderDate = document.getElementById('siteHeaderDate');
+    const posterDateDisplay = document.getElementById('posterDateDisplay');
+    const manualDateEl = document.getElementById('manualDate');
+    const editBtn = document.getElementById('editDateBtn');
+    const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
-const displayEl = document.getElementById('todayDateDisplay');
-const manualDateEl = document.getElementById('manualDate');
-const editBtn = document.getElementById('editDateBtn');
-
-const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-
-// دالة لتحديث العرض
-function updateDateDisplay(date){
-  displayEl.textContent = `${days[date.getDay()]} ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
-}
-
-// افتراضياً اليوم الحالي
-let currentDate = new Date();
-updateDateDisplay(currentDate);
-
-// عند الضغط على زر التحديد
-editBtn.addEventListener('click',()=>{
-  manualDateEl.style.display = 'inline-block';
-  manualDateEl.valueAsDate = currentDate;
-});
-
-// عند تغيير التاريخ يدوياً
-manualDateEl.addEventListener('change',()=>{
-  const selected = new Date(manualDateEl.value);
-  if(!isNaN(selected)) {
-    currentDate = selected;
+    let currentDate = new Date();
+    function updateDateDisplay(date) {
+      const formatted = `${days[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      siteHeaderDate.textContent = formatted;
+      posterDateDisplay.textContent = `📅 ${formatted}`;
+    }
     updateDateDisplay(currentDate);
-  }
-});
 
-const leaguesCSV='csv/leagues.csv';
-const commentatorsCSV='csv/commentators.csv';
-const channelsCSV='csv/channels.csv';
-const teamsCSVFolder='https://falahsab.github.io/jedwal/teams/';
- const extraLogosCSV = 'csv/extra_logos.csv';
-let extraLogos = [];
-let selectedExtraLogo = ""; // الشعار الافتراضي المستخدم
-
-let leagues=[], teams={}, commentators=[], channels=[], showBtns=true;
-let matches=[], editIndex=null, isNextDay=false;
-// بعد تحميل القوائم
-populateLeagues();
-fetchCommentators();
-fetchChannels();
-
-// تفعيل Select2 بعد التأكد أن القوائم موجودة
-setTimeout(() => {
-  $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel').select2({
-    width: '100%',
-    dir: "rtl",
-    language: {
-      noResults: () => "لا توجد نتائج مطابقة"
-    }
-  });
-fetchExtraLogos();
-
-function fetchExtraLogos(){
-  fetchCSV(extraLogosCSV, data=>{
-    extraLogos = data;
-    const extraSelect = document.getElementById('extraLogoSelect');
-    extraSelect.innerHTML = data.map(x=>`<option value="${x.logo}">${x.name}</option>`).join('');
-
-    // ✅ افتراضياً استخدم أول شعار في القائمة
-    if (data.length > 0) {
-      selectedExtraLogo = data[0].logo;
-      document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra" style="max-height:40px;">`;
-    }
-
-    // تفعيل Select2 للبحث
-    $('#extraLogoSelect').select2({
-      width: '100%',
-      dir: 'rtl',
-      language: { noResults: () => "لا توجد نتائج مطابقة" }
+    editBtn.addEventListener('click', () => {
+      manualDateEl.style.display = manualDateEl.style.display === 'none' ? 'block' : 'none';
+      if (manualDateEl.style.display === 'block') {
+        manualDateEl.valueAsDate = currentDate;
+      }
     });
 
-    // تغيير الشعار يحدّث المعاينة ويعيد عرض البطاقات
-    $('#extraLogoSelect').on('change', function(){
-      selectedExtraLogo = this.value;
-      document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra" style="max-height:40px;">`;
-      render();
+    manualDateEl.addEventListener('change', () => {
+      const selected = new Date(manualDateEl.value);
+      if (!isNaN(selected)) {
+        currentDate = selected;
+        updateDateDisplay(currentDate);
+      }
     });
-  });
-}
 
-  // ✅ حدث اختيار الدوري
-  $('#leagueSelect').on('select2:select', function (e) {
-    const leagueCode = e.params.data.id; // قيمة الدوري
-    loadTeams(leagueCode);
-  });
-}, 800);
+    // === إدارة ثيمات الدوريات العالمية ===
+    const themeSelect = document.getElementById('themeSelect');
+    const exportArea = document.getElementById('exportArea');
 
+    // استعادة الثيم المحفوظ (الافتراضي: دوري أبطال أوروبا)
+    const savedTheme = localStorage.getItem('selectedTheme') || 'theme-ucl';
+    themeSelect.value = savedTheme;
+    exportArea.className = savedTheme;
 
-function fetchCSV(url,callback){Papa.parse(url,{download:true,header:true,complete:r=>callback(r.data)});}
-function toBase64(url, callback){
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.onload = () => { const canvas = document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height; canvas.getContext('2d').drawImage(img,0,0); callback(canvas.toDataURL()); };
-  img.onerror = () => callback('');
-  img.src = url;
-}
+    themeSelect.addEventListener('change', (e) => {
+      const theme = e.target.value;
+      exportArea.className = theme;
+      localStorage.setItem('selectedTheme', theme);
+    });
 
-function populateLeagues(){
-  fetchCSV(leaguesCSV,data=>{
-    leagues=data;
-    const leagueSelect=document.getElementById('leagueSelect');
-    leagueSelect.innerHTML=leagues.map(l=>`<option value='${l.code}' data-logo='${l.logo}' data-color='${l.color||"#fdfdfd"}' data-extra='${l.extraLogo||""}'>${l.name}</option>`).join('');
-    loadTeams(leagueSelect.value);
-  });
-}
+    // === مسارات الملفات والمتغيرات العامة ===
+    const leaguesCSV = 'csv/leagues.csv';
+    const commentatorsCSV = 'csv/commentators.csv';
+    const channelsCSV = 'csv/channels.csv';
+    const teamsCSVFolder = 'teams/';
+    const extraLogosCSV = 'csv/extra_logos.csv';
+    const watermarkPath = 'img/yemen-sat-white.png';
 
-function loadTeams(leagueCode, cb){
-  fetchCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`, data=>{
-    teams[leagueCode]=data;
-    const homeTeam=document.getElementById('homeTeam');
-    const awayTeam=document.getElementById('awayTeam');
-    homeTeam.innerHTML=awayTeam.innerHTML=data.map(t=>`<option value='${t.name}' data-img='${t.img}'>${t.name}</option>`).join('');
-    updatePreview(homeTeam,'homePreview'); 
-    updatePreview(awayTeam,'awayPreview');
+    let leagues = [], teams = {}, commentators = [], channels = [], extraLogos = [];
+    let selectedExtraLogo = "";
+    let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+    let editMatchId = null;
+    let isNextDay = false;
+    let showBtns = true;
 
-    // تهيئة Select2 للفرق وإعادة ربط حدث التغيير للمعاينة
-    setTimeout(()=>{
-      // إلغاء أي مستمع سابق لتجنب التكرار
-      $('#homeTeam, #awayTeam').off('change');
+    // جلب ملفات CSV
+    function loadCSV(url) {
+      return new Promise((resolve) => {
+        Papa.parse(url, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          complete: (res) => resolve(res.data || []),
+          error: () => resolve([])
+        });
+      });
+    }
 
-      $('#homeTeam, #awayTeam').select2({
+    // تحويل الصور إلى Base64
+    function toBase64(url) {
+      return new Promise((resolve) => {
+        if (!url || url.startsWith('data:')) {
+          resolve(url || '');
+          return;
+        }
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+          } catch (e) {
+            resolve(url);
+          }
+        };
+        img.onerror = () => resolve(url);
+        img.src = url;
+      });
+    }
+
+    // توليد علامة مائية متباعدة بمسافات متساوية
+    function createSpacedWatermark(url, logoSize = 34, gap = 55) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+          const aspect = img.naturalHeight / img.naturalWidth || 1;
+          const logoW = logoSize;
+          const logoH = logoSize * aspect;
+
+          const tileW = Math.round(logoW + gap);
+          const tileH = Math.round(logoH + gap);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = tileW;
+          canvas.height = tileH;
+          const ctx = canvas.getContext('2d');
+
+          const x = (tileW - logoW) / 2;
+          const y = (tileH - logoH) / 2;
+          ctx.drawImage(img, x, y, logoW, logoH);
+
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => resolve(url);
+        img.src = url;
+      });
+    }
+
+    // تحديث المعاينة للشعارات
+    function updatePreview(selectEl, previewId, fallbackIcon) {
+      if (!selectEl || !selectEl.selectedOptions || selectEl.selectedOptions.length === 0) {
+        document.getElementById(previewId).innerHTML = fallbackIcon;
+        return;
+      }
+      const img = selectEl.selectedOptions[0]?.dataset?.img;
+      if (img) {
+        document.getElementById(previewId).innerHTML = `<img src="${img}" alt="preview">`;
+      } else {
+        document.getElementById(previewId).innerHTML = fallbackIcon;
+      }
+    }
+
+    // تحميل فرق الدوري المحدد
+    async function loadTeams(leagueCode) {
+      if (!teams[leagueCode]) {
+        teams[leagueCode] = await loadCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`);
+      }
+      const teamList = teams[leagueCode] || [];
+      const homeTeam = document.getElementById('homeTeam');
+      const awayTeam = document.getElementById('awayTeam');
+
+      const optionsHtml = teamList.map(t => `<option value="${t.name}" data-img="${t.img || ''}">${t.name}</option>`).join('');
+      homeTeam.innerHTML = optionsHtml;
+      awayTeam.innerHTML = optionsHtml;
+
+      $('#homeTeam').val($('#homeTeam option:first').val()).trigger('change');
+      $('#awayTeam').val($('#awayTeam option:eq(1)').val() || $('#awayTeam option:first').val()).trigger('change');
+
+      updatePreview(homeTeam, 'homePreview', '🏠');
+      updatePreview(awayTeam, 'awayPreview', '⚽');
+    }
+
+    // تهيئة البيانات
+    async function init() {
+      $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel, #extraLogoSelect').select2({
         width: '100%',
-        dir: "rtl",
+        dir: 'rtl',
         language: { noResults: () => "لا توجد نتائج مطابقة" }
       });
 
-      $('#homeTeam, #awayTeam').on('change', function() {
-        updatePreview(this, this.id === 'homeTeam' ? 'homePreview' : 'awayPreview');
-      });
-
-      // استدعاء callback إن وُجد (مثلاً عند تعديل بطاقة)
-      if(typeof cb === 'function') cb();
-    }, 120); // مهلة صغيرة لتهيئة DOM
-  });
-}
-
-
-function fetchCommentators(){fetchCSV(commentatorsCSV,data=>{document.getElementById('commentator').innerHTML=data.map(c=>`<option>${c.name}</option>`).join('');});}
-function fetchChannels(){fetchCSV(channelsCSV,data=>{channels=data; document.getElementById('channel').innerHTML=data.map(c=>`<option value='${c.name}' data-logo='${c.logo}'>${c.name}</option>`).join('');});}
-function updatePreview(selectEl,previewId){
-  const s=selectEl.selectedOptions[0];
-  const img=s.dataset.img;
-  if(img){ toBase64(img, b64 => document.getElementById(previewId).innerHTML=`<img src='${b64}'/>`); } 
-  else document.getElementById(previewId).innerHTML='⚽';
-}
-
-populateLeagues(); fetchCommentators(); fetchChannels();
-document.getElementById('leagueSelect').addEventListener('change',e=>loadTeams(e.target.value));
-document.getElementById('homeTeam').addEventListener('change',()=>updatePreview(document.getElementById('homeTeam'),'homePreview'));
-document.getElementById('awayTeam').addEventListener('change',()=>updatePreview(document.getElementById('awayTeam'),'awayPreview'));
-
-if(localStorage.getItem('matches')){matches=JSON.parse(localStorage.getItem('matches')); render();}
-document.getElementById('nextDayBtn').onclick=()=>{isNextDay=!isNextDay; document.getElementById('nextDayState').textContent=isNextDay?'✅':'❌';};
-
-document.getElementById('addMatch').onclick = () => {
-  const league = document.getElementById('leagueSelect').value;
-  const home = document.getElementById('homeTeam').value;
-  const away = document.getElementById('awayTeam').value;
-  const time = document.getElementById('matchTime').value;
-  const comm = document.getElementById('commentator').value;
-  const chan = document.getElementById('channel').value;
-  let homeImg = document.getElementById('homeTeam').selectedOptions[0].dataset.img;
-  let awayImg = document.getElementById('awayTeam').selectedOptions[0].dataset.img;
-
-  if (!time) { alert('ادخل وقت المباراة'); return; }
-
-  toBase64(homeImg, b64Home => {
-    homeImg = b64Home;
-    toBase64(awayImg, b64Away => {
-      awayImg = b64Away;
-      const chanLogoUrl = channels.find(c => c.name === chan)?.logo || '';
-      toBase64(chanLogoUrl, b64Chan => {
-        const newMatch = { league, home, away, time, comm, chan, homeImg, awayImg, chanLogo: b64Chan, nextDay: isNextDay };
-
-        // ✅ تعديل الإضافة/التحديث
-        if (editIndex !== null) {
-          matches.splice(editIndex, 0, newMatch);
-          editIndex = null;
-        } else {
-          matches.push(newMatch);
+      // إنشاء العلامة المائية المتباعدة
+      createSpacedWatermark(watermarkPath, 34, 55).then(b64 => {
+        if (b64) {
+          document.documentElement.style.setProperty('--watermark-url', `url(${b64})`);
         }
+      });
 
-        localStorage.setItem('matches', JSON.stringify(matches));
+      const [leaguesData, commsData, chansData, extrasData] = await Promise.all([
+        loadCSV(leaguesCSV),
+        loadCSV(commentatorsCSV),
+        loadCSV(channelsCSV),
+        loadCSV(extraLogosCSV)
+      ]);
+
+      leagues = leaguesData;
+      commentators = commsData;
+      channels = chansData;
+      extraLogos = extrasData;
+
+      // تعبئة الدوريات
+      const leagueSelect = document.getElementById('leagueSelect');
+      leagueSelect.innerHTML = leagues.map(l => 
+        `<option value="${l.code}" data-logo="${l.logo || ''}" data-color="${l.color || ''}" data-extra="${l.extraLogo || ''}">${l.name}</option>`
+      ).join('');
+
+      // تعبئة المعلقين
+      document.getElementById('commentator').innerHTML = commentators.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+      // تعبئة القنوات
+      document.getElementById('channel').innerHTML = channels.map(c => `<option value="${c.name}" data-logo="${c.logo || ''}">${c.name}</option>`).join('');
+
+      // تعبئة الشعار الإضافي
+      const extraSelect = document.getElementById('extraLogoSelect');
+      extraSelect.innerHTML = extraLogos.map(x => `<option value="${x.logo}">${x.name}</option>`).join('');
+      if (extraLogos.length > 0) {
+        selectedExtraLogo = extraLogos[0].logo;
+        document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra">`;
+      }
+
+      $('#leagueSelect').on('select2:select', function () {
+        loadTeams(this.value);
+      });
+
+      $('#homeTeam').on('change', function() { updatePreview(this, 'homePreview', '🏠'); });
+      $('#awayTeam').on('change', function() { updatePreview(this, 'awayPreview', '⚽'); });
+
+      $('#extraLogoSelect').on('change', function() {
+        selectedExtraLogo = this.value;
+        document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra">`;
         render();
-        document.getElementById('matchTime').value = '';
-
-        // ✅ إعادة زر اليوم التالي للوضع الافتراضي بعد الإضافة
-        isNextDay = false;
-        document.getElementById('nextDayState').textContent = '❌';
-      });
-    });
-  });
-};
-
-function render(){
-  const matchesContainer=document.getElementById('matchesContainer');
-  matchesContainer.innerHTML='';
-  leagues.forEach(l=>{
-    const leagueMatches=matches.filter(m=>m.league===l.code);
-    if(leagueMatches.length>0){
-      const section=document.createElement('div'); section.className='matches-section';
-      const header=document.createElement('div'); header.className='section-header';
-     const extraLogo = selectedExtraLogo || l.extraLogo || l.extra;
-      header.innerHTML=`<img src='${extraLogo}' class='extra-logo-header'> <img src='${l.logo}' style='width:24px;height:24px'> ${l.name}`;
-      section.appendChild(header);
-
-      leagueMatches.forEach((m)=>{
-        const card=document.createElement('div'); card.className='match-card'; card.style.background=l.color||'#fdfdfd';
-        // عرض الوقت مباشرة بدون تحويله لكائن Date
-        const [hours, minutes] = m.time.split(':');
-        let displayHours = parseInt(hours,10);
-        const ampm = displayHours >= 12 ? 'م' : 'ص';
-        displayHours = displayHours % 12 || 12;
-
-        card.innerHTML=`
-          <div class="match_row">
-            <div class="team hometeam">
-              <span class="the_team">${m.home}</span>
-              <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
-            </div>
-            <div class="middle_column">
-              <div class="the_time">
-                <span>${displayHours}:${minutes}</span>
-                <span>${ampm}</span>
-              </div>
-              ${m.nextDay ? "<div class='next-day-label'>(اليوم التالي)</div>" : ""}
-            </div>
-            <div class="team awayteam">
-              <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
-              <span class="the_team">${m.away}</span>
-            </div>
-          </div>
-
-<div class="meta" style="min-height: 24px;">
-  ${m.comm ? `<div>🎙️ ${m.comm}</div>` : ''}
-</div>
-
-${m.chanLogo ? `<img src="${m.chanLogo}" class="channel-logo" alt="${m.chan}">` : ''}
-
-
-          <div class="action-btns" style="display:${showBtns?'flex':'none'}">
-            <button onclick="editMatch(${matches.indexOf(m)})">✏️ تعديل</button>
-            <button onclick="deleteMatch(${matches.indexOf(m)})">🗑️ حذف</button>
-          </div>
-        `;
-        section.appendChild(card);
       });
 
-      matchesContainer.appendChild(section);
+      if (leagues.length > 0) {
+        await loadTeams(leagues[0].code);
+      }
+
+      render();
     }
-  });
-}
 
-window.editMatch = (index) => {
-  if (editIndex !== null) {
-    alert('هناك بطاقة قيد التعديل حالياً! يرجى حفظ أو إلغاء التعديل قبل تعديل مباراة أخرى.');
-    return;
+    // زر اليوم التالي
+    document.getElementById('nextDayBtn').onclick = () => {
+      isNextDay = !isNextDay;
+      document.getElementById('nextDayState').textContent = isNextDay ? '✅' : '❌';
+    };
+
+    // إضافة أو حفظ تعديل مباراة
+    document.getElementById('addMatch').onclick = async () => {
+      const league = document.getElementById('leagueSelect').value;
+      const home = document.getElementById('homeTeam').value;
+      const away = document.getElementById('awayTeam').value;
+      const time = document.getElementById('matchTime').value;
+      const comm = document.getElementById('commentator').value;
+      const chan = document.getElementById('channel').value;
+
+      if (!time) {
+        alert('⚠️ يرجى تحديد وقت المباراة أولاً');
+        return;
+      }
+
+      if (home === away) {
+        alert('⚠️ لا يمكن اختيار نفس الفريق كمضيف وضيف!');
+        return;
+      }
+
+      const homeImgRaw = document.getElementById('homeTeam').selectedOptions[0]?.dataset?.img || '';
+      const awayImgRaw = document.getElementById('awayTeam').selectedOptions[0]?.dataset?.img || '';
+      const chanLogoRaw = channels.find(c => c.name === chan)?.logo || '';
+
+      const [homeImg, awayImg, chanLogo] = await Promise.all([
+        toBase64(homeImgRaw),
+        toBase64(awayImgRaw),
+        toBase64(chanLogoRaw)
+      ]);
+
+      if (editMatchId) {
+        const idx = matches.findIndex(m => m.id === editMatchId);
+        if (idx !== -1) {
+          matches[idx] = { ...matches[idx], league, home, away, time, comm, chan, homeImg, awayImg, chanLogo, nextDay: isNextDay };
+        }
+        resetEditMode();
+      } else {
+        const newMatch = {
+          id: 'm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+          league, home, away, time, comm, chan,
+          homeImg, awayImg, chanLogo,
+          nextDay: isNextDay
+        };
+        matches.push(newMatch);
+      }
+
+      localStorage.setItem('matches', JSON.stringify(matches));
+      render();
+
+      document.getElementById('matchTime').value = '';
+      isNextDay = false;
+      document.getElementById('nextDayState').textContent = '❌';
+    };
+
+    // وضع التعديل
+    window.editMatch = async (id) => {
+      const match = matches.find(m => m.id === id);
+      if (!match) return;
+
+      editMatchId = id;
+      document.getElementById('addMatch').textContent = '💾 حفظ التعديل';
+      document.getElementById('addMatch').classList.add('btn-success');
+      document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+
+      $('#leagueSelect').val(match.league).trigger('change');
+      await loadTeams(match.league);
+
+      $('#homeTeam').val(match.home).trigger('change');
+      $('#awayTeam').val(match.away).trigger('change');
+      $('#commentator').val(match.comm).trigger('change');
+      $('#channel').val(match.chan).trigger('change');
+
+      document.getElementById('matchTime').value = match.time;
+      isNextDay = !!match.nextDay;
+      document.getElementById('nextDayState').textContent = isNextDay ? '✅' : '❌';
+    };
+
+    function resetEditMode() {
+      editMatchId = null;
+      document.getElementById('addMatch').textContent = '➕ إضافة المباراة';
+      document.getElementById('addMatch').classList.remove('btn-success');
+      document.getElementById('cancelEditBtn').style.display = 'none';
+      document.getElementById('matchTime').value = '';
+    }
+
+    document.getElementById('cancelEditBtn').onclick = resetEditMode;
+
+    // حذف مباراة
+    window.deleteMatch = (id) => {
+      if (confirm('هل أنت متأكد من حذف هذه المباراة؟')) {
+        matches = matches.filter(m => m.id !== id);
+        localStorage.setItem('matches', JSON.stringify(matches));
+        if (editMatchId === id) resetEditMode();
+        render();
+      }
+    };
+
+    // تفريغ الجدول
+    document.getElementById('deleteAll').onclick = () => {
+      if (matches.length === 0) return;
+      if (confirm('⚠️ هل تريد حذف جميع المباريات الموجودة في الجدول؟')) {
+        matches = [];
+        localStorage.setItem('matches', '[]');
+        resetEditMode();
+        render();
+      }
+    };
+
+    // إخفاء/إظهار الإجراءات
+    document.getElementById('toggleBtns').onclick = () => {
+      showBtns = !showBtns;
+      render();
+    };
+
+    // تبديل ترتيب القسمين
+    document.getElementById('swapSections').onclick = () => {
+      const grid = document.querySelector('.grid');
+      grid.appendChild(grid.firstElementChild);
+    };
+
+    // توليد وعرض بطاقات المباريات
+    function render() {
+      const container = document.getElementById('matchesContainer');
+      container.innerHTML = '';
+
+      if (matches.length === 0) {
+        container.innerHTML = '<div class="empty-state">لا توجد مباريات مضافة حالياً.<br>أضف مبارياتك اليوم من النموذج وستظهر هنا فوراً!</div>';
+        return;
+      }
+
+      leagues.forEach(l => {
+        const leagueMatches = matches.filter(m => m.league === l.code);
+        if (leagueMatches.length === 0) return;
+
+        const section = document.createElement('div');
+        section.className = 'matches-section';
+
+        const header = document.createElement('div');
+        header.className = 'section-header';
+        
+        const extraLogo = selectedExtraLogo || l.extraLogo || '';
+        header.innerHTML = `
+          <img src="${l.logo || ''}" style="width:24px;height:24px;object-fit:contain;" alt="">
+          <span>${l.name}</span>
+          ${extraLogo ? `<img src="${extraLogo}" class="extra-logo-header" alt="">` : ''}
+        `;
+        section.appendChild(header);
+
+        leagueMatches.forEach(m => {
+          const card = document.createElement('div');
+          card.className = 'match-card';
+          
+          if (l.color && l.color !== '#fdfdfd') {
+            card.style.backgroundColor = l.color;
+          }
+
+          const [hours, minutes] = (m.time || "00:00").split(':');
+          let displayHours = parseInt(hours, 10);
+          const ampm = displayHours >= 12 ? 'م' : 'ص';
+          displayHours = displayHours % 12 || 12;
+
+          let bottomHTML = '';
+          if (m.comm || m.chanLogo) {
+            bottomHTML = `
+              <div class="meta">
+                ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:4px; height:24px; object-fit:contain;" alt="${m.chan}">` : ''}
+                ${m.comm ? `<div style="flex:1; text-align:center; font-size:12.5px; font-weight:600; color:#ddd;">🎙️ ${m.comm}</div>` : ''}
+              </div>
+            `;
+          }
+
+          card.innerHTML = `
+            <div class="match_row">
+              <div class="team hometeam">
+                <span class="the_team" title="${m.home}">${m.home}</span>
+                <img src="${m.homeImg}" class="team_logo" alt="${m.home}">
+              </div>
+              
+              <div class="middle_column">
+                <div class="the_time">
+                  <span>${displayHours}:${minutes}</span>
+                  <span style="font-size:12px; margin-right:2px;">${ampm}</span>
+                </div>
+                ${m.nextDay ? "<span class='next-day-label'>(اليوم التالي)</span>" : ""}
+              </div>
+
+              <div class="team awayteam">
+                <img src="${m.awayImg}" class="team_logo" alt="${m.away}">
+                <span class="the_team" title="${m.away}">${m.away}</span>
+              </div>
+            </div>
+
+            ${bottomHTML}
+
+            <div class="action-btns" style="display: ${showBtns ? 'flex' : 'none'};">
+              <button onclick="editMatch('${m.id}')" style="background:#f39c12; color:#fff;">✏️ تعديل</button>
+              <button onclick="deleteMatch('${m.id}')" style="background:#e74c3c; color:#fff;">🗑️ حذف</button>
+            </div>
+          `;
+          section.appendChild(card);
+        });
+
+        container.appendChild(section);
+      });
+    }
+
+    // === تحميل الجدول كصورة Full HD بثيم البطولة وعلامة مائية متباعدة ===
+    document.getElementById('downloadTable').addEventListener('click', async () => {
+      const actionBtns = exportArea.querySelectorAll('.action-btns');
+      actionBtns.forEach(btn => btn.style.display = 'none');
+
+      exportArea.classList.add('export-mode');
+
+      try {
+        await document.fonts.ready;
+
+        const computedBg = window.getComputedStyle(exportArea).backgroundColor || '#030818';
+
+        const dataUrl = await htmlToImage.toPng(exportArea, {
+          pixelRatio: 3,
+          backgroundColor: computedBg
+        });
+
+        const link = document.createElement('a');
+        link.download = `جدول_مباريات_${currentDate.toISOString().slice(0, 10)}.png`;
+        link.href = dataUrl;
+        link.click();
+      } catch (error) {
+        console.error('Error exporting image:', error);
+        alert('حدث خطأ أثناء تصدير الصورة.');
+      } finally {
+        exportArea.classList.remove('export-mode');
+        if (showBtns) {
+          actionBtns.forEach(btn => btn.style.display = 'flex');
+        }
+      }
+    });
+
+    init();
+
+    setTimeout(() => {
+      const splash = document.getElementById('splash');
+      splash.style.opacity = '0';
+      setTimeout(() => splash.style.display = 'none', 600);
+    }, 1200);
+
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    });
   }
-
-  const m = matches[index];
-
-  // ضبط اختيار الدوري عبر Select2 (لكي يظهر اختيار الدوري المرئي)
-  $('#leagueSelect').val(m.league).trigger('change.select2');
-
-  // نستخدم loadTeams مع callback لضمان أن الفرق محملة قبل ملء الحقول
-  loadTeams(m.league, () => {
-    // الآن بعد أن تم تحميل الفرق وتهيئة Select2 لها، نعيّن القيم
-    $('#homeTeam').val(m.home).trigger('change.select2');
-    $('#awayTeam').val(m.away).trigger('change.select2');
-
-    // المعلّق والقناة - نضبطهما كذلك
-    $('#commentator').val(m.comm).trigger('change.select2');
-    $('#channel').val(m.chan).trigger('change.select2');
-
-    // الوقت (حقل نصي/وقت)
-    document.getElementById('matchTime').value = m.time;
-
-    // تحديث المعاينات (تأكد أن updatePreview تتعامل مع العنصر الأصلي أو dataset)
-    updatePreview(document.getElementById('homeTeam'),'homePreview');
-    updatePreview(document.getElementById('awayTeam'),'awayPreview');
-
-    // ضبط حالة التحرير: نحدد editIndex ونحذف العنصر من المصفوفة الآن
-    editIndex = index;
-    matches.splice(index, 1);
-    localStorage.setItem('matches', JSON.stringify(matches));
-    render();
-  });
-};
-
-
-window.deleteMatch=(index)=>{if(confirm('هل تريد حذف هذه المباراة؟')){matches.splice(index,1); localStorage.setItem('matches',JSON.stringify(matches)); render();}};
-
-document.getElementById('toggleBtns').addEventListener('click',()=>{showBtns=!showBtns; render();});
-document.getElementById('deleteAll').addEventListener('click',()=>{if(confirm('هل تريد حذف كل البطاقات؟')){matches=[]; localStorage.setItem('matches','[]'); render();}});
-
-document.getElementById('downloadTable').addEventListener('click',()=>{
-  html2canvas(document.querySelector('.matches-wrapper'), {useCORS:true, allowTaint:true}).then(canvas=>{
-    const link=document.getElementById('downloadLink');
-    link.href=canvas.toDataURL('image/png');
-    link.download='matches.png';
-    link.click();
-  });
-});
-
-});
-
-
-const swapBtn = document.getElementById('swapSections');
-let swapped = false;
-
-swapBtn.addEventListener('click', () => {
-  const mainContent = document.getElementById('mainContent');
-  const grid = mainContent.querySelector('.grid');
-  const matchesWrapper = mainContent.querySelector('.matches-wrapper');
-
-  if (!swapped) {
-    // المباريات فوق لوحة التحكم
-    mainContent.insertBefore(matchesWrapper, grid);
-    swapped = true;
-    swapBtn.textContent = "🔄 إعادة الترتيب";
-  } else {
-    // لوحة التحكم فوق المباريات (الترتيب الافتراضي)
-    mainContent.insertBefore(grid, matchesWrapper);
-    swapped = false;
-    swapBtn.textContent = "🔄 تبديل العرض";
-  }
-});
-
-
-</script>
-
+  </script>
 </body>
 </html>
-
