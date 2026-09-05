@@ -25,7 +25,6 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/select2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="js/papaparse.min.js"></script>
 
   <link rel="manifest" href="manifest.json">
@@ -249,13 +248,30 @@
       flex-shrink: 0;
     }
 
+    /* 👈 اسم الفريق في الوضع الافتراضي */
     .the_team {
       font-weight: 700;
-      font-size: clamp(12px, 1.8vw, 15px);
+      font-size: clamp(11px, 1.7vw, 14px);
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 120px;
+      text-align: center;
+      flex: 1;
+    }
+
+    /* 👈 وضع التصدير: عرض الاسم كاملاً وتوسيع الجدول لاستيعاب أطول الأسماء */
+    #exportArea.export-mode {
+      width: 520px !important;
+      max-width: 520px !important;
+    }
+
+    #exportArea.export-mode .the_team {
+      max-width: none !important;
+      width: auto !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      white-space: nowrap !important;
+      font-size: 13.5px !important;
     }
 
     .middle_column {
@@ -375,15 +391,6 @@
       color: #888;
       font-size: 14px;
     }
-
-    /* منع تفكيك الحروف العربية في منطقة التصدير */
-#exportArea, #exportArea * {
-  letter-spacing: 0 !important;
-  word-spacing: normal !important;
-  font-feature-settings: "liga" 1, "calt" 1 !important;
-  font-variant-ligatures: normal !important;
-  text-rendering: optimizeLegibility !important;
-}
   </style>
 </head>
 <body>
@@ -909,36 +916,42 @@
       });
     }
 
-    // === تحميل الجدول كصورة Full HD عالية الوضوح ===
+    // === تحميل الجدول كصورة Full HD عالية الوضوح مع الأسماء كاملة ===
     document.getElementById('downloadTable').addEventListener('click', async () => {
-  const exportArea = document.getElementById('exportArea');
+      const exportArea = document.getElementById('exportArea');
 
-  // إخفاء الأزرار أثناء التصوير
-  const actionBtns = exportArea.querySelectorAll('.action-btns');
-  actionBtns.forEach(btn => btn.style.display = 'none');
+      // إخفاء الأزرار أثناء التصوير
+      const actionBtns = exportArea.querySelectorAll('.action-btns');
+      actionBtns.forEach(btn => btn.style.display = 'none');
 
-  try {
-    await document.fonts.ready;
+      // 👈 تفعيل وضع التصدير لإظهار أسماء الفرق كاملة
+      exportArea.classList.add('export-mode');
 
-    // التقاط الصورة بدقة فائقة وبحروف عربية متصلة 100%
-    const dataUrl = await htmlToImage.toPng(exportArea, {
-      pixelRatio: 3, // جودة 4K حادة جداً
-      backgroundColor: '#181818'
+      try {
+        await document.fonts.ready;
+
+        // التقاط الصورة بدقة فائقة وبحروف عربية متصلة 100%
+        const dataUrl = await htmlToImage.toPng(exportArea, {
+          pixelRatio: 3, // جودة 4K حادة جداً
+          backgroundColor: '#181818'
+        });
+
+        const link = document.createElement('a');
+        link.download = `جدول_مباريات_${currentDate.toISOString().slice(0, 10)}.png`;
+        link.href = dataUrl;
+        link.click();
+      } catch (error) {
+        console.error('Error exporting image:', error);
+        alert('حدث خطأ أثناء تصدير الصورة.');
+      } finally {
+        // 👈 إعادة الجدول لوضعه الأصلي
+        exportArea.classList.remove('export-mode');
+        if (showBtns) {
+          actionBtns.forEach(btn => btn.style.display = 'flex');
+        }
+      }
     });
 
-    const link = document.createElement('a');
-    link.download = `جدول_مباريات_${currentDate.toISOString().slice(0, 10)}.png`;
-    link.href = dataUrl;
-    link.click();
-  } catch (error) {
-    console.error('Error exporting image:', error);
-    alert('حدث خطأ أثناء تصدير الصورة.');
-  } finally {
-    if (showBtns) {
-      actionBtns.forEach(btn => btn.style.display = 'flex');
-    }
-  }
-});
     // تشغيل التهيئة
     init();
 
