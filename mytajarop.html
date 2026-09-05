@@ -24,7 +24,7 @@
   <!-- JS Libraries -->
   <script src="js/jquery.min.js"></script>
   <script src="js/select2.min.js"></script>
-  <script src="js/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js"></script>
   <script src="js/papaparse.min.js"></script>
 
   <link rel="manifest" href="manifest.json">
@@ -911,30 +911,27 @@
     // === تحميل الجدول كصورة Full HD عالية الوضوح ===
     document.getElementById('downloadTable').addEventListener('click', async () => {
   const exportArea = document.getElementById('exportArea');
-  
-  // 1. التأكد التام من اكتمال تحميل الخطوط قبل التقاط الصورة
-  await document.fonts.ready;
 
-  // 2. إخفاء أزرار التعديل والحذف
+  // إخفاء الأزرار أثناء التصوير
   const actionBtns = exportArea.querySelectorAll('.action-btns');
   actionBtns.forEach(btn => btn.style.display = 'none');
 
   try {
-    const canvas = await html2canvas(exportArea, {
-      useCORS: true,
-      allowTaint: true,
-      scale: 3, // دقة عالية
-      backgroundColor: '#181818',
-      foreignObjectRendering: true // 👈 هذا الخيار هو الحل: يجعل المتصفح يرسم الحروف متصلة كما هي
+    await document.fonts.ready;
+
+    // التقاط الصورة بدقة فائقة وبحروف عربية متصلة 100%
+    const dataUrl = await htmlToImage.toPng(exportArea, {
+      pixelRatio: 3, // جودة 4K حادة جداً
+      backgroundColor: '#181818'
     });
 
     const link = document.createElement('a');
     link.download = `جدول_مباريات_${currentDate.toISOString().slice(0, 10)}.png`;
-    link.href = canvas.toDataURL('image/png');
+    link.href = dataUrl;
     link.click();
-  } catch (err) {
-    console.error(err);
-    alert('حدث خطأ أثناء تحميل الصورة.');
+  } catch (error) {
+    console.error('Error exporting image:', error);
+    alert('حدث خطأ أثناء تصدير الصورة.');
   } finally {
     if (showBtns) {
       actionBtns.forEach(btn => btn.style.display = 'flex');
