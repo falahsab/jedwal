@@ -74,7 +74,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: 1fr 440px;
+      grid-template-columns: 1fr 460px;
       gap: 16px;
       margin-bottom: 20px;
     }
@@ -111,9 +111,7 @@
       transition: border-color 0.2s;
     }
 
-    select:focus, input:focus {
-      border-color: #3498db;
-    }
+    select:focus, input:focus { border-color: #3498db; }
 
     label {
       font-size: 13px;
@@ -169,80 +167,77 @@
        🎨 نظام الثيمات المتقدم لمنطقة الصورة
        ======================================= */
     #exportArea {
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 0;
       overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.6);
       transition: all 0.3s ease;
+      background-color: var(--bg-main) !important;
+      border: 1px solid var(--border-color) !important;
     }
 
     /* 1. ثيم كلاسيكي داكن (Dark Obsidian) */
     #exportArea.theme-dark {
-      --bg-main: #141414;
+      --bg-main: #121212;
       --card-bg: #1c1c1c;
       --accent: #3498db;
       --border-color: rgba(255, 255, 255, 0.08);
-      --header-grad: linear-gradient(135deg, #1b2636, #0e1217);
+      --header-grad: linear-gradient(135deg, #182332, #0d1218);
       --time-color: #f1c40f;
     }
 
     /* 2. ثيم كحلي ملكي (Royal Navy) */
     #exportArea.theme-navy {
-      --bg-main: #0a111a;
-      --card-bg: #101c2b;
+      --bg-main: #08101a;
+      --card-bg: #0f1c2d;
       --accent: #00d2d3;
-      --border-color: rgba(0, 210, 211, 0.18);
-      --header-grad: linear-gradient(135deg, #0e2947, #07101a);
+      --border-color: rgba(0, 210, 211, 0.2);
+      --header-grad: linear-gradient(135deg, #0d2a4a, #060e18);
       --time-color: #f6b93b;
     }
 
     /* 3. ثيم الزمرد الرياضي (Stadium Emerald) */
     #exportArea.theme-emerald {
-      --bg-main: #081711;
-      --card-bg: #0f271d;
+      --bg-main: #061510;
+      --card-bg: #0d261c;
       --accent: #2ecc71;
-      --border-color: rgba(46, 204, 113, 0.18);
-      --header-grad: linear-gradient(135deg, #0f3d28, #07140e);
+      --border-color: rgba(46, 204, 113, 0.2);
+      --header-grad: linear-gradient(135deg, #0e3d28, #05120c);
       --time-color: #f1c40f;
     }
 
     /* 4. ثيم الياقوت الناري (Crimson Fire) */
     #exportArea.theme-crimson {
-      --bg-main: #18090b;
-      --card-bg: #270f14;
+      --bg-main: #160709;
+      --card-bg: #260d12;
       --accent: #ff4757;
-      --border-color: rgba(255, 71, 87, 0.2);
-      --header-grad: linear-gradient(135deg, #440d16, #150608);
+      --border-color: rgba(255, 71, 87, 0.22);
+      --header-grad: linear-gradient(135deg, #440d16, #140507);
       --time-color: #ffa502;
     }
 
     /* 5. ثيم بنفسجي نيون (Cyber Violet) */
     #exportArea.theme-violet {
-      --bg-main: #0f0b1a;
-      --card-bg: #1a132e;
+      --bg-main: #0d0917;
+      --card-bg: #18112b;
       --accent: #a29bfe;
       --border-color: rgba(162, 155, 254, 0.22);
-      --header-grad: linear-gradient(135deg, #2e1a5a, #0c0817);
+      --header-grad: linear-gradient(135deg, #2d1858, #0b0714);
       --time-color: #fdcb6e;
     }
 
     /* 6. ثيم أسود وذهبي فاخر (Luxury Gold) */
     #exportArea.theme-gold {
-      --bg-main: #121212;
-      --card-bg: #1b1915;
+      --bg-main: #11100f;
+      --card-bg: #1c1914;
       --accent: #d4af37;
-      --border-color: rgba(212, 175, 55, 0.25);
-      --header-grad: linear-gradient(135deg, #33270d, #111111);
+      --border-color: rgba(212, 175, 55, 0.28);
+      --header-grad: linear-gradient(135deg, #382a0b, #100f0c);
       --time-color: #f9ca24;
     }
 
-    #exportArea {
-      background-color: var(--bg-main) !important;
-      border: 1px solid var(--border-color) !important;
-    }
-
     /* =======================================
-       ✨ تصميم الهيدر الجمالي داخل الصورة المصدرة
+       ✨ هيدر الصورة بتصميم رياضي فخم
        ======================================= */
     .poster-header {
       background: var(--header-grad);
@@ -256,33 +251,33 @@
       content: "";
       position: absolute;
       bottom: -4px;
-      left: 20%;
-      right: 20%;
+      left: 15%;
+      right: 15%;
       height: 2px;
       background: var(--accent);
       filter: blur(4px);
-      opacity: 0.8;
+      opacity: 0.9;
     }
 
     .poster-badge {
       display: inline-block;
-      padding: 3px 12px;
-      background: rgba(0,0,0,0.35);
+      padding: 3px 14px;
+      background: rgba(0,0,0,0.45);
       border: 1px solid var(--accent);
       border-radius: 20px;
-      font-size: 16px;
-      font-weight: 700;
-      color: #ffffff;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--accent);
       margin-bottom: 6px;
       letter-spacing: 0.5px;
     }
 
     .poster-title {
       margin: 0;
-      font-size: 22px;
+      font-size: 23px;
       font-weight: 900;
       color: #ffffff;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -290,33 +285,35 @@
     }
 
     .poster-date {
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 14.5px;
+      font-weight: 700;
       color: var(--accent);
-      margin-top: 4px;
+      margin-top: 5px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     }
 
     /* محتوى البطاقات */
     .poster-body {
-      padding: 14px;
+      padding: 12px 12px 16px;
     }
 
     .matches-section {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .section-header {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 700;
-      font-size: 14px;
+      font-weight: 800;
+      font-size: 14.5px;
       margin-bottom: 8px;
-      padding: 6px 12px;
-      background: rgba(0, 0, 0, 0.35);
+      padding: 7px 12px;
+      background: rgba(0, 0, 0, 0.4);
       border-radius: 6px;
       border-right: 4px solid var(--accent);
       position: relative;
+      color: #fff;
     }
 
     .extra-logo-header {
@@ -325,23 +322,25 @@
       object-fit: contain;
     }
 
+    /* بطاقة المباراة بتنسيق فوتوشوب ممتلئ وفخم */
     .match-card {
       display: flex;
       flex-direction: column;
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin-bottom: 6px;
+      border-radius: 9px;
+      padding: 10px 12px;
+      margin-bottom: 7px;
       position: relative;
       overflow: hidden;
       background-color: var(--card-bg) !important;
       border: 1px solid var(--border-color);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
     }
 
     .match_row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
     }
 
     .team {
@@ -355,54 +354,47 @@
     .team.hometeam { justify-content: flex-end; text-align: left; }
     .team.awayteam { justify-content: flex-start; text-align: right; }
 
+    /* شعار الفريق: كبير وبارز مع ظل ثلاثي الأبعاد */
     .team_logo {
-      width: clamp(28px, 4vw, 38px);
-      height: clamp(28px, 4vw, 38px);
+      width: 36px;
+      height: 36px;
       object-fit: contain;
       flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
     }
 
+    /* اسم الفريق: عريض، بارز، وواضح جداً للعين */
     .the_team {
-      font-weight: 700;
-      font-size: clamp(11px, 1.7vw, 14px);
+      font-weight: 800;
+      font-size: 14.5px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-align: center;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
       flex: 1;
+      text-align: center;
     }
 
-    /* 👈 وضع التصدير: استيعاب أطول أسماء الفرق بدون قص */
-    #exportArea.export-mode {
-      width: 520px !important;
-      max-width: 520px !important;
-    }
-
-    #exportArea.export-mode .the_team {
-      max-width: none !important;
-      width: auto !important;
-      overflow: visible !important;
-      text-overflow: clip !important;
-      white-space: nowrap !important;
-      font-size: 13.5px !important;
-    }
-
+    /* عامود التوقيت */
     .middle_column {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: clamp(14px, 2.2vw, 18px);
-      min-width: 75px;
+      font-weight: 900;
+      font-size: 18px;
+      min-width: 76px;
+      padding: 0 4px;
     }
 
     .the_time {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       direction: ltr;
       color: var(--time-color);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.6);
     }
 
     .next-day-label {
@@ -418,9 +410,9 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      margin-top: 4px;
-      padding-top: 4px;
-      border-top: 1px dashed rgba(255,255,255,0.06);
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(255,255,255,0.07);
     }
 
     .action-btns {
@@ -442,10 +434,45 @@
     .poster-footer {
       text-align: center;
       padding: 12px;
-      font-size: 12px;
-      color: #aaa;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #bbb;
       border-top: 1px solid var(--border-color);
-      background: rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.25);
+    }
+
+    /* ===================================================
+       🎯 وضع التصدير الاحترافي (يحاكي تصاميم الفوتوشوب 100%)
+       =================================================== */
+    #exportArea.export-mode {
+      width: 470px !important;
+      max-width: 470px !important;
+    }
+
+    #exportArea.export-mode .match-card {
+      padding: 11px 14px !important;
+      margin-bottom: 8px !important;
+    }
+
+    #exportArea.export-mode .team_logo {
+      width: 38px !important;
+      height: 38px !important;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6)) !important;
+    }
+
+    #exportArea.export-mode .the_team {
+      max-width: none !important;
+      width: auto !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      white-space: nowrap !important;
+      font-size: 15px !important;
+      font-weight: 800 !important;
+    }
+
+    #exportArea.export-mode .the_time {
+      font-size: 19px !important;
+      font-weight: 900 !important;
     }
 
     /* Select2 Customization */
@@ -638,7 +665,8 @@
             
             <!-- ✨ الهيدر الجمالي الذي سيظهر داخل الصورة الملتقطة ✨ -->
             <div class="poster-header">
-              <span class="poster-badge">⚽ أهم مباريات اليوم</span>
+              <span class="poster-badge">مباريات اليوم</span>
+              <h1 class="poster-title">⚽ أهم مباريات اليوم</h1>
               <div class="poster-date" id="posterDateDisplay"></div>
             </div>
 
@@ -701,7 +729,6 @@
     const themeSelect = document.getElementById('themeSelect');
     const exportArea = document.getElementById('exportArea');
 
-    // استعادة الثيم المحفوظ
     const savedTheme = localStorage.getItem('selectedTheme') || 'theme-dark';
     themeSelect.value = savedTheme;
     exportArea.className = savedTheme;
@@ -1006,7 +1033,7 @@
         
         const extraLogo = selectedExtraLogo || l.extraLogo || '';
         header.innerHTML = `
-          <img src="${l.logo || ''}" style="width:22px;height:22px;object-fit:contain;" alt="">
+          <img src="${l.logo || ''}" style="width:24px;height:24px;object-fit:contain;" alt="">
           <span>${l.name}</span>
           ${extraLogo ? `<img src="${extraLogo}" class="extra-logo-header" alt="">` : ''}
         `;
@@ -1030,7 +1057,7 @@
             bottomHTML = `
               <div class="meta">
                 ${m.chanLogo ? `<img src="${m.chanLogo}" style="position:absolute; left:4px; height:24px; object-fit:contain;" alt="${m.chan}">` : ''}
-                ${m.comm ? `<div style="flex:1; text-align:center; font-size:12px; color:#ddd;">🎙️ ${m.comm}</div>` : ''}
+                ${m.comm ? `<div style="flex:1; text-align:center; font-size:12.5px; font-weight:600; color:#ddd;">🎙️ ${m.comm}</div>` : ''}
               </div>
             `;
           }
@@ -1045,7 +1072,7 @@
               <div class="middle_column">
                 <div class="the_time">
                   <span>${displayHours}:${minutes}</span>
-                  <span style="font-size:11px; margin-right:2px;">${ampm}</span>
+                  <span style="font-size:12px; margin-right:2px;">${ampm}</span>
                 </div>
                 ${m.nextDay ? "<span class='next-day-label'>(اليوم التالي)</span>" : ""}
               </div>
@@ -1070,22 +1097,21 @@
       });
     }
 
-    // === تحميل الجدول كصورة Full HD بالهيدر والثيم والأسماء كاملة ===
+    // === تحميل الجدول كصورة Full HD بتصميم فوتوشوب متناسق وقريب ===
     document.getElementById('downloadTable').addEventListener('click', async () => {
       const actionBtns = exportArea.querySelectorAll('.action-btns');
       actionBtns.forEach(btn => btn.style.display = 'none');
 
-      // تفعيل وضع التصدير لعرض الأسماء كاملة وتوسيع الكرت
+      // 👈 تفعيل وضع التصدير الاحترافي بمقاسات الفوتوشوب
       exportArea.classList.add('export-mode');
 
       try {
         await document.fonts.ready;
 
-        // جلب لون خلفية الثيم الحالي ديناميكياً
-        const computedBg = window.getComputedStyle(exportArea).backgroundColor || '#141414';
+        const computedBg = window.getComputedStyle(exportArea).backgroundColor || '#121212';
 
         const dataUrl = await htmlToImage.toPng(exportArea, {
-          pixelRatio: 3, // دقة 4K حادة جداً
+          pixelRatio: 3, // دقة 4K فائقة الوضوح
           backgroundColor: computedBg
         });
 
@@ -1097,6 +1123,7 @@
         console.error('Error exporting image:', error);
         alert('حدث خطأ أثناء تصدير الصورة.');
       } finally {
+        // إعادة الجدول إلى شكله التفاعلي العادي
         exportArea.classList.remove('export-mode');
         if (showBtns) {
           actionBtns.forEach(btn => btn.style.display = 'flex');
