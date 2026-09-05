@@ -374,6 +374,15 @@
       color: #888;
       font-size: 14px;
     }
+
+    /* منع تفكيك الحروف العربية في منطقة التصدير */
+#exportArea, #exportArea * {
+  letter-spacing: 0 !important;
+  word-spacing: normal !important;
+  font-feature-settings: "liga" 1, "calt" 1 !important;
+  font-variant-ligatures: normal !important;
+  text-rendering: optimizeLegibility !important;
+}
   </style>
 </head>
 <body>
@@ -901,33 +910,37 @@
 
     // === تحميل الجدول كصورة Full HD عالية الوضوح ===
     document.getElementById('downloadTable').addEventListener('click', async () => {
-      const exportArea = document.getElementById('exportArea');
-      
-      // إخفاء أزرار التعديل والحذف مؤقتاً قبل التقاط الصورة
-      const actionBtns = exportArea.querySelectorAll('.action-btns');
-      actionBtns.forEach(btn => btn.style.display = 'none');
+  const exportArea = document.getElementById('exportArea');
+  
+  // 1. التأكد التام من اكتمال تحميل الخطوط قبل التقاط الصورة
+  await document.fonts.ready;
 
-      try {
-        const canvas = await html2canvas(exportArea, {
-          useCORS: true,
-          allowTaint: true,
-          scale: 3, // دقة عالية جداً للطباعة والسوشيال ميديا
-          backgroundColor: '#181818'
-        });
+  // 2. إخفاء أزرار التعديل والحذف
+  const actionBtns = exportArea.querySelectorAll('.action-btns');
+  actionBtns.forEach(btn => btn.style.display = 'none');
 
-        const link = document.createElement('a');
-        link.download = `جدول_مباريات_${currentDate.toISOString().slice(0,10)}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      } catch (err) {
-        alert('حدث خطأ أثناء تحميل الصورة. تأكد من اتصالك بالإنترنت والسماح بالصور الخارجية.');
-      } finally {
-        if (showBtns) {
-          actionBtns.forEach(btn => btn.style.display = 'flex');
-        }
-      }
+  try {
+    const canvas = await html2canvas(exportArea, {
+      useCORS: true,
+      allowTaint: true,
+      scale: 3, // دقة عالية
+      backgroundColor: '#181818',
+      foreignObjectRendering: true // 👈 هذا الخيار هو الحل: يجعل المتصفح يرسم الحروف متصلة كما هي
     });
 
+    const link = document.createElement('a');
+    link.download = `جدول_مباريات_${currentDate.toISOString().slice(0, 10)}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    console.error(err);
+    alert('حدث خطأ أثناء تحميل الصورة.');
+  } finally {
+    if (showBtns) {
+      actionBtns.forEach(btn => btn.style.display = 'flex');
+    }
+  }
+});
     // تشغيل التهيئة
     init();
 
