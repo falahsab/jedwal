@@ -336,9 +336,9 @@
       background: rgba(0,0,0,0.45);
       border: 1px solid var(--accent);
       border-radius: 20px;
-      font-size: 11.5px;
+      font-size: 16px;
       font-weight: 800;
-      color: var(--accent);
+      color: #ffffff;
       margin-bottom: 6px;
       letter-spacing: 0.5px;
     }
@@ -560,6 +560,10 @@
     }
 
     /* Select2 Customization */
+    .select2-container {
+      z-index: 10005 !important;
+    }
+
     .select2-container--default .select2-selection--single {
       background-color: #282828 !important;
       border: 1px solid #3d3d3d !important;
@@ -579,6 +583,7 @@
       background-color: #222222 !important;
       border: 1px solid #3d3d3d !important;
       color: #fff !important;
+      z-index: 10006 !important;
     }
 
     .select2-container--default .select2-results__option--highlighted {
@@ -592,12 +597,12 @@
       border-radius: 6px;
     }
 
-    /* نافذة الاستيراد الذكي المنبثقة (Modal) */
-    #smartModal {
+    /* نوافذ منبثقة (Modals) */
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(6px);
       z-index: 10000;
       display: none;
       align-items: center;
@@ -612,8 +617,10 @@
       padding: 20px;
       max-width: 520px;
       width: 100%;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.85);
       animation: modalFade 0.25s ease;
+      max-height: 92vh;
+      overflow-y: auto;
     }
 
     @keyframes modalFade {
@@ -676,10 +683,10 @@
       <!-- نموذج إدخال المباراة والتحكم -->
       <div class="card form">
         <h3 style="margin-top:0; margin-bottom:14px; font-size:16px; border-bottom:1px solid #333; padding-bottom:8px;">
-          📝 بيانات المباراة
+          ➕ إضافة مباراة جديدة
         </h3>
 
-        <!-- 👈 زر الاستيراد الذكي المتعدد -->
+        <!-- زر الاستيراد الذكي المتعدد -->
         <button id="openSmartModalBtn" type="button" class="btn" style="background: linear-gradient(135deg, #0984e3, #00cec9); font-size: 15px; margin-bottom: 12px; width: 100%; padding: 12px; border-radius: 8px; box-shadow: 0 4px 14px rgba(9, 132, 227, 0.35);">
           📋 استيراد ذكي متعدد الدوريات من jdwel.com
         </button>
@@ -758,8 +765,7 @@
         <!-- أزرار الإضافة والتحكم -->
         <div style="display:flex; gap:8px; margin-top:10px;">
           <button id="addMatch" class="btn" style="flex:2;">➕ إضافة المباراة</button>
-          <button id="cancelEditBtn" class="btn btn-secondary" style="flex:1; display:none;">❌ إلغاء</button>
-          <button id="nextDayBtn" class="btn btn-purple" style="flex:1.5;">📅 الغد: <span id="nextDayState">❌</span></button>
+          <button id="nextDayBtn" class="btn btn-purple" style="flex:1.2;">📅 الغد: <span id="nextDayState">❌</span></button>
         </div>
 
         <div style="display:flex; gap:8px; margin-top:8px;">
@@ -795,8 +801,7 @@
             
             <!-- ✨ الهيدر الجمالي داخل الصورة الملتقطة ✨ -->
             <div class="poster-header">
-              <span class="poster-badge" id="posterBadge">مباريات اليوم</span>
-              <h1 class="poster-title" id="posterTitle">⚽ أهم مباريات اليوم</h1>
+              <span class="poster-badge" id="posterBadge">⚽ أهم مباريات اليوم</span>
               <div class="poster-date" id="posterDateDisplay"></div>
             </div>
 
@@ -835,13 +840,83 @@
   </div>
 
   <!-- =========================================================
+       ✏️ نافذة تعديل المباراة المنبثقة الذكية (Edit Modal)
+       ========================================================= -->
+  <div id="editModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 530px; border: 1px solid #f39c12;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:14px;">
+        <h3 style="margin:0; font-size:17px; color:#f39c12; display:flex; align-items:center; gap:6px;">
+          ✏️ تعديل بيانات المباراة
+        </h3>
+        <button id="closeEditModalBtn" type="button" style="background:none; border:none; color:#aaa; font-size:22px; cursor:pointer;">✕</button>
+      </div>
+
+      <div class="row">
+        <div style="flex:1;">
+          <label for="editLeagueSelect">الدوري</label>
+          <select id="editLeagueSelect"></select>
+        </div>
+        <div style="width:130px;">
+          <label for="editMatchTime">الوقت</label>
+          <input id="editMatchTime" type="time" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div style="flex:1;">
+          <label for="editHomeTeam">الفريق المضيف</label>
+          <select id="editHomeTeam"></select>
+        </div>
+        <div style="width:42px;">
+          <label>&nbsp;</label>
+          <div class="logo-preview" id="editHomePreview">🏠</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div style="flex:1;">
+          <label for="editAwayTeam">الفريق الضيف</label>
+          <select id="editAwayTeam"></select>
+        </div>
+        <div style="width:42px;">
+          <label>&nbsp;</label>
+          <div class="logo-preview" id="editAwayPreview">⚽</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div style="flex:1;">
+          <label for="editCommentator">المعلق</label>
+          <select id="editCommentator"></select>
+        </div>
+        <div style="flex:1;">
+          <label for="editChannel">القناة الناقلة</label>
+          <select id="editChannel"></select>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button id="saveEditMatchBtn" type="button" class="btn btn-success" style="flex:2; font-size:15px; padding:11px;">
+          💾 حفظ التعديل فوراً
+        </button>
+        <button id="editNextDayBtn" type="button" class="btn btn-purple" style="flex:1.2;">
+          📅 الغد: <span id="editNextDayState">❌</span>
+        </button>
+        <button id="cancelEditModalBtn" type="button" class="btn btn-secondary" style="flex:1;">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
        📋 نافذة الاستيراد الذكي المنبثقة (Smart Import Modal)
        ========================================================= -->
-  <div id="smartModal">
+  <div id="smartModal" class="modal-backdrop">
     <div class="modal-content">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:14px;">
         <h3 style="margin:0; font-size:17px; color:#00cec9;">📋 الاستيراد الذكي متعدد الدوريات من jdwel.com</h3>
-        <button id="closeSmartModalBtn" type="button" style="background:none; border:none; color:#aaa; font-size:20px; cursor:pointer;">✕</button>
+        <button id="closeSmartModalBtn" type="button" style="background:none; border:none; color:#aaa; font-size:22px; cursor:pointer;">✕</button>
       </div>
       
       <p style="font-size:13px; color:#bbb; margin-top:0; line-height:1.5;">
@@ -941,7 +1016,6 @@
     let leagues = [], teams = {}, commentators = [], channels = [], extraLogos = [];
     let selectedExtraLogo = "";
     let matches = JSON.parse(localStorage.getItem('matches') || '[]');
-    let editMatchId = null;
     let isNextDay = false;
     let showBtns = true;
 
@@ -1027,7 +1101,7 @@
       }
     }
 
-    // تحميل فرق الدوري المحدد
+    // تحميل فرق الدوري المحدد في نموذج الإضافة
     async function loadTeams(leagueCode, updateDropdowns = true) {
       if (!teams[leagueCode]) {
         teams[leagueCode] = await loadCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`);
@@ -1049,7 +1123,24 @@
       }
     }
 
-    // تهيئة البيانات
+    // تحميل فرق الدوري المحدد في نافذة التعديل
+    async function loadEditTeams(leagueCode) {
+      if (!teams[leagueCode]) {
+        teams[leagueCode] = await loadCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`);
+      }
+      const teamList = teams[leagueCode] || [];
+      const homeTeam = document.getElementById('editHomeTeam');
+      const awayTeam = document.getElementById('editAwayTeam');
+
+      const optionsHtml = teamList.map(t => `<option value="${t.name}" data-img="${t.img || ''}">${t.name}</option>`).join('');
+      homeTeam.innerHTML = optionsHtml;
+      awayTeam.innerHTML = optionsHtml;
+
+      updatePreview(homeTeam, 'editHomePreview', '🏠');
+      updatePreview(awayTeam, 'editAwayPreview', '⚽');
+    }
+
+    // تهيئة البيانات والصفحة
     async function init() {
       $('#leagueSelect, #homeTeam, #awayTeam, #commentator, #channel, #extraLogoSelect').select2({
         width: '100%',
@@ -1076,13 +1167,20 @@
       channels = chansData;
       extraLogos = extrasData;
 
-      const leagueSelect = document.getElementById('leagueSelect');
-      leagueSelect.innerHTML = leagues.map(l => 
+      const leagueSelectHtml = leagues.map(l => 
         `<option value="${l.code}" data-logo="${l.logo || ''}" data-color="${l.color || ''}" data-extra="${l.extraLogo || ''}">${l.name}</option>`
       ).join('');
 
-      document.getElementById('commentator').innerHTML = commentators.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-      document.getElementById('channel').innerHTML = channels.map(c => `<option value="${c.name}" data-logo="${c.logo || ''}">${c.name}</option>`).join('');
+      document.getElementById('leagueSelect').innerHTML = leagueSelectHtml;
+      document.getElementById('editLeagueSelect').innerHTML = leagueSelectHtml;
+
+      const commsHtml = commentators.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      document.getElementById('commentator').innerHTML = commsHtml;
+      document.getElementById('editCommentator').innerHTML = commsHtml;
+
+      const chansHtml = channels.map(c => `<option value="${c.name}" data-logo="${c.logo || ''}">${c.name}</option>`).join('');
+      document.getElementById('channel').innerHTML = chansHtml;
+      document.getElementById('editChannel').innerHTML = chansHtml;
 
       const extraSelect = document.getElementById('extraLogoSelect');
       extraSelect.innerHTML = extraLogos.map(x => `<option value="${x.logo}">${x.name}</option>`).join('');
@@ -1091,12 +1189,29 @@
         document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra">`;
       }
 
+      // تهيئة Select2 لنافذة التعديل المنبثقة
+      $('#editLeagueSelect, #editHomeTeam, #editAwayTeam, #editCommentator, #editChannel').select2({
+        width: '100%',
+        dir: 'rtl',
+        dropdownParent: $('#editModal'),
+        language: { noResults: () => "لا توجد نتائج مطابقة" }
+      });
+
       $('#leagueSelect').on('select2:select', function () {
         loadTeams(this.value, true);
       });
 
+      $('#editLeagueSelect').on('select2:select', async function () {
+        await loadEditTeams(this.value);
+        $('#editHomeTeam').val($('#editHomeTeam option:first').val()).trigger('change');
+        $('#editAwayTeam').val($('#editAwayTeam option:eq(1)').val() || $('#editAwayTeam option:first').val()).trigger('change');
+      });
+
       $('#homeTeam').on('change', function() { updatePreview(this, 'homePreview', '🏠'); });
       $('#awayTeam').on('change', function() { updatePreview(this, 'awayPreview', '⚽'); });
+
+      $('#editHomeTeam').on('change', function() { updatePreview(this, 'editHomePreview', '🏠'); });
+      $('#editAwayTeam').on('change', function() { updatePreview(this, 'editAwayPreview', '⚽'); });
 
       $('#extraLogoSelect').on('change', function() {
         selectedExtraLogo = this.value;
@@ -1119,13 +1234,13 @@
       render();
     }
 
-    // زر اليوم التالي
+    // زر اليوم التالي في نموذج الإضافة
     document.getElementById('nextDayBtn').onclick = () => {
       isNextDay = !isNextDay;
       document.getElementById('nextDayState').textContent = isNextDay ? '✅' : '❌';
     };
 
-    // إضافة أو حفظ تعديل مباراة يدوياً
+    // إضافة مباراة جديدة يدوياً
     document.getElementById('addMatch').onclick = async () => {
       const league = document.getElementById('leagueSelect').value;
       const home = document.getElementById('homeTeam').value;
@@ -1154,21 +1269,13 @@
         toBase64(chanLogoRaw)
       ]);
 
-      if (editMatchId) {
-        const idx = matches.findIndex(m => m.id === editMatchId);
-        if (idx !== -1) {
-          matches[idx] = { ...matches[idx], league, home, away, time, comm, chan, homeImg, awayImg, chanLogo, nextDay: isNextDay };
-        }
-        resetEditMode();
-      } else {
-        const newMatch = {
-          id: 'm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-          league, home, away, time, comm, chan,
-          homeImg, awayImg, chanLogo,
-          nextDay: isNextDay
-        };
-        matches.push(newMatch);
-      }
+      const newMatch = {
+        id: 'm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        league, home, away, time, comm, chan,
+        homeImg, awayImg, chanLogo,
+        nextDay: isNextDay
+      };
+      matches.push(newMatch);
 
       localStorage.setItem('matches', JSON.stringify(matches));
       render();
@@ -1178,44 +1285,125 @@
       document.getElementById('nextDayState').textContent = '❌';
     };
 
-    // وضع التعديل
+    // =========================================================
+    // ✏️ إدارة نافذة التعديل المنبثقة الذكية (Edit Modal Logic)
+    // =========================================================
+    const editModal = document.getElementById('editModal');
+    const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+    const cancelEditModalBtn = document.getElementById('cancelEditModalBtn');
+    const saveEditMatchBtn = document.getElementById('saveEditMatchBtn');
+    const editNextDayBtn = document.getElementById('editNextDayBtn');
+
+    let activeEditMatchId = null;
+    let editIsNextDay = false;
+
+    // فتح نافذة التعديل فوراً في نفس موضع الشاشة
     window.editMatch = async (id) => {
       const match = matches.find(m => m.id === id);
       if (!match) return;
 
-      editMatchId = id;
-      document.getElementById('addMatch').textContent = '💾 حفظ التعديل';
-      document.getElementById('addMatch').classList.add('btn-success');
-      document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+      activeEditMatchId = id;
+      editIsNextDay = !!match.nextDay;
+      document.getElementById('editNextDayState').textContent = editIsNextDay ? '✅' : '❌';
 
-      $('#leagueSelect').val(match.league).trigger('change');
-      await loadTeams(match.league, true);
+      // تعيين الدوري وتحميل فرقه في نافذة التعديل
+      $('#editLeagueSelect').val(match.league).trigger('change');
+      await loadEditTeams(match.league);
 
-      $('#homeTeam').val(match.home).trigger('change');
-      $('#awayTeam').val(match.away).trigger('change');
-      $('#commentator').val(match.comm).trigger('change');
-      $('#channel').val(match.chan).trigger('change');
+      // تعيين القيم الحالية للمباراة
+      $('#editHomeTeam').val(match.home).trigger('change');
+      $('#editAwayTeam').val(match.away).trigger('change');
+      $('#editCommentator').val(match.comm).trigger('change');
+      $('#editChannel').val(match.chan).trigger('change');
 
-      document.getElementById('matchTime').value = match.time;
-      isNextDay = !!match.nextDay;
-      document.getElementById('nextDayState').textContent = isNextDay ? '✅' : '❌';
+      document.getElementById('editMatchTime').value = match.time || '';
+
+      // فتح النافذة المنبثقة
+      editModal.style.display = 'flex';
     };
 
-    function resetEditMode() {
-      editMatchId = null;
-      document.getElementById('addMatch').textContent = '➕ إضافة المباراة';
-      document.getElementById('addMatch').classList.remove('btn-success');
-      document.getElementById('cancelEditBtn').style.display = 'none';
-      document.getElementById('matchTime').value = '';
-    }
+    const closeEditModal = () => {
+      editModal.style.display = 'none';
+      activeEditMatchId = null;
+    };
 
-    document.getElementById('cancelEditBtn').onclick = resetEditMode;
+    closeEditModalBtn.onclick = closeEditModal;
+    cancelEditModalBtn.onclick = closeEditModal;
+
+    // زر اليوم التالي داخل نافذة التعديل
+    editNextDayBtn.onclick = () => {
+      editIsNextDay = !editIsNextDay;
+      document.getElementById('editNextDayState').textContent = editIsNextDay ? '✅' : '❌';
+    };
+
+    // حفظ التعديل وتحديث البطاقة في مكانها فوراً
+    saveEditMatchBtn.onclick = async () => {
+      if (!activeEditMatchId) return;
+
+      const league = document.getElementById('editLeagueSelect').value;
+      const home = document.getElementById('editHomeTeam').value;
+      const away = document.getElementById('editAwayTeam').value;
+      const time = document.getElementById('editMatchTime').value;
+      const comm = document.getElementById('editCommentator').value;
+      const chan = document.getElementById('editChannel').value;
+
+      if (!time) {
+        alert('⚠️ يرجى تحديد وقت المباراة أولاً');
+        return;
+      }
+
+      if (home === away) {
+        alert('⚠️ لا يمكن اختيار نفس الفريق كمضيف وضيف!');
+        return;
+      }
+
+      const match = matches.find(m => m.id === activeEditMatchId);
+      if (!match) return;
+
+      let homeImg = match.homeImg;
+      let awayImg = match.awayImg;
+      let chanLogo = match.chanLogo;
+
+      const homeImgRaw = document.getElementById('editHomeTeam').selectedOptions[0]?.dataset?.img || '';
+      const awayImgRaw = document.getElementById('editAwayTeam').selectedOptions[0]?.dataset?.img || '';
+      const chanLogoRaw = channels.find(c => c.name === chan)?.logo || '';
+
+      // تحديث الصور إذا تغير الفريق أو القناة
+      if (home !== match.home || !homeImg) {
+        homeImg = await toBase64(homeImgRaw || findTeamLogo(home, league));
+      }
+      if (away !== match.away || !awayImg) {
+        awayImg = await toBase64(awayImgRaw || findTeamLogo(away, league));
+      }
+      if (chan !== match.chan || !chanLogo) {
+        chanLogo = await toBase64(chanLogoRaw);
+      }
+
+      const idx = matches.findIndex(m => m.id === activeEditMatchId);
+      if (idx !== -1) {
+        matches[idx] = {
+          ...matches[idx],
+          league, home, away, time, comm, chan,
+          homeImg, awayImg, chanLogo,
+          nextDay: editIsNextDay
+        };
+        localStorage.setItem('matches', JSON.stringify(matches));
+      }
+
+      render();
+      closeEditModal();
+    };
+
+    // إغلاق النوافذ عند النقر خارجها
+    window.addEventListener('click', (e) => {
+      if (e.target === editModal) closeEditModal();
+      if (e.target === smartModal) smartModal.style.display = 'none';
+    });
 
     window.deleteMatch = (id) => {
       if (confirm('هل أنت متأكد من حذف هذه المباراة؟')) {
         matches = matches.filter(m => m.id !== id);
         localStorage.setItem('matches', JSON.stringify(matches));
-        if (editMatchId === id) resetEditMode();
         render();
       }
     };
@@ -1225,7 +1413,6 @@
       if (confirm('⚠️ هل تريد حذف جميع المباريات الموجودة في الجدول؟')) {
         matches = [];
         localStorage.setItem('matches', '[]');
-        resetEditMode();
         render();
       }
     };
@@ -1360,8 +1547,8 @@
               
               <div class="middle_column">
                 <div class="the_time">
-                  <span>${displayHours}:${minutes}</span>
                   <span style="font-size:12px; margin-right:2px;">${ampm}</span>
+                  <span>${displayHours}:${minutes}</span>
                 </div>
                 ${m.nextDay ? "<span class='next-day-label'>(اليوم التالي)</span>" : ""}
               </div>
@@ -1427,13 +1614,11 @@
 
     function detectLeagueFromHeader(line) {
       const lower = line.toLowerCase();
-      // مطابقة أسماء ملف الدوريات
       for (const l of leagues) {
         if (lower.includes(l.name.toLowerCase()) || lower.includes(l.code.toLowerCase())) {
           return l.code;
         }
       }
-      // مطابقة الكلمات المفتاحية
       for (const item of leagueKeywords) {
         if (item.keys.some(k => lower.includes(k.toLowerCase()))) {
           const matchInCSV = leagues.find(l => l.code === item.code);
@@ -1483,7 +1668,7 @@
         const headerLeague = detectLeagueFromHeader(line);
         if (headerLeague && !line.match(timeRegex)) {
           currentLeagueCode = headerLeague;
-          continue; // الانتقال للسطر التالي
+          continue;
         }
 
         // 2. فحص سطر المباراة
@@ -1492,7 +1677,6 @@
           let timeStr = timeMatch[1];
           const period = timeMatch[2];
 
-          // ضبط التوقيت إذا كان بصيغة 12 ساعة
           if (period) {
             let [h, m] = timeStr.split(':').map(Number);
             if ((period === 'م' || period.toUpperCase() === 'PM') && h < 12) h += 12;
@@ -1540,7 +1724,6 @@
           }
 
           if (home && away && home !== away) {
-            // كشف ذكي إضافي: التحقق من دوري الفريقين
             const inferredLeague = detectLeagueFromTeams(home, away) || currentLeagueCode;
             extractedList.push({ home, away, time: timeStr, chan, comm, league: inferredLeague });
           }
