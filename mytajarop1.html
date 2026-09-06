@@ -343,9 +343,9 @@
       background: rgba(0,0,0,0.45);
       border: 1px solid var(--accent);
       border-radius: 20px;
-      font-size: 11.5px;
+      font-size: 16px;
       font-weight: 800;
-      color: var(--accent);
+      color: #ffffff;
       margin-bottom: 6px;
       letter-spacing: 0.5px;
     }
@@ -769,8 +769,7 @@
             
             <!-- ✨ الهيدر الجمالي داخل الصورة الملتقطة ✨ -->
             <div class="poster-header">
-              <span class="poster-badge">مباريات اليوم</span>
-              <h1 class="poster-title">⚽ أهم مباريات اليوم</h1>
+              <span class="poster-badge">⚽ أهم مباريات اليوم</span>
               <div class="poster-date" id="posterDateDisplay"></div>
             </div>
 
@@ -1213,8 +1212,8 @@
               
               <div class="middle_column">
                 <div class="the_time">
-                  <span>${displayHours}:${minutes}</span>
                   <span style="font-size:12px; margin-right:2px;">${ampm}</span>
+                  <span>${displayHours}:${minutes}</span>
                 </div>
                 ${m.nextDay ? "<span class='next-day-label'>(اليوم التالي)</span>" : ""}
               </div>
