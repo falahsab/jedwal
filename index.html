@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>جدول مباريات اليوم - لوحة التحكم</title>
+  
+  <meta name="description" content="لوحة تحكم لإنشاء وتصميم جدول مباريات اليوم للدوريات العالمية والعربية.">
+  <meta property="og:title" content="صانع جدول مباريات" />
+  <meta property="og:description" content="لوحة تحكم من خلالها تنشئ جدول مباريات للدوريات العالمية والعربية مدعومة من يمن ستلايت" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/img/yemen-sat.png" />
+  <meta property="og:url" content="https://jedwal.yemensat.com/" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/png" href="img/jedwal000.png">
+
+  <!-- Google Fonts: Tajawal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" href="css/select2.min.css">
+
+  <!-- JS Libraries -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js"></script>
+  <script src="js/papaparse.min.js"></script>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#070607">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- شاشة البداية -->
+  <div id="splash">
+    <img src="img/jedwal000.png" alt="شعار التطبيق" onerror="this.style.display='none'">
+    <h2 style="margin-top:16px;">⚽ صانع جدول المباريات</h2>
+    <p style="color:#aaa; font-size:13px; position:absolute; bottom:20px;">www.yemensat.com</p>
+  </div>
+
+  <!-- الهيدر الثابت للموقع -->
+  <header class="site-header">
+    <div>⚽ لوحة تحكم جدول المباريات</div>
+    <div style="font-size:14px; font-weight:400; color:#3498db;" id="siteHeaderDate"></div>
+  </header>
+
+  <div class="container" id="mainContent">
+    <div class="grid">
+      
+      <!-- نموذج إدخال المباراة والتحكم -->
+      <div class="card form">
+        <h3 style="margin-top:0; margin-bottom:14px; font-size:16px; border-bottom:1px solid #333; padding-bottom:8px;">
+          📝 بيانات المباراة
+        </h3>
+
+        <!-- اختيار ثيم البطولة والدوريات الكبرى -->
+        <div class="row">
+          <div style="flex:1;">
+            <label for="themeSelect">🏆 هوية وثيم البطولة (اختر الدوري أو المسابقة)</label>
+            <select id="themeSelect">
+              <optgroup label="⭐ البطولات القارية والعالمية الكبرى">
+                <option value="theme-ucl">⭐ دوري أبطال أوروبا (Champions League)</option>
+                <option value="theme-fifa">🏆 كأس العالم والذهب (FIFA Luxury Gold)</option>
+                <option value="theme-asian-cup">🌏 كأس أمم آسيا (AFC Asian Cup)</option>
+                <option value="theme-afcon">🌍 كأس أمم إفريقيا (TotalEnergies AFCON)</option>
+              </optgroup>
+              <optgroup label="⚽ الدوريات الأوروبية الخمسة الكبرى">
+                <option value="theme-pl">🦁 الدوري الإنجليزي (Premier League)</option>
+                <option value="theme-laliga">🇪🇸 الدوري الإسباني (LaLiga EA Sports)</option>
+                <option value="theme-serie-a">🇮🇹 الدوري الإيطالي (Serie A Enilive)</option>
+                <option value="theme-bundesliga">🇩🇪 الدوري الألماني (Bundesliga)</option>
+                <option value="theme-ligue1">🇫🇷 الدوري الفرنسي (Ligue 1)</option>
+                <option value="theme-superlig">🇹🇷 الدوري التركي (Trendyol Süper Lig)</option>
+              </optgroup>
+              <optgroup label="🌴 الدوريات العربية والمحلية">
+                <option value="theme-roshn">🇸🇦 دوري روشن السعودي (Saudi Pro League)</option>
+                <option value="theme-dark">🖤 كلاسيكي داكن محايد (Dark Neutral)</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="leagueSelect">الدوري</label>
+            <select id="leagueSelect"></select>
+          </div>
+          <div style="width:130px;">
+            <label for="matchTime">الوقت</label>
+            <input id="matchTime" type="time" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="homeTeam">الفريق المضيف</label>
+            <select id="homeTeam"></select>
+          </div>
+          <div style="width:42px;">
+            <label>&nbsp;</label>
+            <div class="logo-preview" id="homePreview">🏠</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="awayTeam">الفريق الضيف</label>
+            <select id="awayTeam"></select>
+          </div>
+          <div style="width:42px;">
+            <label>&nbsp;</label>
+            <div class="logo-preview" id="awayPreview">⚽</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="commentator">المعلق</label>
+            <select id="commentator"></select>
+          </div>
+          <div style="flex:1;">
+            <label for="channel">القناة الناقلة</label>
+            <select id="channel"></select>
+          </div>
+        </div>
+
+        <!-- أزرار الإضافة والتحكم -->
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <button id="addMatch" class="btn" style="flex:2;">➕ إضافة المباراة</button>
+          <button id="cancelEditBtn" class="btn btn-secondary" style="flex:1; display:none;">❌ إلغاء</button>
+          <button id="nextDayBtn" class="btn btn-purple" style="flex:1.5;">📅 الغد: <span id="nextDayState">❌</span></button>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button id="toggleBtns" class="btn btn-secondary" style="flex:1;">👁️ إخفاء/إظهار الإجراءات</button>
+          <button id="deleteAll" class="btn btn-danger" style="flex:1;">🗑️ تفريغ الجدول</button>
+        </div>
+
+        <hr style="border:0; border-top:1px solid #333; margin:16px 0;">
+
+        <div class="row">
+          <div style="flex:1;">
+            <label for="extraLogoSelect">الشعار الجانبي (Extra Logo)</label>
+            <select id="extraLogoSelect"></select>
+          </div>
+          <div style="width:42px;">
+            <label>&nbsp;</label>
+            <div class="logo-preview" id="extraPreview">🖼️</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-bottom:0;">
+          <div style="flex:1;">
+            <input type="date" id="manualDate" style="display:none; margin-bottom:8px;">
+            <button id="editDateBtn" class="btn btn-secondary" style="width:100%;">📅 تخصيص التاريخ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- عرض الجدول ومعاينة التصدير -->
+      <div>
+        <div class="matches-wrapper">
+          <div id="exportArea" class="theme-ucl">
+            
+            <!-- ✨ الهيدر الجمالي داخل الصورة الملتقطة ✨ -->
+            <div class="poster-header">
+              <span class="poster-badge">⚽ أهم مباريات اليوم</span>
+              <div class="poster-date" id="posterDateDisplay"></div>
+            </div>
+
+            <!-- محتوى البطاقات -->
+            <div class="poster-body">
+              <div id="matchesContainer"></div>
+            </div>
+            
+            <!-- تذييل الصورة -->
+            <div class="poster-footer">
+              مع VIP عيش المتعة .. اشترك الآن | عبر الواتساب: <strong style="color:#2ecc71;">738092209</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- أزرار الإخراج -->
+        <div style="display:flex; gap:8px;">
+          <button id="downloadTable" class="btn btn-success" style="flex:2;">📸 تحميل كصورة (Full HD)</button>
+          <button id="swapSections" class="btn btn-secondary" style="flex:1;">تبديل الموضع ↔️</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
