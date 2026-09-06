@@ -1,0 +1,601 @@
+    :root {
+      --watermark-url: none;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+
+    body {
+      background: #0f0f0f;
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* الهيدر العلوي للموقع */
+    .site-header {
+      background: #080808;
+      color: #fff;
+      padding: 12px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 460px;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 950px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #1c1c1c;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #2e2e2e;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    select, input[type="time"], input[type="date"] {
+      background: #282828;
+      border: 1px solid #3d3d3d;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #ffffff;
+      width: 100%;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, input:focus { border-color: #3498db; }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ccc;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .logo-preview {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: #252525;
+      border: 1px solid #3d3d3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .btn {
+      background: #3498db;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-purple { background: #6c5ce7; }
+    .btn-danger { background: #e74c3c; }
+    .btn-secondary { background: #333333; }
+    .btn-success { background: #27ae60; }
+
+    /* =========================================================
+       🎨 ثيمات الدوريات والبطولات العالمية الرسمية للبوستر
+       ========================================================= */
+    #exportArea {
+      position: relative;
+      border-radius: 14px;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.6);
+      transition: all 0.3s ease;
+      background-color: var(--bg-main) !important;
+      border: 1px solid var(--border-color) !important;
+    }
+
+    /* العلامة المائية المتباعدة */
+    #exportArea::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--watermark-url);
+      background-repeat: repeat;
+      opacity: 0.045;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 1. ⭐ دوري أبطال أوروبا (UEFA Champions League) */
+    #exportArea.theme-ucl {
+      --bg-main: #030818;
+      --card-bg: #07122b;
+      --accent: #00e5ff;
+      --border-color: rgba(0, 229, 255, 0.22);
+      --header-grad: linear-gradient(135deg, #0b2254, #020716);
+      --time-color: #00e5ff;
+    }
+
+    /* 2. 🦁 الدوري الإنجليزي الممتاز (Premier League) */
+    #exportArea.theme-pl {
+      --bg-main: #18001e;
+      --card-bg: #270131;
+      --accent: #00ff85;
+      --border-color: rgba(0, 255, 133, 0.22);
+      --header-grad: linear-gradient(135deg, #38003c, #130018);
+      --time-color: #00ff85;
+    }
+
+    /* 3. 🇪🇸 الدوري الإسباني (LaLiga EA Sports) */
+    #exportArea.theme-laliga {
+      --bg-main: #111114;
+      --card-bg: #1c1c22;
+      --accent: #ff4b44;
+      --border-color: rgba(255, 75, 68, 0.25);
+      --header-grad: linear-gradient(135deg, #330f14, #0e0e11);
+      --time-color: #ff4b44;
+    }
+
+    /* 4. 🇮🇹 الدوري الإيطالي (Serie A Enilive) */
+    #exportArea.theme-serie-a {
+      --bg-main: #020d1c;
+      --card-bg: #071a33;
+      --accent: #0088ff;
+      --border-color: rgba(0, 136, 255, 0.22);
+      --header-grad: linear-gradient(135deg, #0a2b54, #020914);
+      --time-color: #48dbfb;
+    }
+
+    /* 5. 🇩🇪 الدوري الألماني (Bundesliga) */
+    #exportArea.theme-bundesliga {
+      --bg-main: #121212;
+      --card-bg: #1e1b1b;
+      --accent: #e30613;
+      --border-color: rgba(227, 6, 19, 0.25);
+      --header-grad: linear-gradient(135deg, #3d070b, #111111);
+      --time-color: #ff4757;
+    }
+
+    /* 6. 🇫🇷 الدوري الفرنسي (Ligue 1) */
+    #exportArea.theme-ligue1 {
+      --bg-main: #040a1a;
+      --card-bg: #091736;
+      --accent: #18f192;
+      --border-color: rgba(24, 241, 146, 0.22);
+      --header-grad: linear-gradient(135deg, #0e275c, #030814);
+      --time-color: #18f192;
+    }
+
+    /* 7. 🇸🇦 دوري روشن السعودي (Saudi Pro League) */
+    #exportArea.theme-roshn {
+      --bg-main: #04140e;
+      --card-bg: #08261b;
+      --accent: #00d26a;
+      --border-color: rgba(0, 210, 106, 0.24);
+      --header-grad: linear-gradient(135deg, #0c3d2b, #03110b);
+      --time-color: #f1c40f;
+    }
+
+    /* 8. 🇹🇷 الدوري التركي (Trendyol Süper Lig) */
+    #exportArea.theme-superlig {
+      --bg-main: #160608;
+      --card-bg: #270b10;
+      --accent: #e30a17;
+      --border-color: rgba(227, 10, 23, 0.25);
+      --header-grad: linear-gradient(135deg, #440a0f, #130305);
+      --time-color: #ff6b6b;
+    }
+
+    /* 9. 🌏 كأس أمم آسيا (AFC Asian Cup) */
+    #exportArea.theme-asian-cup {
+      --bg-main: #14070a;
+      --card-bg: #240c12;
+      --accent: #f39c12;
+      --border-color: rgba(243, 156, 18, 0.28);
+      --header-grad: linear-gradient(135deg, #3d0f19, #100508);
+      --time-color: #f1c40f;
+    }
+
+    /* 10. 🌍 كأس أمم إفريقيا (TotalEnergies AFCON) */
+    #exportArea.theme-afcon {
+      --bg-main: #07170b;
+      --card-bg: #0f2c16;
+      --accent: #2ecc71;
+      --border-color: rgba(46, 204, 113, 0.26);
+      --header-grad: linear-gradient(135deg, #174523, #051208);
+      --time-color: #f1c40f;
+    }
+
+    /* 11. 🏆 كأس العالم والذهب (FIFA Luxury Gold) */
+    #exportArea.theme-fifa {
+      --bg-main: #110f0c;
+      --card-bg: #1c1813;
+      --accent: #d4af37;
+      --border-color: rgba(212, 175, 55, 0.3);
+      --header-grad: linear-gradient(135deg, #3a2e0e, #0e0c0a);
+      --time-color: #f9ca24;
+    }
+
+    /* 12. 🖤 كلاسيكي داكن محايد (Dark Neutral) */
+    #exportArea.theme-dark {
+      --bg-main: #121212;
+      --card-bg: #1c1c1c;
+      --accent: #3498db;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --header-grad: linear-gradient(135deg, #182332, #0d1218);
+      --time-color: #f1c40f;
+    }
+
+    /* =======================================
+       ✨ هيدر الصورة بتنسيق رياضي فخم
+       ======================================= */
+    .poster-header {
+      background: var(--header-grad);
+      padding: 16px 14px 14px;
+      text-align: center;
+      position: relative;
+      border-bottom: 2px solid var(--accent);
+      z-index: 1;
+    }
+
+    .poster-header::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background: var(--accent);
+      filter: blur(4px);
+      opacity: 0.9;
+    }
+
+    .poster-badge {
+      display: inline-block;
+      padding: 3px 14px;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .poster-title {
+      margin: 0;
+      font-size: 23px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .poster-date {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 5px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+
+    .poster-body {
+      padding: 12px 12px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .matches-section {
+      margin-bottom: 14px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 14.5px;
+      margin-bottom: 8px;
+      padding: 7px 12px;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 6px;
+      border-right: 4px solid var(--accent);
+      position: relative;
+      color: #fff;
+    }
+
+    .extra-logo-header {
+      margin-right: auto;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    /* بطاقة المباراة مع علامتها المائية المتباعدة */
+    .match-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 9px;
+      padding: 10px 12px;
+      margin-bottom: 7px;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--card-bg) !important;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    }
+
+    .match-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--watermark-url);
+      background-repeat: repeat;
+      opacity: 0.055;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .match-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .match_row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .team.hometeam { justify-content: flex-end; text-align: left; }
+    .team.awayteam { justify-content: flex-start; text-align: right; }
+
+    .team_logo {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+
+    .the_team {
+      font-weight: 800;
+      font-size: 14.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      flex: 1;
+      text-align: center;
+    }
+
+    .middle_column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      min-width: 76px;
+      padding: 0 4px;
+    }
+
+    .the_time {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      direction: ltr;
+      color: var(--time-color);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    }
+
+    .next-day-label {
+      font-size: 9px;
+      color: #ff7675;
+      margin-top: 2px;
+      font-weight: bold;
+    }
+
+    .meta {
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(255,255,255,0.07);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      justify-content: center;
+    }
+
+    .action-btns button {
+      padding: 4px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .poster-footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #bbb;
+      border-top: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* وضع التصدير الفوتوشوبي */
+    #exportArea.export-mode {
+      width: 470px !important;
+      max-width: 470px !important;
+    }
+
+    #exportArea.export-mode .match-card {
+      padding: 11px 14px !important;
+      margin-bottom: 8px !important;
+    }
+
+    #exportArea.export-mode .team_logo {
+      width: 38px !important;
+      height: 38px !important;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6)) !important;
+    }
+
+    #exportArea.export-mode .the_team {
+      max-width: none !important;
+      width: auto !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      white-space: nowrap !important;
+      font-size: 15px !important;
+      font-weight: 800 !important;
+    }
+
+    #exportArea.export-mode .the_time {
+      font-size: 19px !important;
+      font-weight: 900 !important;
+    }
+
+    /* Select2 Customization */
+    .select2-container--default .select2-selection--single {
+      background-color: #282828 !important;
+      border: 1px solid #3d3d3d !important;
+      border-radius: 8px !important;
+      height: 40px !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: #ffffff !important;
+      line-height: 38px !important;
+      padding-right: 10px !important;
+    }
+
+    .select2-dropdown {
+      background-color: #222222 !important;
+      border: 1px solid #3d3d3d !important;
+      color: #fff !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted {
+      background-color: #3498db !important;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+      background-color: #303030 !important;
+      color: #fff !important;
+      border: 1px solid #555 !important;
+      border-radius: 6px;
+    }
+
+    /* Splash Screen */
+    #splash {
+      position: fixed;
+      inset: 0;
+      background: #0d0d0d;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #splash img {
+      width: 100px;
+      height: 100px;
+      border-radius: 20px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #777;
+      font-size: 14px;
+    }
