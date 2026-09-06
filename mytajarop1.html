@@ -651,7 +651,13 @@
 
   <div class="container" id="mainContent">
     <div class="grid">
-      
+      <!-- زر الجلب التلقائي الذكي -->
+<div style="margin-bottom: 14px;">
+  <button id="autoFetchBtn" type="button" class="btn" style="background: linear-gradient(135deg, #10ac84, #1dd1a1); font-size: 15px; padding: 12px; box-shadow: 0 4px 12px rgba(16, 172, 132, 0.3);">
+    ⚡ جلب مباريات اليوم تلقائياً
+  </button>
+  <div id="fetchStatus" style="font-size: 12px; color: #aaa; text-align: center; margin-top: 5px; display: none;"></div>
+</div>
       <!-- نموذج إدخال المباراة والتحكم -->
       <div class="card form">
         <h3 style="margin-top:0; margin-bottom:14px; font-size:16px; border-bottom:1px solid #333; padding-bottom:8px;">
@@ -1285,6 +1291,124 @@
       navigator.serviceWorker.register("./sw.js").catch(() => {});
     });
   }
+
+        // =========================================================
+    // ⚡ محرك الجلب التلقائي الذكي لمباريات اليوم
+    // =========================================================
+    const autoFetchBtn = document.getElementById('autoFetchBtn');
+    const fetchStatus = document.getElementById('fetchStatus');
+
+    // قاموس مطابقة أسماء الفرق والدوريات الأكثر شهرة
+    const teamNameMap = {
+      "Real Madrid": "ريال مدريد", "Barcelona": "برشلونة", "Atletico Madrid": "أتلتيكو مدريد",
+      "Arsenal": "أرسنال", "Manchester City": "مانشستر سيتي", "Liverpool": "ليفربول",
+      "Manchester United": "مانشستر يونايتد", "Chelsea": "تشيلسي", "Tottenham": "توتنهام",
+      "Bayern Munich": "بايرن ميونخ", "Borussia Dortmund": "بوروسيا دورتموند", "Bayer Leverkusen": "باير ليفركوزن",
+      "Paris Saint Germain": "باريس سان جيرمان", "Juventus": "يوفنتوس", "Inter": "إنتر ميلان",
+      "AC Milan": "ميلان", "Napoli": "نابولي", "Al Hilal": "الهلال", "Al Nassr": "النصر",
+      "Al Ittihad": "الاتحاد", "Al Ahli": "الأهلي"
+    };
+
+    const leagueCodeMap = {
+      "English Premier League": "pl",
+      "Spanish La Liga": "laliga",
+      "Italian Serie A": "serie-a",
+      "German Bundesliga": "bundesliga",
+      "French Ligue 1": "ligue1",
+      "UEFA Champions League": "ucl",
+      "Saudi Pro League": "roshn"
+    };
+
+    autoFetchBtn.addEventListener('click', async () => {
+      autoFetchBtn.disabled = true;
+      const originalText = autoFetchBtn.innerHTML;
+      autoFetchBtn.innerHTML = '⏳ جاري البحث وجلب المباريات...';
+      fetchStatus.style.display = 'block';
+      fetchStatus.textContent = 'جاري الاتصال بخدمة المباريات الحية...';
+
+      try {
+        // تجهيز تاريخ اليوم بصيغة YYYY-MM-DD
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`;
+
+        // رابط المصدر المفتوح للمباريات مع دعم CORS
+        const apiUrl = `https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=${dateStr}&s=Soccer`;
+        
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('فشل الاتصال بمصدر البيانات');
+        
+        const data = await response.json();
+
+        if (!data.events || data.events.length === 0) {
+          fetchStatus.textContent = `ℹ️ لا توجد مباريات مسجلة لهذا التاريخ (${dateStr}).`;
+          return;
+        }
+
+        let addedCount = 0;
+
+        // قراءة المباريات وتحويلها إلى شكل البطاقات في موقعك
+        for (const ev of data.events) {
+          // استخراج التوقيت وتحويله لتوقيت محلي مناسب (توقيت مكة/اليمن GMT+3)
+          let matchTime = "20:00";
+          if (ev.strTime) {
+            const timeParts = ev.strTime.split(':');
+            let hours = (parseInt(timeParts[0], 10) + 3) % 24; // ضبط فارق التوقيت
+            matchTime = `${String(hours).padStart(2, '0')}:${timeParts[1]}`;
+          }
+
+          // تعريب اسم الفريق إن وجد في القاموس أو إبقاؤه كما هو
+          const homeName = teamNameMap[ev.strHomeTeam] || ev.strHomeTeam;
+          const awayName = teamNameMap[ev.strAwayTeam] || ev.strAwayTeam;
+          
+          // تحديد كود الدوري
+          const leagueCode = leagueCodeMap[ev.strLeague] || leagues[0]?.code || 'pl';
+
+          // تجهيز شعارات الفرق
+          const homeImg = ev.strHomeTeamBadge || 'img/jedwal000.png';
+          const awayImg = ev.strAwayTeamBadge || 'img/jedwal000.png';
+
+          // تحويل صور الشعارات إلى Base64 تلقائياً لتكون جاهزة للتصدير فوراً
+          const [b64Home, b64Away] = await Promise.all([
+            toBase64(homeImg),
+            toBase64(awayImg)
+          ]);
+
+          // إضافة المباراة للجدول
+          const newMatch = {
+            id: 'm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            league: leagueCode,
+            home: homeName,
+            away: awayName,
+            time: matchTime,
+            comm: "سيحدد لاحقاً",
+            chan: channels[0]?.name || "beIN Sports 1",
+            homeImg: b64Home || homeImg,
+            awayImg: b64Away || awayImg,
+            chanLogo: channels[0]?.logo || "",
+            nextDay: false
+          };
+
+          matches.push(newMatch);
+          addedCount++;
+        }
+
+        // حفظ في الذاكرة وتحديث العرض فوراً
+        localStorage.setItem('matches', JSON.stringify(matches));
+        render();
+
+        fetchStatus.innerHTML = `<span style="color:#2ecc71;">✅ تم جلب وإضافة ${addedCount} مباراة بنجاح إلى جدولك!</span>`;
+
+      } catch (err) {
+        console.error('Fetch error:', err);
+        fetchStatus.innerHTML = `<span style="color:#e74c3c;">⚠️ تعذر الجلب التلقائي حالياً. يمكنك الاستمرار في إضافة المباريات يدوياً.</span>`;
+      } finally {
+        autoFetchBtn.disabled = false;
+        autoFetchBtn.innerHTML = originalText;
+        setTimeout(() => { fetchStatus.style.display = 'none'; }, 6000);
+      }
+    });
   </script>
 </body>
 </html>
