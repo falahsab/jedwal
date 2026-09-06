@@ -1008,9 +1008,13 @@
       'bundesliga': 'theme-bundesliga',
       'ligue1': 'theme-ligue1',
       'roshn': 'theme-roshn',
+      'spl': 'theme-roshn',
+      'saudi': 'theme-roshn',
       'ucl': 'theme-ucl',
       'superlig': 'theme-superlig',
       'asian-cup': 'theme-asian-cup',
+      'afc': 'theme-asian-cup',
+      'acl': 'theme-asian-cup',
       'afcon': 'theme-afcon',
       'fifa': 'theme-fifa'
     };
@@ -1028,6 +1032,18 @@
     let matches = JSON.parse(localStorage.getItem('matches') || '[]');
     let isNextDay = false;
     let showBtns = true;
+
+    // دالة مساعدة لتوحيد النصوص العربية للمطابقة الدقيقة
+    function normalizeArabic(text) {
+      if (!text) return '';
+      return text
+        .replace(/[\u064B-\u065F\u0670]/g, '') // إزالة التشكيل
+        .replace(/[أإآ]/g, 'ا')
+        .replace(/ة/g, 'ه')
+        .replace(/ى/g, 'ي')
+        .toLowerCase()
+        .trim();
+    }
 
     // جلب ملفات CSV
     function loadCSV(url) {
@@ -1335,7 +1351,7 @@
 
     const closeEditModal = () => {
       editModal.style.display = 'none';
-      document.body.style.overflow = ''; // إعادة التمرير للوضع الطبيعي
+      document.body.style.overflow = '';
       activeEditMatchId = null;
     };
 
@@ -1380,7 +1396,6 @@
       const awayImgRaw = document.getElementById('editAwayTeam').selectedOptions[0]?.dataset?.img || '';
       const chanLogoRaw = channels.find(c => c.name === chan)?.logo || '';
 
-      // تحديث الصور إذا تغير الفريق أو القناة
       if (home !== match.home || !homeImg) {
         homeImg = await toBase64(homeImgRaw || findTeamLogo(home, league));
       }
@@ -1610,51 +1625,110 @@
     }
 
     // =========================================================
-    // 📋 كلمات مفتاحية وكشف الدوريات الذكي
+    // 📋 كلمات مفتاحية وكشف الدوريات الذكي المحدث
     // =========================================================
+    function cleanHeaderLine(line) {
+      return line
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // تنظيف روابط الماركداون
+        .replace(/https?:\/\/\S+/gi, '')          // إزالة الروابط الخام
+        .replace(/[\[\]()#*_]/g, ' ')            // إزالة علامات الماركداون
+        .trim();
+    }
+
     const leagueKeywords = [
+      { code: 'roshn', keys: ['روشن', 'السعودي', 'saudi', 'spl'] },
       { code: 'ucl', keys: ['أبطال أوروبا', 'ابطال اوروبا', 'champions league', 'دوري الأبطال', 'التشامبيونز'] },
       { code: 'pl', keys: ['الإنجليزي', 'الانجليزي', 'البريميرليج', 'premier league', 'الدوري الممتاز'] },
       { code: 'laliga', keys: ['الإسباني', 'الاسباني', 'لا ليغا', 'لاليغا', 'laliga', 'الليغا', 'الليجا'] },
       { code: 'serie-a', keys: ['الإيطالي', 'الايطالي', 'سيريا', 'الكالتشيو', 'serie a'] },
       { code: 'bundesliga', keys: ['الألماني', 'الالماني', 'بوندسليجا', 'bundesliga'] },
       { code: 'ligue1', keys: ['الفرنسي', 'ليج 1', 'ligue 1'] },
-      { code: 'roshn', keys: ['روشن', 'السعودي', 'saudi'] },
       { code: 'superlig', keys: ['التركي', 'سوبر ليغ', 'super lig', 'süper lig'] },
+      { code: 'afc', keys: ['أبطال آسيا', 'ابطال اسيا', 'النخبة الآسيوية', 'النخبة الاسيوية', 'دوري أبطال آسيا للنخبة', 'ابطال اسيا للنخبة', 'afc'] },
       { code: 'asian-cup', keys: ['أمم آسيا', 'امم اسيا', 'كأس آسيا', 'كاس اسيا', 'asian cup'] },
       { code: 'afcon', keys: ['إفريقيا', 'افريقيا', 'كان', 'afcon'] },
       { code: 'fifa', keys: ['كأس العالم', 'كاس العالم', 'فيفا', 'fifa'] }
     ];
 
-    function detectLeagueFromHeader(line) {
-      const lower = line.toLowerCase();
+    function detectLeagueFromHeader(rawLine) {
+      const cleanLine = cleanHeaderLine(rawLine);
+      if (!cleanLine) return null;
+
+      // تجاهل أسطر التنقل الفرعية مثل [الترتيب] و [الهدافين]
+      const navWords = ['الترتيب', 'الهدافين', 'المباريات', 'جدول الترتيب', 'قائمة الهدافين'];
+      if (navWords.some(w => cleanLine === w)) return null;
+
+      const normLine = normalizeArabic(cleanLine);
+
+      // 1. المطابقة المباشرة مع أسماء الدوريات المسجلة في leagues.csv
       for (const l of leagues) {
-        if (lower.includes(l.name.toLowerCase()) || lower.includes(l.code.toLowerCase())) {
+        const normName = normalizeArabic(l.name);
+        if (normName && (normLine.includes(normName) || normName.includes(normLine))) {
           return l.code;
         }
       }
+
+      // 2. المطابقة عبر الكلمات الدلالية الذكية
       for (const item of leagueKeywords) {
-        if (item.keys.some(k => lower.includes(k.toLowerCase()))) {
-          const matchInCSV = leagues.find(l => l.code === item.code);
-          return matchInCSV ? matchInCSV.code : item.code;
+        for (const k of item.keys) {
+          const normKey = normalizeArabic(k);
+          if (normLine.includes(normKey)) {
+            // البحث عن كود الدوري المقابل في ملف leagues.csv
+            const matchInCSV = leagues.find(l => {
+              const n = normalizeArabic(l.name);
+              const c = l.code.toLowerCase();
+              return c === item.code || n.includes(normKey);
+            });
+            return matchInCSV ? matchInCSV.code : item.code;
+          }
         }
       }
+
       return null;
     }
 
+    // مطابقة ذكية بنظام النقاط للفرق (تمنع التضارب بين البطولات القارية والمحلية)
     function detectLeagueFromTeams(home, away) {
+      const normHome = normalizeArabic(home);
+      const normAway = normalizeArabic(away);
+
+      let bestCode = null;
+      let bestScore = 0;
+
       for (const code in teams) {
         const list = teams[code] || [];
-        const found = list.some(t => {
-          const tName = t.name.trim();
-          return tName === home || tName === away || home.includes(tName) || away.includes(tName);
+        let score = 0;
+
+        const homeMatch = list.some(t => {
+          const n = normalizeArabic(t.name);
+          return n === normHome || normHome.includes(n) || n.includes(normHome);
         });
-        if (found) return code;
+        const awayMatch = list.some(t => {
+          const n = normalizeArabic(t.name);
+          return n === normAway || normAway.includes(n) || n.includes(normAway);
+        });
+
+        // إذا كان الفريقان معاً ينتميان لنفس الدوري (تطابق مؤكد)
+        if (homeMatch && awayMatch) {
+          score = 10;
+        } else if (homeMatch || awayMatch) {
+          // تطابق فريق واحد فقط (إعطاء أولوية للدوريات المحلية على القارية)
+          score = 2;
+          if (['roshn', 'spl', 'saudi', 'pl', 'laliga', 'serie-a', 'bundesliga', 'ligue1', 'superlig'].includes(code)) {
+            score += 1;
+          }
+        }
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestCode = code;
+        }
       }
-      return null;
+
+      return bestCode;
     }
 
-    // استخراج وتوليد المباريات
+    // استخراج وتوليد المباريات الذكي
     executeSmartImportBtn.onclick = async () => {
       const rawText = smartPasteInput.value.trim();
       if (!rawText) {
@@ -1670,15 +1744,18 @@
       const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
       const timeRegex = /(\b\d{1,2}:\d{2}\b)(?:\s*(ص|م|AM|PM))?/i;
 
-      let currentLeagueCode = document.getElementById('leagueSelect').value || 'pl';
+      let currentLeagueCode = document.getElementById('leagueSelect').value || (leagues[0] ? leagues[0].code : 'pl');
+      let hasExplicitLeagueHeader = false;
       let extractedList = [];
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
+        // التحقق مما إذا كان السطر يمثل عنوان دوري
         const headerLeague = detectLeagueFromHeader(line);
         if (headerLeague && !line.match(timeRegex)) {
           currentLeagueCode = headerLeague;
+          hasExplicitLeagueHeader = true; // تم رصد عنوان دوري صريح
           continue;
         }
 
@@ -1733,8 +1810,13 @@
           }
 
           if (home && away && home !== away) {
-            const inferredLeague = detectLeagueFromTeams(home, away) || currentLeagueCode;
-            extractedList.push({ home, away, time: timeStr, chan, comm, league: inferredLeague });
+            // الأولوية لعنوان الدوري الصريح المنسوخ؛ والتخمين فقط إذا لم يوجد عنوان دوري
+            let finalLeague = currentLeagueCode;
+            if (!hasExplicitLeagueHeader) {
+              const inferred = detectLeagueFromTeams(home, away);
+              if (inferred) finalLeague = inferred;
+            }
+            extractedList.push({ home, away, time: timeStr, chan, comm, league: finalLeague });
           }
         }
       }
@@ -1781,7 +1863,7 @@
       render();
 
       smartImportFeedback.style.display = 'block';
-      smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف ${added} مباراة بنجاح في فئاتها!</span>`;
+      smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف ${added} مباراة بنجاح في فئاتها الصحيحة!</span>`;
       executeSmartImportBtn.disabled = false;
       executeSmartImportBtn.innerHTML = '⚡ فرز وتوليد البطاقات فوراً';
 
@@ -1791,16 +1873,28 @@
     };
 
     function cleanTeamString(str) {
-      return str.replace(/[-–—|•:0-9]|نادي\s+|فريق\s+|مباشر|جارية|انتهت/gi, '').trim();
+      return str
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // تنظيف روابط الماركداون
+        .replace(/[-–—|•:0-9]|نادي\s+|فريق\s+|مباشر|جارية|انتهت/gi, '')
+        .trim();
     }
 
     function findTeamLogo(teamName, leagueCode) {
+      if (!teamName) return 'img/jedwal000.png';
+      const normInput = normalizeArabic(teamName);
+
       if (teams[leagueCode]) {
-        const match = teams[leagueCode].find(t => t.name.trim() === teamName.trim() || teamName.includes(t.name) || t.name.includes(teamName));
+        const match = teams[leagueCode].find(t => {
+          const normT = normalizeArabic(t.name);
+          return normT === normInput || normInput.includes(normT) || normT.includes(normInput);
+        });
         if (match && match.img) return match.img;
       }
       for (const l in teams) {
-        const match = teams[l].find(t => t.name.trim() === teamName.trim() || teamName.includes(t.name) || t.name.includes(teamName));
+        const match = teams[l].find(t => {
+          const normT = normalizeArabic(t.name);
+          return normT === normInput || normInput.includes(normT) || normT.includes(normInput);
+        });
         if (match && match.img) return match.img;
       }
       return 'img/jedwal000.png';
