@@ -577,7 +577,6 @@
       padding-right: 10px !important;
     }
 
-    /* القوائم المنسدلة المفتوحة فقط هي التي تأخذ z-index فائق */
     .select2-container--open {
       z-index: 999999 !important;
     }
@@ -607,10 +606,10 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.86); /* تعتيم عميق يحجب ما خلفه */
+      background: rgba(0, 0, 0, 0.86);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      z-index: 99990 !important; /* فوق جميع عناصر الصفحة دون استثناء */
+      z-index: 99990 !important;
       display: none;
       align-items: center;
       justify-content: center;
@@ -619,7 +618,7 @@
     }
 
     .modal-content {
-      background: #181818 !important; /* لون مصمت وقوي يمنع الشفافية */
+      background: #181818 !important;
       border: 1px solid #3d3d3d;
       border-radius: 14px;
       padding: 22px 20px;
@@ -631,7 +630,7 @@
       overflow-y: auto;
       position: relative;
       z-index: 99995 !important;
-      isolation: isolate; /* عزل محتوى النافذة تماماً عن الصفحة */
+      isolation: isolate;
     }
 
     @keyframes modalFade {
@@ -935,7 +934,22 @@
         2. الصق النص وسيقوم النظام بفرز كل مباراة في دوريها تلقائياً:
       </p>
 
-      <textarea id="smartPasteInput" rows="7" placeholder="الصق نص المباريات لمختلف الدوريات هنا..."></textarea>
+      <!-- ✨ شريط أدوات الحافظة الأنيق ✨ -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:#222; padding:6px 10px; border-radius:8px; border:1px solid #333;">
+        <label for="smartPasteInput" style="margin-bottom:0; font-weight:700; color:#eee; font-size:13px;">
+          📝 محتوى النص المنسوخ:
+        </label>
+        <div style="display:flex; gap:6px;">
+          <button id="pasteClipboardBtn" type="button" class="btn" style="background: linear-gradient(135deg, #10ac84, #1dd1a1); font-size:13px; padding:6px 14px; border-radius:6px; box-shadow:0 2px 10px rgba(29, 209, 161, 0.35);">
+            📋 لصق من الحافظة
+          </button>
+          <button id="clearPasteBtn" type="button" class="btn btn-secondary" style="font-size:12px; padding:6px 10px; border-radius:6px;" title="تفريغ الحقل">
+            🗑️
+          </button>
+        </div>
+      </div>
+
+      <textarea id="smartPasteInput" rows="7" placeholder="اضغط على زر (📋 لصق من الحافظة) أعلاه أو الصق النص هنا مباشرة..."></textarea>
 
       <div style="margin-top:12px; display:flex; gap:10px;">
         <button id="executeSmartImportBtn" type="button" class="btn" style="flex:2; background: linear-gradient(135deg, #0984e3, #00cec9); font-size:15px; padding:11px;">
@@ -1323,7 +1337,6 @@
     let activeEditMatchId = null;
     let editIsNextDay = false;
 
-    // فتح نافذة التعديل فوراً مع قفل تمرير الصفحة الخلفية
     window.editMatch = async (id) => {
       const match = matches.find(m => m.id === id);
       if (!match) return;
@@ -1332,11 +1345,9 @@
       editIsNextDay = !!match.nextDay;
       document.getElementById('editNextDayState').textContent = editIsNextDay ? '✅' : '❌';
 
-      // تعيين الدوري وتحميل فرقه في نافذة التعديل
       $('#editLeagueSelect').val(match.league).trigger('change');
       await loadEditTeams(match.league);
 
-      // تعيين القيم الحالية للمباراة
       $('#editHomeTeam').val(match.home).trigger('change');
       $('#editAwayTeam').val(match.away).trigger('change');
       $('#editCommentator').val(match.comm).trigger('change');
@@ -1344,7 +1355,6 @@
 
       document.getElementById('editMatchTime').value = match.time || '';
 
-      // قفل تمرير الصفحة الأصلية وفتح النافذة
       document.body.style.overflow = 'hidden';
       editModal.style.display = 'flex';
     };
@@ -1358,13 +1368,11 @@
     closeEditModalBtn.onclick = closeEditModal;
     cancelEditModalBtn.onclick = closeEditModal;
 
-    // زر اليوم التالي داخل نافذة التعديل
     editNextDayBtn.onclick = () => {
       editIsNextDay = !editIsNextDay;
       document.getElementById('editNextDayState').textContent = editIsNextDay ? '✅' : '❌';
     };
 
-    // حفظ التعديل وتحديث البطاقة في مكانها فوراً
     saveEditMatchBtn.onclick = async () => {
       if (!activeEditMatchId) return;
 
@@ -1421,7 +1429,9 @@
       closeEditModal();
     };
 
-    // إدارة نافذة الاستيراد وقفل تمرير الصفحة
+    // =========================================================
+    // 📋 إدارة نافذة الاستيراد وزر اللصق من الحافظة
+    // =========================================================
     const smartModal = document.getElementById('smartModal');
     const openSmartModalBtn = document.getElementById('openSmartModalBtn');
     const closeSmartModalBtn = document.getElementById('closeSmartModalBtn');
@@ -1429,6 +1439,8 @@
     const executeSmartImportBtn = document.getElementById('executeSmartImportBtn');
     const smartPasteInput = document.getElementById('smartPasteInput');
     const smartImportFeedback = document.getElementById('smartImportFeedback');
+    const pasteClipboardBtn = document.getElementById('pasteClipboardBtn');
+    const clearPasteBtn = document.getElementById('clearPasteBtn');
 
     openSmartModalBtn.onclick = () => {
       document.body.style.overflow = 'hidden';
@@ -1445,6 +1457,49 @@
 
     closeSmartModalBtn.onclick = closeSmartModal;
     cancelSmartModalBtn.onclick = closeSmartModal;
+
+    // زر اللصق التلقائي المباشر من حافظة الجهاز
+    if (pasteClipboardBtn) {
+      pasteClipboardBtn.onclick = async () => {
+        try {
+          if (!navigator.clipboard || !navigator.clipboard.readText) {
+            throw new Error('Clipboard API not supported');
+          }
+          const text = await navigator.clipboard.readText();
+          if (!text || !text.trim()) {
+            smartImportFeedback.style.display = 'block';
+            smartImportFeedback.innerHTML = '<span style="color:#f39c12; font-weight:bold;">⚠️ الحافظة فارغة! يرجى نسخ جدول المباريات من الموقع أولاً ثم الضغط هنا.</span>';
+            return;
+          }
+
+          smartPasteInput.value = text;
+          smartImportFeedback.style.display = 'block';
+          smartImportFeedback.innerHTML = '<span style="color:#2ecc71; font-weight:bold;">✅ تم لصق المحتوى من الحافظة بنجاح! اضغط الآن على (فرز وتوليد البطاقات).</span>';
+
+          const origBtnHTML = pasteClipboardBtn.innerHTML;
+          pasteClipboardBtn.innerHTML = '✅ تم اللصق!';
+          setTimeout(() => {
+            pasteClipboardBtn.innerHTML = origBtnHTML;
+          }, 1800);
+
+          smartPasteInput.focus();
+        } catch (err) {
+          console.warn('Clipboard read notice:', err);
+          smartPasteInput.focus();
+          smartImportFeedback.style.display = 'block';
+          smartImportFeedback.innerHTML = '<span style="color:#74b9ff;">ℹ️ انقر داخل المربع واضغط <kbd>Ctrl + V</kbd> للصق (أو وافق على إذن الحافظة بالمتصفح).</span>';
+        }
+      };
+    }
+
+    // زر مسح المحتوى
+    if (clearPasteBtn) {
+      clearPasteBtn.onclick = () => {
+        smartPasteInput.value = '';
+        smartImportFeedback.style.display = 'none';
+        smartPasteInput.focus();
+      };
+    }
 
     // إغلاق النوافذ عند النقر على الخلفية المظلمة
     window.addEventListener('click', (e) => {
@@ -1512,7 +1567,6 @@
 
     exportLeagueSelect.addEventListener('change', applyLeagueFilter);
 
-    // تحديث خيارات قائمة اختيار الدوري للتصدير
     function updateExportLeagueOptions() {
       const prevVal = exportLeagueSelect.value || 'all';
       const activeLeagueCodes = [...new Set(matches.map(m => m.league))];
@@ -1629,9 +1683,9 @@
     // =========================================================
     function cleanHeaderLine(line) {
       return line
-        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // تنظيف روابط الماركداون
-        .replace(/https?:\/\/\S+/gi, '')          // إزالة الروابط الخام
-        .replace(/[\[\]()#*_]/g, ' ')            // إزالة علامات الماركداون
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/https?:\/\/\S+/gi, '')
+        .replace(/[\[\]()#*_]/g, ' ')
         .trim();
     }
 
@@ -1654,13 +1708,11 @@
       const cleanLine = cleanHeaderLine(rawLine);
       if (!cleanLine) return null;
 
-      // تجاهل أسطر التنقل الفرعية مثل [الترتيب] و [الهدافين]
       const navWords = ['الترتيب', 'الهدافين', 'المباريات', 'جدول الترتيب', 'قائمة الهدافين'];
       if (navWords.some(w => cleanLine === w)) return null;
 
       const normLine = normalizeArabic(cleanLine);
 
-      // 1. المطابقة المباشرة مع أسماء الدوريات المسجلة في leagues.csv
       for (const l of leagues) {
         const normName = normalizeArabic(l.name);
         if (normName && (normLine.includes(normName) || normName.includes(normLine))) {
@@ -1668,12 +1720,10 @@
         }
       }
 
-      // 2. المطابقة عبر الكلمات الدلالية الذكية
       for (const item of leagueKeywords) {
         for (const k of item.keys) {
           const normKey = normalizeArabic(k);
           if (normLine.includes(normKey)) {
-            // البحث عن كود الدوري المقابل في ملف leagues.csv
             const matchInCSV = leagues.find(l => {
               const n = normalizeArabic(l.name);
               const c = l.code.toLowerCase();
@@ -1687,7 +1737,6 @@
       return null;
     }
 
-    // مطابقة ذكية بنظام النقاط للفرق (تمنع التضارب بين البطولات القارية والمحلية)
     function detectLeagueFromTeams(home, away) {
       const normHome = normalizeArabic(home);
       const normAway = normalizeArabic(away);
@@ -1708,11 +1757,9 @@
           return n === normAway || normAway.includes(n) || n.includes(normAway);
         });
 
-        // إذا كان الفريقان معاً ينتميان لنفس الدوري (تطابق مؤكد)
         if (homeMatch && awayMatch) {
           score = 10;
         } else if (homeMatch || awayMatch) {
-          // تطابق فريق واحد فقط (إعطاء أولوية للدوريات المحلية على القارية)
           score = 2;
           if (['roshn', 'spl', 'saudi', 'pl', 'laliga', 'serie-a', 'bundesliga', 'ligue1', 'superlig'].includes(code)) {
             score += 1;
@@ -1728,7 +1775,6 @@
       return bestCode;
     }
 
-    // استخراج وتوليد المباريات الذكي
     executeSmartImportBtn.onclick = async () => {
       const rawText = smartPasteInput.value.trim();
       if (!rawText) {
@@ -1751,11 +1797,10 @@
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
-        // التحقق مما إذا كان السطر يمثل عنوان دوري
         const headerLeague = detectLeagueFromHeader(line);
         if (headerLeague && !line.match(timeRegex)) {
           currentLeagueCode = headerLeague;
-          hasExplicitLeagueHeader = true; // تم رصد عنوان دوري صريح
+          hasExplicitLeagueHeader = true;
           continue;
         }
 
@@ -1810,7 +1855,6 @@
           }
 
           if (home && away && home !== away) {
-            // الأولوية لعنوان الدوري الصريح المنسوخ؛ والتخمين فقط إذا لم يوجد عنوان دوري
             let finalLeague = currentLeagueCode;
             if (!hasExplicitLeagueHeader) {
               const inferred = detectLeagueFromTeams(home, away);
@@ -1874,7 +1918,7 @@
 
     function cleanTeamString(str) {
       return str
-        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // تنظيف روابط الماركداون
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
         .replace(/[-–—|•:0-9]|نادي\s+|فريق\s+|مباشر|جارية|انتهت/gi, '')
         .trim();
     }
