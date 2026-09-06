@@ -559,11 +559,9 @@
       font-weight: 900 !important;
     }
 
-    /* Select2 Customization */
-    .select2-container {
-      z-index: 10005 !important;
-    }
-
+    /* =========================================================
+       ✨ تحسين وتنسيق مكتبة Select2 بدقة لمنع أي تداخل
+       ========================================================= */
     .select2-container--default .select2-selection--single {
       background-color: #282828 !important;
       border: 1px solid #3d3d3d !important;
@@ -579,11 +577,17 @@
       padding-right: 10px !important;
     }
 
+    /* القوائم المنسدلة المفتوحة فقط هي التي تأخذ z-index فائق */
+    .select2-container--open {
+      z-index: 999999 !important;
+    }
+
     .select2-dropdown {
       background-color: #222222 !important;
-      border: 1px solid #3d3d3d !important;
+      border: 1px solid #444 !important;
       color: #fff !important;
-      z-index: 10006 !important;
+      z-index: 999999 !important;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.95) !important;
     }
 
     .select2-container--default .select2-results__option--highlighted {
@@ -597,30 +601,37 @@
       border-radius: 6px;
     }
 
-    /* نوافذ منبثقة (Modals) */
+    /* =========================================================
+       🛡️ نوافذ منبثقة معزولة بصرياً بنسبة 100% (Modals)
+       ========================================================= */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(6px);
-      z-index: 10000;
+      background: rgba(0, 0, 0, 0.86); /* تعتيم عميق يحجب ما خلفه */
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99990 !important; /* فوق جميع عناصر الصفحة دون استثناء */
       display: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      overflow-y: auto;
     }
 
     .modal-content {
-      background: #1c1c1c;
-      border: 1px solid #383838;
+      background: #181818 !important; /* لون مصمت وقوي يمنع الشفافية */
+      border: 1px solid #3d3d3d;
       border-radius: 14px;
-      padding: 20px;
-      max-width: 520px;
+      padding: 22px 20px;
+      max-width: 530px;
       width: 100%;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.85);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.95);
       animation: modalFade 0.25s ease;
-      max-height: 92vh;
+      max-height: 90vh;
       overflow-y: auto;
+      position: relative;
+      z-index: 99995 !important;
+      isolation: isolate; /* عزل محتوى النافذة تماماً عن الصفحة */
     }
 
     @keyframes modalFade {
@@ -843,7 +854,7 @@
        ✏️ نافذة تعديل المباراة المنبثقة الذكية (Edit Modal)
        ========================================================= -->
   <div id="editModal" class="modal-backdrop">
-    <div class="modal-content" style="max-width: 530px; border: 1px solid #f39c12;">
+    <div class="modal-content" style="border: 1px solid #f39c12;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:14px;">
         <h3 style="margin:0; font-size:17px; color:#f39c12; display:flex; align-items:center; gap:6px;">
           ✏️ تعديل بيانات المباراة
@@ -946,7 +957,6 @@
     const posterDateDisplay = document.getElementById('posterDateDisplay');
     const manualDateEl = document.getElementById('manualDate');
     const editBtn = document.getElementById('editDateBtn');
-    const posterTitle = document.getElementById('posterTitle');
     const posterBadge = document.getElementById('posterBadge');
     const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
@@ -1189,7 +1199,7 @@
         document.getElementById('extraPreview').innerHTML = `<img src="${selectedExtraLogo}" alt="Extra">`;
       }
 
-      // تهيئة Select2 لنافذة التعديل المنبثقة
+      // تهيئة Select2 لنافذة التعديل المنبثقة مع ربطها بحاوية النافذة
       $('#editLeagueSelect, #editHomeTeam, #editAwayTeam, #editCommentator, #editChannel').select2({
         width: '100%',
         dir: 'rtl',
@@ -1297,7 +1307,7 @@
     let activeEditMatchId = null;
     let editIsNextDay = false;
 
-    // فتح نافذة التعديل فوراً في نفس موضع الشاشة
+    // فتح نافذة التعديل فوراً مع قفل تمرير الصفحة الخلفية
     window.editMatch = async (id) => {
       const match = matches.find(m => m.id === id);
       if (!match) return;
@@ -1318,12 +1328,14 @@
 
       document.getElementById('editMatchTime').value = match.time || '';
 
-      // فتح النافذة المنبثقة
+      // قفل تمرير الصفحة الأصلية وفتح النافذة
+      document.body.style.overflow = 'hidden';
       editModal.style.display = 'flex';
     };
 
     const closeEditModal = () => {
       editModal.style.display = 'none';
+      document.body.style.overflow = ''; // إعادة التمرير للوضع الطبيعي
       activeEditMatchId = null;
     };
 
@@ -1394,10 +1406,35 @@
       closeEditModal();
     };
 
-    // إغلاق النوافذ عند النقر خارجها
+    // إدارة نافذة الاستيراد وقفل تمرير الصفحة
+    const smartModal = document.getElementById('smartModal');
+    const openSmartModalBtn = document.getElementById('openSmartModalBtn');
+    const closeSmartModalBtn = document.getElementById('closeSmartModalBtn');
+    const cancelSmartModalBtn = document.getElementById('cancelSmartModalBtn');
+    const executeSmartImportBtn = document.getElementById('executeSmartImportBtn');
+    const smartPasteInput = document.getElementById('smartPasteInput');
+    const smartImportFeedback = document.getElementById('smartImportFeedback');
+
+    openSmartModalBtn.onclick = () => {
+      document.body.style.overflow = 'hidden';
+      smartModal.style.display = 'flex';
+      smartPasteInput.value = '';
+      smartImportFeedback.style.display = 'none';
+      smartPasteInput.focus();
+    };
+
+    const closeSmartModal = () => { 
+      smartModal.style.display = 'none'; 
+      document.body.style.overflow = '';
+    };
+
+    closeSmartModalBtn.onclick = closeSmartModal;
+    cancelSmartModalBtn.onclick = closeSmartModal;
+
+    // إغلاق النوافذ عند النقر على الخلفية المظلمة
     window.addEventListener('click', (e) => {
       if (e.target === editModal) closeEditModal();
-      if (e.target === smartModal) smartModal.style.display = 'none';
+      if (e.target === smartModal) closeSmartModal();
     });
 
     window.deleteMatch = (id) => {
@@ -1436,8 +1473,7 @@
 
       if (filter === 'all') {
         sections.forEach(s => s.style.display = 'block');
-        posterTitle.textContent = '⚽ أهم مباريات اليوم';
-        posterBadge.textContent = 'مباريات اليوم';
+        posterBadge.textContent = '⚽ أهم مباريات اليوم';
         exportArea.className = themeSelect.value;
       } else {
         sections.forEach(s => {
@@ -1451,10 +1487,8 @@
         const targetLeague = leagues.find(l => l.code === filter);
         const leagueName = targetLeague ? targetLeague.name : 'الدوري';
 
-        posterTitle.textContent = `⚽ مباريات ${leagueName}`;
-        posterBadge.textContent = `🏆 ${leagueName}`;
+        posterBadge.textContent = `🏆 مباريات ${leagueName}`;
 
-        // تطبيق الهوية والثيم الرسمي التلقائي لهذا الدوري
         if (leagueThemesMap[filter]) {
           exportArea.className = leagueThemesMap[filter];
         }
@@ -1502,7 +1536,7 @@
 
         const section = document.createElement('div');
         section.className = 'matches-section';
-        section.dataset.league = l.code; // ربط كل قسم بكود الدوري للفلترة
+        section.dataset.league = l.code;
 
         const header = document.createElement('div');
         header.className = 'section-header';
@@ -1576,28 +1610,8 @@
     }
 
     // =========================================================
-    // 📋 محرك الاستيراد الذكي المتقدم وفصل الدوريات تلقائياً
+    // 📋 كلمات مفتاحية وكشف الدوريات الذكي
     // =========================================================
-    const smartModal = document.getElementById('smartModal');
-    const openSmartModalBtn = document.getElementById('openSmartModalBtn');
-    const closeSmartModalBtn = document.getElementById('closeSmartModalBtn');
-    const cancelSmartModalBtn = document.getElementById('cancelSmartModalBtn');
-    const executeSmartImportBtn = document.getElementById('executeSmartImportBtn');
-    const smartPasteInput = document.getElementById('smartPasteInput');
-    const smartImportFeedback = document.getElementById('smartImportFeedback');
-
-    openSmartModalBtn.onclick = () => {
-      smartModal.style.display = 'flex';
-      smartPasteInput.value = '';
-      smartImportFeedback.style.display = 'none';
-      smartPasteInput.focus();
-    };
-
-    const closeSmartModal = () => { smartModal.style.display = 'none'; };
-    closeSmartModalBtn.onclick = closeSmartModal;
-    cancelSmartModalBtn.onclick = closeSmartModal;
-
-    // كلمات مفتاحية ذكية للكشف عن الدوريات
     const leagueKeywords = [
       { code: 'ucl', keys: ['أبطال أوروبا', 'ابطال اوروبا', 'champions league', 'دوري الأبطال', 'التشامبيونز'] },
       { code: 'pl', keys: ['الإنجليزي', 'الانجليزي', 'البريميرليج', 'premier league', 'الدوري الممتاز'] },
@@ -1628,7 +1642,6 @@
       return null;
     }
 
-    // كشف الدوري تلقائياً بناء على أسماء الفرق الموجودة فيه
     function detectLeagueFromTeams(home, away) {
       for (const code in teams) {
         const list = teams[code] || [];
@@ -1641,7 +1654,7 @@
       return null;
     }
 
-    // دالة استخراج وتوليد المباريات وتوزيعها على الدوريات
+    // استخراج وتوليد المباريات
     executeSmartImportBtn.onclick = async () => {
       const rawText = smartPasteInput.value.trim();
       if (!rawText) {
@@ -1652,7 +1665,6 @@
       executeSmartImportBtn.disabled = true;
       executeSmartImportBtn.innerHTML = '⏳ جاري تحليل وتصنيف المباريات...';
 
-      // التأكد من تحميل فرق جميع الدوريات للمطابقة
       await Promise.all(leagues.map(l => loadTeams(l.code, false)));
 
       const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
@@ -1664,14 +1676,12 @@
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
-        // 1. هل هذا السطر يمثل عنوان دوري أو بطولة؟
         const headerLeague = detectLeagueFromHeader(line);
         if (headerLeague && !line.match(timeRegex)) {
           currentLeagueCode = headerLeague;
           continue;
         }
 
-        // 2. فحص سطر المباراة
         const timeMatch = line.match(timeRegex);
         if (timeMatch) {
           let timeStr = timeMatch[1];
@@ -1707,7 +1717,6 @@
             }
           }
 
-          // محاولة استخراج القناة والمعلق
           let chan = channels[0]?.name || "beIN Sports 1";
           let comm = "سيحدد لاحقاً";
 
@@ -1738,7 +1747,6 @@
         return;
       }
 
-      // مطابقة الشعارات من ملفات الـ CSV وتحويلها لـ Base64
       let added = 0;
       for (const item of extractedList) {
         const homeImgRaw = findTeamLogo(item.home, item.league);
@@ -1782,12 +1790,10 @@
       }, 1500);
     };
 
-    // دالة تنظيف اسم الفريق من الرموز والكلمات الزائدة
     function cleanTeamString(str) {
       return str.replace(/[-–—|•:0-9]|نادي\s+|فريق\s+|مباشر|جارية|انتهت/gi, '').trim();
     }
 
-    // دالة البحث الذكي عن شعار الفريق في ملفات الـ CSV
     function findTeamLogo(teamName, leagueCode) {
       if (teams[leagueCode]) {
         const match = teams[leagueCode].find(t => t.name.trim() === teamName.trim() || teamName.includes(t.name) || t.name.includes(teamName));
@@ -1817,7 +1823,6 @@
           backgroundColor: computedBg
         });
 
-        // تسمية الملف باسم الدوري المصدر
         const currentFilter = exportLeagueSelect.value;
         let fileSuffix = 'اليوم';
         if (currentFilter !== 'all') {
