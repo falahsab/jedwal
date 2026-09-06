@@ -1008,30 +1008,148 @@
 
     themeSelect.addEventListener('change', (e) => {
       const theme = e.target.value;
-      if (exportLeagueSelect.value === 'all') {
-        exportArea.className = theme;
-      }
+      exportArea.className = theme;
       localStorage.setItem('selectedTheme', theme);
     });
 
-    // خريطة الربط بين كود الدوري وثيم الهوية الرسمية
-    const leagueThemesMap = {
-      'pl': 'theme-pl',
-      'laliga': 'theme-laliga',
-      'serie-a': 'theme-serie-a',
-      'bundesliga': 'theme-bundesliga',
-      'ligue1': 'theme-ligue1',
-      'roshn': 'theme-roshn',
-      'spl': 'theme-roshn',
-      'saudi': 'theme-roshn',
-      'ucl': 'theme-ucl',
-      'superlig': 'theme-superlig',
-      'asian-cup': 'theme-asian-cup',
-      'afc': 'theme-asian-cup',
-      'acl': 'theme-asian-cup',
-      'afcon': 'theme-afcon',
-      'fifa': 'theme-fifa'
-    };
+    // =========================================================
+    // 🎨 المحرك الذكي لاستخراج الثيم الرسمي لأي دوري بدقة 100%
+    // =========================================================
+    function getLeagueTheme(leagueCode) {
+      if (!leagueCode || leagueCode === 'all') {
+        return themeSelect.value || 'theme-ucl';
+      }
+
+      const codeLower = leagueCode.toLowerCase().trim();
+
+      // مطابقة سريعة عبر الأكواد المحتملة
+      const codeMap = {
+        // الدوري الإسباني
+        'laliga': 'theme-laliga',
+        'la-liga': 'theme-laliga',
+        'la_liga': 'theme-laliga',
+        'spain': 'theme-laliga',
+        'es': 'theme-laliga',
+        'esp': 'theme-laliga',
+        'liga': 'theme-laliga',
+
+        // الدوري الإنجليزي
+        'pl': 'theme-pl',
+        'epl': 'theme-pl',
+        'premier': 'theme-pl',
+        'premier-league': 'theme-pl',
+        'premier_league': 'theme-pl',
+        'england': 'theme-pl',
+        'en': 'theme-pl',
+        'eng': 'theme-pl',
+
+        // الدوري الإيطالي
+        'serie-a': 'theme-serie-a',
+        'serie_a': 'theme-serie-a',
+        'seriea': 'theme-serie-a',
+        'italy': 'theme-serie-a',
+        'it': 'theme-serie-a',
+        'ita': 'theme-serie-a',
+        'calcio': 'theme-serie-a',
+
+        // الدوري الألماني
+        'bundesliga': 'theme-bundesliga',
+        'germany': 'theme-bundesliga',
+        'de': 'theme-bundesliga',
+        'ger': 'theme-bundesliga',
+        'bundes': 'theme-bundesliga',
+
+        // الدوري الفرنسي
+        'ligue1': 'theme-ligue1',
+        'ligue-1': 'theme-ligue1',
+        'ligue_1': 'theme-ligue1',
+        'france': 'theme-ligue1',
+        'fr': 'theme-ligue1',
+        'fra': 'theme-ligue1',
+
+        // دوري روشن السعودي
+        'roshn': 'theme-roshn',
+        'spl': 'theme-roshn',
+        'saudi': 'theme-roshn',
+        'sa': 'theme-roshn',
+        'ksa': 'theme-roshn',
+
+        // دوري أبطال أوروبا
+        'ucl': 'theme-ucl',
+        'champions': 'theme-ucl',
+        'cl': 'theme-ucl',
+
+        // الدوري التركي
+        'superlig': 'theme-superlig',
+        'super-lig': 'theme-superlig',
+        'turkey': 'theme-superlig',
+        'tr': 'theme-superlig',
+
+        // بطولات آسيا
+        'asian-cup': 'theme-asian-cup',
+        'afc': 'theme-asian-cup',
+        'acl': 'theme-asian-cup',
+        'afc-elite': 'theme-asian-cup',
+        'asia': 'theme-asian-cup',
+
+        // كأس أمم إفريقيا
+        'afcon': 'theme-afcon',
+        'can': 'theme-afcon',
+        'africa': 'theme-afcon',
+
+        // كأس العالم
+        'fifa': 'theme-fifa',
+        'worldcup': 'theme-fifa',
+        'wc': 'theme-fifa'
+      };
+
+      if (codeMap[codeLower]) {
+        return codeMap[codeLower];
+      }
+
+      // مطابقة ذكية ثانوية عبر قراءة اسم الدوري المسجل في leagues.csv
+      const leagueObj = leagues.find(l => l.code === leagueCode);
+      if (leagueObj) {
+        const normName = normalizeArabic(leagueObj.name);
+        const normCode = normalizeArabic(leagueObj.code);
+
+        if (normName.includes('اسبان') || normName.includes('إسبان') || normName.includes('ليغا') || normName.includes('laliga') || normCode.includes('spain') || normCode.includes('es')) {
+          return 'theme-laliga';
+        }
+        if (normName.includes('انجل') || normName.includes('إنجل') || normName.includes('بريمير') || normName.includes('premier') || normCode.includes('pl')) {
+          return 'theme-pl';
+        }
+        if (normName.includes('ايطال') || normName.includes('إيطال') || normName.includes('سيريا') || normName.includes('كالتشيو') || normName.includes('serie')) {
+          return 'theme-serie-a';
+        }
+        if (normName.includes('المان') || normName.includes('ألمان') || normName.includes('بوندس') || normName.includes('bundes')) {
+          return 'theme-bundesliga';
+        }
+        if (normName.includes('فرنس') || normName.includes('ليج') || normName.includes('ligue')) {
+          return 'theme-ligue1';
+        }
+        if (normName.includes('روشن') || normName.includes('سعود') || normName.includes('saudi') || normCode.includes('spl')) {
+          return 'theme-roshn';
+        }
+        if (normName.includes('ابطال اوروبا') || normName.includes('أبطال أوروبا') || normName.includes('champions')) {
+          return 'theme-ucl';
+        }
+        if (normName.includes('ترك') || normName.includes('سوبر ليغ') || normName.includes('super lig')) {
+          return 'theme-superlig';
+        }
+        if (normName.includes('اسيا') || normName.includes('آسيا') || normName.includes('asian') || normName.includes('afc')) {
+          return 'theme-asian-cup';
+        }
+        if (normName.includes('افريق') || normName.includes('إفريق') || normName.includes('كان') || normName.includes('afcon')) {
+          return 'theme-afcon';
+        }
+        if (normName.includes('عالم') || normName.includes('فيفا') || normName.includes('fifa')) {
+          return 'theme-fifa';
+        }
+      }
+
+      return themeSelect.value || 'theme-dark';
+    }
 
     // === مسارات الملفات والمتغيرات العامة ===
     const leaguesCSV = 'csv/leagues.csv';
@@ -1051,7 +1169,7 @@
     function normalizeArabic(text) {
       if (!text) return '';
       return text
-        .replace(/[\u064B-\u065F\u0670]/g, '') // إزالة التشكيل
+        .replace(/[\u064B-\u065F\u0670]/g, '')
         .replace(/[أإآ]/g, 'ا')
         .replace(/ة/g, 'ه')
         .replace(/ى/g, 'ي')
@@ -1458,7 +1576,6 @@
     closeSmartModalBtn.onclick = closeSmartModal;
     cancelSmartModalBtn.onclick = closeSmartModal;
 
-    // زر اللصق التلقائي المباشر من حافظة الجهاز
     if (pasteClipboardBtn) {
       pasteClipboardBtn.onclick = async () => {
         try {
@@ -1492,7 +1609,6 @@
       };
     }
 
-    // زر مسح المحتوى
     if (clearPasteBtn) {
       clearPasteBtn.onclick = () => {
         smartPasteInput.value = '';
@@ -1501,7 +1617,6 @@
       };
     }
 
-    // إغلاق النوافذ عند النقر على الخلفية المظلمة
     window.addEventListener('click', (e) => {
       if (e.target === editModal) closeEditModal();
       if (e.target === smartModal) closeSmartModal();
@@ -1535,7 +1650,7 @@
     };
 
     // =========================================================
-    // 🎯 فلترة التصدير لدوري محدد أو كل الدوريات
+    // 🎯 فلترة التصدير والتحويل التلقائي لثيم الدوري المختار
     // =========================================================
     function applyLeagueFilter() {
       const filter = exportLeagueSelect.value;
@@ -1544,8 +1659,22 @@
       if (filter === 'all') {
         sections.forEach(s => s.style.display = 'block');
         posterBadge.textContent = '⚽ أهم مباريات اليوم';
-        exportArea.className = themeSelect.value;
+
+        // إذا كانت كل المباريات في الجدول تتبع دورياً واحداً فقط، يطبق ثيم ذلك الدوري تلقائياً
+        const activeLeagues = [...new Set(matches.map(m => m.league))];
+        if (activeLeagues.length === 1) {
+          const autoTheme = getLeagueTheme(activeLeagues[0]);
+          exportArea.className = autoTheme;
+          themeSelect.value = autoTheme;
+          const lObj = leagues.find(item => item.code === activeLeagues[0]);
+          if (lObj) {
+            posterBadge.textContent = `🏆 مباريات ${lObj.name}`;
+          }
+        } else {
+          exportArea.className = themeSelect.value;
+        }
       } else {
+        // إخفاء باقي الدوريات وعرض الدوري المطلوب فقط
         sections.forEach(s => {
           if (s.dataset.league === filter) {
             s.style.display = 'block';
@@ -1559,9 +1688,10 @@
 
         posterBadge.textContent = `🏆 مباريات ${leagueName}`;
 
-        if (leagueThemesMap[filter]) {
-          exportArea.className = leagueThemesMap[filter];
-        }
+        // 👈 تحويل ثيم وبوست الجدول فوراً إلى الهوية الرسمية الخاصة بهذا الدوري
+        const targetTheme = getLeagueTheme(filter);
+        exportArea.className = targetTheme;
+        themeSelect.value = targetTheme;
       }
     }
 
@@ -1946,6 +2076,11 @@
 
     // === تحميل الجدول كصورة Full HD ===
     document.getElementById('downloadTable').addEventListener('click', async () => {
+      const currentFilter = exportLeagueSelect.value;
+
+      // تطبيق الفلتر والثيم الرسمي للدوري المختار قبل التصوير
+      applyLeagueFilter();
+
       const actionBtns = exportArea.querySelectorAll('.action-btns');
       actionBtns.forEach(btn => btn.style.display = 'none');
 
@@ -1961,11 +2096,16 @@
           backgroundColor: computedBg
         });
 
-        const currentFilter = exportLeagueSelect.value;
         let fileSuffix = 'اليوم';
         if (currentFilter !== 'all') {
           const l = leagues.find(item => item.code === currentFilter);
           fileSuffix = l ? l.name.replace(/\s+/g, '_') : currentFilter;
+        } else {
+          const activeLeagues = [...new Set(matches.map(m => m.league))];
+          if (activeLeagues.length === 1) {
+            const l = leagues.find(item => item.code === activeLeagues[0]);
+            if (l) fileSuffix = l.name.replace(/\s+/g, '_');
+          }
         }
 
         const link = document.createElement('a');
