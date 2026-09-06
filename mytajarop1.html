@@ -315,6 +315,7 @@
       position: relative;
       border-bottom: 2px solid var(--accent);
       z-index: 1;
+      transition: all 0.3s ease;
     }
 
     .poster-header::after {
@@ -678,9 +679,9 @@
           📝 بيانات المباراة
         </h3>
 
-        <!-- 👈 زر الاستيراد الذكي الجديد -->
+        <!-- 👈 زر الاستيراد الذكي المتعدد -->
         <button id="openSmartModalBtn" type="button" class="btn" style="background: linear-gradient(135deg, #0984e3, #00cec9); font-size: 15px; margin-bottom: 12px; width: 100%; padding: 12px; border-radius: 8px; box-shadow: 0 4px 14px rgba(9, 132, 227, 0.35);">
-          📋 استيراد ذكي وسريع من jdwel.com
+          📋 استيراد ذكي متعدد الدوريات من jdwel.com
         </button>
 
         <!-- اختيار ثيم البطولة والدوريات الكبرى -->
@@ -794,8 +795,8 @@
             
             <!-- ✨ الهيدر الجمالي داخل الصورة الملتقطة ✨ -->
             <div class="poster-header">
-              <span class="poster-badge">مباريات اليوم</span>
-              <h1 class="poster-title">⚽ أهم مباريات اليوم</h1>
+              <span class="poster-badge" id="posterBadge">مباريات اليوم</span>
+              <h1 class="poster-title" id="posterTitle">⚽ أهم مباريات اليوم</h1>
               <div class="poster-date" id="posterDateDisplay"></div>
             </div>
 
@@ -808,6 +809,18 @@
             <div class="poster-footer">
               مع VIP عيش المتعة .. اشترك الآن | عبر الواتساب: <strong style="color:#2ecc71;">738092209</strong>
             </div>
+          </div>
+        </div>
+
+        <!-- 🎯 تحديد الدوري المراد تصديره كصورة أو الكل -->
+        <div class="row" style="margin-top:12px; margin-bottom:10px;">
+          <div style="flex:1;">
+            <label for="exportLeagueSelect" style="color:#2ecc71; font-weight:800; font-size:13.5px; margin-bottom:6px;">
+              🎯 خيار حفظ الصورة (اختر دورياً لوحده أو الجدول كاملاً):
+            </label>
+            <select id="exportLeagueSelect" style="border:1.5px solid #27ae60; font-weight:700; background:#18231c; color:#2ecc71;">
+              <option value="all">📸 كل الدوريات (الجدول كاملاً في صورة واحدة)</option>
+            </select>
           </div>
         </div>
 
@@ -827,20 +840,20 @@
   <div id="smartModal">
     <div class="modal-content">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:14px;">
-        <h3 style="margin:0; font-size:17px; color:#00cec9;">📋 الاستيراد الذكي من jdwel.com</h3>
+        <h3 style="margin:0; font-size:17px; color:#00cec9;">📋 الاستيراد الذكي متعدد الدوريات من jdwel.com</h3>
         <button id="closeSmartModalBtn" type="button" style="background:none; border:none; color:#aaa; font-size:20px; cursor:pointer;">✕</button>
       </div>
       
       <p style="font-size:13px; color:#bbb; margin-top:0; line-height:1.5;">
-        1. افتح صفحة <a href="https://jdwel.com/today/" target="_blank" style="color:#74b9ff; font-weight:bold;">jdwel.com/today</a> وحدد نصوص المباريات وانسخها (<kbd>Ctrl+C</kbd>).<br>
-        2. الصق النص هنا وسيقوم النظام باستخراج الفرق والأوقات والشعارات تلقائياً:
+        1. افتح صفحة <a href="https://jdwel.com/today/" target="_blank" style="color:#74b9ff; font-weight:bold;">jdwel.com/today</a> وانسخ مباريات كل الدوريات معاً (<kbd>Ctrl+C</kbd>).<br>
+        2. الصق النص وسيقوم النظام بفرز كل مباراة في دوريها تلقائياً:
       </p>
 
-      <textarea id="smartPasteInput" rows="6" placeholder="الصق نص المباريات المنسوخ هنا..."></textarea>
+      <textarea id="smartPasteInput" rows="7" placeholder="الصق نص المباريات لمختلف الدوريات هنا..."></textarea>
 
       <div style="margin-top:12px; display:flex; gap:10px;">
         <button id="executeSmartImportBtn" type="button" class="btn" style="flex:2; background: linear-gradient(135deg, #0984e3, #00cec9); font-size:15px; padding:11px;">
-          ⚡ تحويل إلى بطاقات فوراً
+          ⚡ فرز وتوليد البطاقات فوراً
         </button>
         <button id="cancelSmartModalBtn" type="button" class="btn btn-secondary" style="flex:1;">
           إلغاء
@@ -858,6 +871,8 @@
     const posterDateDisplay = document.getElementById('posterDateDisplay');
     const manualDateEl = document.getElementById('manualDate');
     const editBtn = document.getElementById('editDateBtn');
+    const posterTitle = document.getElementById('posterTitle');
+    const posterBadge = document.getElementById('posterBadge');
     const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
     let currentDate = new Date();
@@ -886,6 +901,7 @@
     // === إدارة ثيمات الدوريات العالمية ===
     const themeSelect = document.getElementById('themeSelect');
     const exportArea = document.getElementById('exportArea');
+    const exportLeagueSelect = document.getElementById('exportLeagueSelect');
 
     const savedTheme = localStorage.getItem('selectedTheme') || 'theme-ucl';
     themeSelect.value = savedTheme;
@@ -893,9 +909,26 @@
 
     themeSelect.addEventListener('change', (e) => {
       const theme = e.target.value;
-      exportArea.className = theme;
+      if (exportLeagueSelect.value === 'all') {
+        exportArea.className = theme;
+      }
       localStorage.setItem('selectedTheme', theme);
     });
+
+    // خريطة الربط بين كود الدوري وثيم الهوية الرسمية
+    const leagueThemesMap = {
+      'pl': 'theme-pl',
+      'laliga': 'theme-laliga',
+      'serie-a': 'theme-serie-a',
+      'bundesliga': 'theme-bundesliga',
+      'ligue1': 'theme-ligue1',
+      'roshn': 'theme-roshn',
+      'ucl': 'theme-ucl',
+      'superlig': 'theme-superlig',
+      'asian-cup': 'theme-asian-cup',
+      'afcon': 'theme-afcon',
+      'fifa': 'theme-fifa'
+    };
 
     // === مسارات الملفات والمتغيرات العامة ===
     const leaguesCSV = 'csv/leagues.csv';
@@ -925,7 +958,7 @@
       });
     }
 
-    // تحويل الصور إلى Base64
+    // تحويل الصور إلى Base64 لمنع قيود المتصفح
     function toBase64(url) {
       return new Promise((resolve) => {
         if (!url || url.startsWith('data:')) {
@@ -995,23 +1028,25 @@
     }
 
     // تحميل فرق الدوري المحدد
-    async function loadTeams(leagueCode) {
+    async function loadTeams(leagueCode, updateDropdowns = true) {
       if (!teams[leagueCode]) {
         teams[leagueCode] = await loadCSV(`${teamsCSVFolder}${leagueCode}_teams.csv`);
       }
-      const teamList = teams[leagueCode] || [];
-      const homeTeam = document.getElementById('homeTeam');
-      const awayTeam = document.getElementById('awayTeam');
+      if (updateDropdowns) {
+        const teamList = teams[leagueCode] || [];
+        const homeTeam = document.getElementById('homeTeam');
+        const awayTeam = document.getElementById('awayTeam');
 
-      const optionsHtml = teamList.map(t => `<option value="${t.name}" data-img="${t.img || ''}">${t.name}</option>`).join('');
-      homeTeam.innerHTML = optionsHtml;
-      awayTeam.innerHTML = optionsHtml;
+        const optionsHtml = teamList.map(t => `<option value="${t.name}" data-img="${t.img || ''}">${t.name}</option>`).join('');
+        homeTeam.innerHTML = optionsHtml;
+        awayTeam.innerHTML = optionsHtml;
 
-      $('#homeTeam').val($('#homeTeam option:first').val()).trigger('change');
-      $('#awayTeam').val($('#awayTeam option:eq(1)').val() || $('#awayTeam option:first').val()).trigger('change');
+        $('#homeTeam').val($('#homeTeam option:first').val()).trigger('change');
+        $('#awayTeam').val($('#awayTeam option:eq(1)').val() || $('#awayTeam option:first').val()).trigger('change');
 
-      updatePreview(homeTeam, 'homePreview', '🏠');
-      updatePreview(awayTeam, 'awayPreview', '⚽');
+        updatePreview(homeTeam, 'homePreview', '🏠');
+        updatePreview(awayTeam, 'awayPreview', '⚽');
+      }
     }
 
     // تهيئة البيانات
@@ -1057,7 +1092,7 @@
       }
 
       $('#leagueSelect').on('select2:select', function () {
-        loadTeams(this.value);
+        loadTeams(this.value, true);
       });
 
       $('#homeTeam').on('change', function() { updatePreview(this, 'homePreview', '🏠'); });
@@ -1069,9 +1104,17 @@
         render();
       });
 
+      // تحميل فرق أول دوري
       if (leagues.length > 0) {
-        await loadTeams(leagues[0].code);
+        await loadTeams(leagues[0].code, true);
       }
+
+      // تحميل فرق باقي الدوريات في الخلفية لتحسين دقة التعرف التلقائي
+      setTimeout(() => {
+        leagues.forEach(l => {
+          if (!teams[l.code]) loadTeams(l.code, false);
+        });
+      }, 500);
 
       render();
     }
@@ -1146,7 +1189,7 @@
       document.getElementById('cancelEditBtn').style.display = 'inline-flex';
 
       $('#leagueSelect').val(match.league).trigger('change');
-      await loadTeams(match.league);
+      await loadTeams(match.league, true);
 
       $('#homeTeam').val(match.home).trigger('change');
       $('#awayTeam').val(match.away).trigger('change');
@@ -1197,6 +1240,64 @@
       grid.appendChild(grid.firstElementChild);
     };
 
+    // =========================================================
+    // 🎯 فلترة التصدير لدوري محدد أو كل الدوريات
+    // =========================================================
+    function applyLeagueFilter() {
+      const filter = exportLeagueSelect.value;
+      const sections = exportArea.querySelectorAll('.matches-section');
+
+      if (filter === 'all') {
+        sections.forEach(s => s.style.display = 'block');
+        posterTitle.textContent = '⚽ أهم مباريات اليوم';
+        posterBadge.textContent = 'مباريات اليوم';
+        exportArea.className = themeSelect.value;
+      } else {
+        sections.forEach(s => {
+          if (s.dataset.league === filter) {
+            s.style.display = 'block';
+          } else {
+            s.style.display = 'none';
+          }
+        });
+
+        const targetLeague = leagues.find(l => l.code === filter);
+        const leagueName = targetLeague ? targetLeague.name : 'الدوري';
+
+        posterTitle.textContent = `⚽ مباريات ${leagueName}`;
+        posterBadge.textContent = `🏆 ${leagueName}`;
+
+        // تطبيق الهوية والثيم الرسمي التلقائي لهذا الدوري
+        if (leagueThemesMap[filter]) {
+          exportArea.className = leagueThemesMap[filter];
+        }
+      }
+    }
+
+    exportLeagueSelect.addEventListener('change', applyLeagueFilter);
+
+    // تحديث خيارات قائمة اختيار الدوري للتصدير
+    function updateExportLeagueOptions() {
+      const prevVal = exportLeagueSelect.value || 'all';
+      const activeLeagueCodes = [...new Set(matches.map(m => m.league))];
+
+      let options = '<option value="all">📸 كل الدوريات (الجدول كاملاً في صورة واحدة)</option>';
+      activeLeagueCodes.forEach(code => {
+        const l = leagues.find(item => item.code === code);
+        const name = l ? l.name : code;
+        options += `<option value="${code}">🏆 ${name} (صورة منفصلة لوحده)</option>`;
+      });
+
+      exportLeagueSelect.innerHTML = options;
+
+      if (activeLeagueCodes.includes(prevVal) || prevVal === 'all') {
+        exportLeagueSelect.value = prevVal;
+      } else {
+        exportLeagueSelect.value = 'all';
+      }
+      applyLeagueFilter();
+    }
+
     // توليد وعرض بطاقات المباريات
     function render() {
       const container = document.getElementById('matchesContainer');
@@ -1204,6 +1305,7 @@
 
       if (matches.length === 0) {
         container.innerHTML = '<div class="empty-state">لا توجد مباريات مضافة حالياً.<br>أضف مبارياتك اليوم أو استخدم الاستيراد الذكي لتوليد الجدول فوراً!</div>';
+        updateExportLeagueOptions();
         return;
       }
 
@@ -1213,6 +1315,7 @@
 
         const section = document.createElement('div');
         section.className = 'matches-section';
+        section.dataset.league = l.code; // ربط كل قسم بكود الدوري للفلترة
 
         const header = document.createElement('div');
         header.className = 'section-header';
@@ -1281,10 +1384,12 @@
 
         container.appendChild(section);
       });
+
+      updateExportLeagueOptions();
     }
 
     // =========================================================
-    // 📋 محرك الاستيراد الذكي المتقدم (Smart Match Parser)
+    // 📋 محرك الاستيراد الذكي المتقدم وفصل الدوريات تلقائياً
     // =========================================================
     const smartModal = document.getElementById('smartModal');
     const openSmartModalBtn = document.getElementById('openSmartModalBtn');
@@ -1305,7 +1410,53 @@
     closeSmartModalBtn.onclick = closeSmartModal;
     cancelSmartModalBtn.onclick = closeSmartModal;
 
-    // دالة استخراج وتوليد المباريات من النص
+    // كلمات مفتاحية ذكية للكشف عن الدوريات
+    const leagueKeywords = [
+      { code: 'ucl', keys: ['أبطال أوروبا', 'ابطال اوروبا', 'champions league', 'دوري الأبطال', 'التشامبيونز'] },
+      { code: 'pl', keys: ['الإنجليزي', 'الانجليزي', 'البريميرليج', 'premier league', 'الدوري الممتاز'] },
+      { code: 'laliga', keys: ['الإسباني', 'الاسباني', 'لا ليغا', 'لاليغا', 'laliga', 'الليغا', 'الليجا'] },
+      { code: 'serie-a', keys: ['الإيطالي', 'الايطالي', 'سيريا', 'الكالتشيو', 'serie a'] },
+      { code: 'bundesliga', keys: ['الألماني', 'الالماني', 'بوندسليجا', 'bundesliga'] },
+      { code: 'ligue1', keys: ['الفرنسي', 'ليج 1', 'ligue 1'] },
+      { code: 'roshn', keys: ['روشن', 'السعودي', 'saudi'] },
+      { code: 'superlig', keys: ['التركي', 'سوبر ليغ', 'super lig', 'süper lig'] },
+      { code: 'asian-cup', keys: ['أمم آسيا', 'امم اسيا', 'كأس آسيا', 'كاس اسيا', 'asian cup'] },
+      { code: 'afcon', keys: ['إفريقيا', 'افريقيا', 'كان', 'afcon'] },
+      { code: 'fifa', keys: ['كأس العالم', 'كاس العالم', 'فيفا', 'fifa'] }
+    ];
+
+    function detectLeagueFromHeader(line) {
+      const lower = line.toLowerCase();
+      // مطابقة أسماء ملف الدوريات
+      for (const l of leagues) {
+        if (lower.includes(l.name.toLowerCase()) || lower.includes(l.code.toLowerCase())) {
+          return l.code;
+        }
+      }
+      // مطابقة الكلمات المفتاحية
+      for (const item of leagueKeywords) {
+        if (item.keys.some(k => lower.includes(k.toLowerCase()))) {
+          const matchInCSV = leagues.find(l => l.code === item.code);
+          return matchInCSV ? matchInCSV.code : item.code;
+        }
+      }
+      return null;
+    }
+
+    // كشف الدوري تلقائياً بناء على أسماء الفرق الموجودة فيه
+    function detectLeagueFromTeams(home, away) {
+      for (const code in teams) {
+        const list = teams[code] || [];
+        const found = list.some(t => {
+          const tName = t.name.trim();
+          return tName === home || tName === away || home.includes(tName) || away.includes(tName);
+        });
+        if (found) return code;
+      }
+      return null;
+    }
+
+    // دالة استخراج وتوليد المباريات وتوزيعها على الدوريات
     executeSmartImportBtn.onclick = async () => {
       const rawText = smartPasteInput.value.trim();
       if (!rawText) {
@@ -1314,18 +1465,29 @@
       }
 
       executeSmartImportBtn.disabled = true;
-      executeSmartImportBtn.innerHTML = '⏳ جاري استخراج وتحليل المباريات...';
+      executeSmartImportBtn.innerHTML = '⏳ جاري تحليل وتصنيف المباريات...';
 
-      const currentLeague = document.getElementById('leagueSelect').value || 'pl';
+      // التأكد من تحميل فرق جميع الدوريات للمطابقة
+      await Promise.all(leagues.map(l => loadTeams(l.code, false)));
+
       const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
       const timeRegex = /(\b\d{1,2}:\d{2}\b)(?:\s*(ص|م|AM|PM))?/i;
 
+      let currentLeagueCode = document.getElementById('leagueSelect').value || 'pl';
       let extractedList = [];
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        const timeMatch = line.match(timeRegex);
 
+        // 1. هل هذا السطر يمثل عنوان دوري أو بطولة؟
+        const headerLeague = detectLeagueFromHeader(line);
+        if (headerLeague && !line.match(timeRegex)) {
+          currentLeagueCode = headerLeague;
+          continue; // الانتقال للسطر التالي
+        }
+
+        // 2. فحص سطر المباراة
+        const timeMatch = line.match(timeRegex);
         if (timeMatch) {
           let timeStr = timeMatch[1];
           const period = timeMatch[2];
@@ -1343,7 +1505,6 @@
           const before = (parts[0] || '').trim();
           const after = (parts[parts.length - 1] || '').trim();
 
-          // فحص إذا كان الفريقان في نفس السطر
           if (before && after) {
             home = cleanTeamString(before);
             away = cleanTeamString(after);
@@ -1354,7 +1515,6 @@
               away = cleanTeamString(splitT[1]);
             }
           } else {
-            // فحص السطور السابقة والتالية
             const prev = lines[i - 1] || '';
             const next = lines[i + 1] || '';
             if (prev && next && !prev.match(timeRegex) && !next.match(timeRegex)) {
@@ -1380,7 +1540,9 @@
           }
 
           if (home && away && home !== away) {
-            extractedList.push({ home, away, time: timeStr, chan, comm });
+            // كشف ذكي إضافي: التحقق من دوري الفريقين
+            const inferredLeague = detectLeagueFromTeams(home, away) || currentLeagueCode;
+            extractedList.push({ home, away, time: timeStr, chan, comm, league: inferredLeague });
           }
         }
       }
@@ -1389,15 +1551,15 @@
         smartImportFeedback.style.display = 'block';
         smartImportFeedback.innerHTML = `<span style="color:#e74c3c;">⚠️ لم يتم العثور على أوقات ومباريات واضحة في النص. تأكد من تحديد جدول المباريات ونسخه بدقة.</span>`;
         executeSmartImportBtn.disabled = false;
-        executeSmartImportBtn.innerHTML = '⚡ تحويل إلى بطاقات فوراً';
+        executeSmartImportBtn.innerHTML = '⚡ فرز وتوليد البطاقات فوراً';
         return;
       }
 
       // مطابقة الشعارات من ملفات الـ CSV وتحويلها لـ Base64
       let added = 0;
       for (const item of extractedList) {
-        const homeImgRaw = findTeamLogo(item.home, currentLeague);
-        const awayImgRaw = findTeamLogo(item.away, currentLeague);
+        const homeImgRaw = findTeamLogo(item.home, item.league);
+        const awayImgRaw = findTeamLogo(item.away, item.league);
         const chanLogoRaw = channels.find(c => c.name === item.chan)?.logo || '';
 
         const [homeImg, awayImg, chanLogo] = await Promise.all([
@@ -1408,7 +1570,7 @@
 
         const newMatch = {
           id: 'm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-          league: currentLeague,
+          league: item.league,
           home: item.home,
           away: item.away,
           time: item.time,
@@ -1428,9 +1590,9 @@
       render();
 
       smartImportFeedback.style.display = 'block';
-      smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استخراج وإضافة ${added} مباراة بنجاح إلى جدولك!</span>`;
+      smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف ${added} مباراة بنجاح في فئاتها!</span>`;
       executeSmartImportBtn.disabled = false;
-      executeSmartImportBtn.innerHTML = '⚡ تحويل إلى بطاقات فوراً';
+      executeSmartImportBtn.innerHTML = '⚡ فرز وتوليد البطاقات فوراً';
 
       setTimeout(() => {
         closeSmartModal();
@@ -1472,8 +1634,16 @@
           backgroundColor: computedBg
         });
 
+        // تسمية الملف باسم الدوري المصدر
+        const currentFilter = exportLeagueSelect.value;
+        let fileSuffix = 'اليوم';
+        if (currentFilter !== 'all') {
+          const l = leagues.find(item => item.code === currentFilter);
+          fileSuffix = l ? l.name.replace(/\s+/g, '_') : currentFilter;
+        }
+
         const link = document.createElement('a');
-        link.download = `جدول_مباريات_${currentDate.toISOString().slice(0, 10)}.png`;
+        link.download = `جدول_مباريات_${fileSuffix}_${currentDate.toISOString().slice(0, 10)}.png`;
         link.href = dataUrl;
         link.click();
       } catch (error) {
