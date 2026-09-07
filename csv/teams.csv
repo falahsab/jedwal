@@ -2,13 +2,14 @@ code,name,logo
 EPL,الدوري الإنجليزي,img/eng/premier-league.png
 LaLiga,الدوري الإسباني,img/esb/la-liga-2023.png
 Ligue1,الدوري الفرنسي,img/frn/fr.png
-uefa,دوري ابطال اوربا,uefa.png
+uefa,دوري أبطال أوروبا,uefa.png
 Turkish,الدوري التركي,Turkish.png
+AsianCup,كأس آسيا,AsianCup.png
 WCU20,كاس العالم للشباب تحت الـ20,img/world-cup-u20/WCU20.png
 WCEUROPE,تصفيات كأس العالم أوروبا,img/world-cup-europe/WCEUROPE.png
 EFL,كأس رابطة الدوري الإنجليزي,img/efl-cup/efl-cup-v2.png
 EFLF,كأس الرابطة الإنجليزية للمحترفين,img/efl-cup/efl-cup-v20.png
-SPL,الدوري السعودي(روشن),img/saudi-league/saudi-league.png
+SPL,دوري روشن السعودي,img/saudi-league/saudi-league.png
 ACL,دوري ابطال آسيا للنخبة,img/asia-champions-league/AC-league-1.png
 WCU17,كأس العالم للناشئين,img/world-cup-u17/world-cup-u17.png
 UEFAEUROP,الدوري الأوربي,img/uefa-europa-league/uefa-europa-league.png
