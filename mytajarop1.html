@@ -760,7 +760,6 @@
         <div id="exportArea" class="theme-ucl">
           <div class="poster-header">
             <span class="poster-badge" id="posterBadge">⚽ أهم مباريات اليوم</span>
-            <h2 class="poster-title">مواعيد مباريات اليوم</h2>
             <div class="poster-date" id="posterDateDisplay"></div>
           </div>
 
@@ -1656,7 +1655,7 @@
         if (activeLeagues.length === 1) {
           const l = leagues.find(item => item.code === activeLeagues[0]);
           if (l && posterBadge) {
-            posterBadge.textContent = '🏆 مباريات ' + l.name;
+            posterBadge.textContent = '⚽ أهم مباريات اليوم';
           }
           const autoTheme = getLeagueTheme(activeLeagues[0]);
           exportArea.className = autoTheme;
