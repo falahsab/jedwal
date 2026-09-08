@@ -174,7 +174,7 @@
     .btn-success { background: #27ae60; }
 
     /* =========================================================
-       🎨 ثيمات الدوريات العالمية
+       🎨 ثيمات الدوريات الرسمية
        ========================================================= */
     #exportArea {
       position: relative;
@@ -498,6 +498,21 @@
       border-top: 1px dashed rgba(255,255,255,0.07);
     }
 
+    /* وسم عرض القناة كنص أنيق */
+    .channel-text-badge {
+      position: absolute;
+      left: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--time-color, #00e5ff);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+      letter-spacing: 0.3px;
+    }
+
     .action-btns {
       display: flex;
       gap: 6px;
@@ -555,6 +570,11 @@
 
     #exportArea.export-mode .meta img {
       height: 26px !important;
+    }
+
+    #exportArea.export-mode .channel-text-badge {
+      font-size: 12.5px !important;
+      left: 8px !important;
     }
 
     .modal-overlay {
@@ -622,141 +642,148 @@
 <body>
 
   <!-- شاشة البداية -->
-  <div id="splash" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#070607;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.6s ease;">
-    <img src="https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/img/yemen-sat.png" alt="يمن ستلايت" style="width:130px;height:auto;filter:drop-shadow(0 4px 15px rgba(0,0,0,0.8));">
+  <div id=\"splash\" style=\"position:fixed;top:0;left:0;width:100%;height:100%;background:#070607;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.6s ease;\">
+    <img src=\"https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/img/yemen-sat.png\" alt=\"يمن ستلايت\" style=\"width:130px;height:auto;filter:drop-shadow(0 4px 15px rgba(0,0,0,0.8));\">
   </div>
 
-  <header class="site-header">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <img src="img/yemen-sat-white.png" alt="Logo" style="height:32px; object-fit:contain;" onerror="this.src='img/jedwal000.png';">
+  <header class=\"site-header\">
+    <div style=\"display:flex; align-items:center; gap:10px;\">
+      <img src=\"img/yemen-sat-white.png\" alt=\"Logo\" style=\"height:32px; object-fit:contain;\" onerror=\"this.src='img/jedwal000.png';\">
       <span>⚽ صانع جدول المباريات</span>
     </div>
-    <div style="display:flex; align-items:center; gap:8px; font-size:14px;">
-      <span id="siteHeaderDate"></span>
-      <button id="editDateBtn" class="btn btn-secondary" style="padding:4px 8px; font-size:12px;" title="تعديل التاريخ">✏️</button>
-      <input type="date" id="manualDate" style="display:none; width:auto; padding:3px 6px; font-size:12px;">
+    <div style=\"display:flex; align-items:center; gap:8px; font-size:14px;\">
+      <span id=\"siteHeaderDate\"></span>
+      <button id=\"editDateBtn\" class=\"btn btn-secondary\" style=\"padding:4px 8px; font-size:12px;\" title=\"تعديل التاريخ\">✏️</button>
+      <input type=\"date\" id=\"manualDate\" style=\"display:none; width:auto; padding:3px 6px; font-size:12px;\">
     </div>
   </header>
 
-  <div class="container">
-    <div class="grid">
+  <div class=\"container\">
+    <div class=\"grid\">
       <!-- قسم التحكم وإدخال المباريات -->
       <div>
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h3 style="margin:0; font-size:16px;">➕ إضافة مباراة جديدة</h3>
-            <button id="openSmartModalBtn" type="button" class="btn btn-purple" style="font-size:12.5px; padding:6px 12px;">
+        <div class=\"card\">
+          <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;\">
+            <h3 style=\"margin:0; font-size:16px;\">➕ إضافة مباراة جديدة</h3>
+            <button id=\"openSmartModalBtn\" type=\"button\" class=\"btn btn-purple\" style=\"font-size:12.5px; padding:6px 12px;\">
               ⚡ استيراد ذكي متعدد الدوريات
             </button>
           </div>
 
-          <div class="row">
-            <div style="flex:1;">
+          <div class=\"row\">
+            <div style=\"flex:1;\">
               <label>البطولة / الدوري</label>
-              <select id="leagueSelect" style="width:100%;"></select>
+              <select id=\"leagueSelect\" style=\"width:100%;\"></select>
             </div>
           </div>
 
-          <div class="row">
-            <div style="flex:1;">
+          <div class=\"row\">
+            <div style=\"flex:1;\">
               <label>الفريق المضيف</label>
-              <div style="display:flex; gap:6px;">
-                <div class="logo-preview" id="homePreview">🏠</div>
-                <select id="homeTeam" style="flex:1;"></select>
+              <div style=\"display:flex; gap:6px;\">
+                <div class=\"logo-preview\" id=\"homePreview\">🏠</div>
+                <select id=\"homeTeam\" style=\"flex:1;\"></select>
               </div>
             </div>
-            <div style="flex:1;">
+            <div style=\"flex:1;\">
               <label>الفريق الضيف</label>
-              <div style="display:flex; gap:6px;">
-                <div class="logo-preview" id="awayPreview">⚽</div>
-                <select id="awayTeam" style="flex:1;"></select>
+              <div style=\"display:flex; gap:6px;\">
+                <div class=\"logo-preview\" id=\"awayPreview\">⚽</div>
+                <select id=\"awayTeam\" style=\"flex:1;\"></select>
               </div>
             </div>
           </div>
 
-          <div class="row">
-            <div style="flex:1;">
+          <div class=\"row\">
+            <div style=\"flex:1;\">
               <label>وقت المباراة</label>
-              <div style="display:flex; gap:6px;">
-                <input type="time" id="matchTime" required>
-                <button type="button" id="nextDayBtn" class="btn btn-secondary" style="padding:6px 10px; font-size:12px; white-space:nowrap;">
-                  <span>+1 يوم</span> <span id="nextDayState">❌</span>
+              <div style=\"display:flex; gap:6px;\">
+                <input type=\"time\" id=\"matchTime\" required>
+                <button type=\"button\" id=\"nextDayBtn\" class=\"btn btn-secondary\" style=\"padding:6px 10px; font-size:12px; white-space:nowrap;\">
+                  <span>+1 يوم</span> <span id=\"nextDayState\">❌</span>
                 </button>
               </div>
             </div>
-            <div style="flex:1;">
+            <div style=\"flex:1;\">
               <label>المعلق الرياضي</label>
-              <select id="commentator" style="width:100%;"></select>
+              <select id=\"commentator\" style=\"width:100%;\"></select>
             </div>
           </div>
 
-          <div class="row">
-            <div style="flex:1;">
+          <div class=\"row\">
+            <div style=\"flex:1;\">
               <label>القناة الناقلة</label>
-              <select id="channel" style="width:100%;"></select>
+              <select id=\"channel\" style=\"width:100%;\"></select>
             </div>
-            <div style="flex:1;">
+            <div style=\"flex:1;\">
               <label>شعار إضافي للترويسة</label>
-              <div style="display:flex; gap:6px;">
-                <div class="logo-preview" id="extraPreview">🌟</div>
-                <select id="extraLogoSelect" style="flex:1;"></select>
+              <div style=\"display:flex; gap:6px;\">
+                <div class=\"logo-preview\" id=\"extraPreview\">🌟</div>
+                <select id=\"extraLogoSelect\" style=\"flex:1;\"></select>
               </div>
             </div>
           </div>
 
-          <button id="addMatch" class="btn" style="width:100%; margin-top:8px; padding:11px;">➕ إضافة المباراة إلى الجدول</button>
+          <button id=\"addMatch\" class=\"btn\" style=\"width:100%; margin-top:8px; padding:11px;\">➕ إضافة المباراة إلى الجدول</button>
         </div>
 
-        <div class="card" style="margin-top:14px;">
-          <div class="row" style="margin-bottom:8px;">
-            <div style="flex:1;">
+        <div class=\"card\" style=\"margin-top:14px;\">
+          <div class=\"row\" style=\"margin-bottom:8px;\">
+            <div style=\"flex:1.2;\">
               <label>🏆 تحديد دوري للتصدير أو عرض الكل</label>
-              <select id="exportLeagueSelect" style="background:#222; font-weight:700; border-color:#0984e3; color:#74b9ff;"></select>
+              <select id=\"exportLeagueSelect\" style=\"background:#222; font-weight:700; border-color:#0984e3; color:#74b9ff;\"></select>
             </div>
-            <div style="flex:1;">
+            <div style=\"flex:1;\">
               <label>🎨 ثيم وتصميم البوستر</label>
-              <select id="themeSelect">
-                <option value="theme-ucl">دوري أبطال أوروبا (كحلي نيلي)</option>
-                <option value="theme-pl">الدوري الإنجليزي (بنفسجي وأخضر فوسفوري)</option>
-                <option value="theme-laliga">الدوري الإسباني (داكن وأحمر)</option>
-                <option value="theme-serie-a">الدوري الإيطالي (أزرق ملكي)</option>
-                <option value="theme-bundesliga">الدوري الألماني (رمادي وأحمر ناري)</option>
-                <option value="theme-ligue1">الدوري الفرنسي (كحلي وأخضر ليموني)</option>
-                <option value="theme-roshn">دوري روشن السعودي (أخضر وذهبي)</option>
-                <option value="theme-superlig">الدوري التركي (أحمر نبيذي)</option>
-                <option value="theme-asian-cup">كأس آسيا / النخبة (عنابي وذهبي)</option>
-                <option value="theme-afcon">كأس إفريقيا (أخضر وذهبي)</option>
-                <option value="theme-fifa">كأس العالم (أسود وذهبي ملكي)</option>
-                <option value="theme-dark">الوضع الليلي الكلاسيكي</option>
+              <select id=\"themeSelect\">
+                <option value=\"theme-ucl\">دوري أبطال أوروبا (كحلي نيلي)</option>
+                <option value=\"theme-pl\">الدوري الإنجليزي (بنفسجي وأخضر فوسفوري)</option>
+                <option value=\"theme-laliga\">الدوري الإسباني (داكن وأحمر)</option>
+                <option value=\"theme-serie-a\">الدوري الإيطالي (أزرق ملكي)</option>
+                <option value=\"theme-bundesliga\">الدوري الألماني (رمادي وأحمر ناري)</option>
+                <option value=\"theme-ligue1\">الدوري الفرنسي (كحلي وأخضر ليموني)</option>
+                <option value=\"theme-roshn\">دوري روشن السعودي (أخضر وذهبي)</option>
+                <option value=\"theme-superlig\">الدوري التركي (أحمر نبيذي)</option>
+                <option value=\"theme-asian-cup\">كأس آسيا / النخبة (عنابي وذهبي)</option>
+                <option value=\"theme-afcon\">كأس إفريقيا (أخضر وذهبي)</option>
+                <option value=\"theme-fifa\">كأس العالم (أسود وذهبي ملكي)</option>
+                <option value=\"theme-dark\">الوضع الليلي الكلاسيكي</option>
+              </select>
+            </div>
+            <div style=\"flex:1;\">
+              <label>📺 طريقة عرض القناة</label>
+              <select id=\"channelDisplayModeSelect\" style=\"background:#222; font-weight:700; border-color:#27ae60; color:#2ecc71;\">
+                <option value=\"logo\">🖼️ أيقونة (شعار القناة)</option>
+                <option value=\"text\">📝 نص (اسم القناة)</option>
               </select>
             </div>
           </div>
 
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
-            <button id="downloadTable" class="btn btn-success" style="flex:2; font-size:15px; padding:10px;">
+          <div style=\"display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;\">
+            <button id=\"downloadTable\" class=\"btn btn-success\" style=\"flex:2; font-size:15px; padding:10px;\">
               📸 تصوير وحفظ الجدول كصورة (4K)
             </button>
-            <button id="toggleBtns" class="btn btn-secondary" style="flex:1;">👁️ إخفاء/إظهار الأزرار</button>
-            <button id="swapSections" class="btn btn-secondary" title="تبديل ترتيب الأقسام">🔄 ترتيب</button>
-            <button id="deleteAll" class="btn btn-danger" style="flex:1;">🗑️ مسح الكل</button>
+            <button id=\"toggleBtns\" class=\"btn btn-secondary\" style=\"flex:1;\">👁️ إخفاء/إظهار الأزرار</button>
+            <button id=\"swapSections\" class=\"btn btn-secondary\" title=\"تبديل ترتيب الأقسام\">🔄 ترتيب</button>
+            <button id=\"deleteAll\" class=\"btn btn-danger\" style=\"flex:1;\">🗑️ مسح الكل</button>
           </div>
         </div>
       </div>
 
       <!-- البوستر المخصص للتصدير -->
       <div>
-        <div id="exportArea" class="theme-ucl">
-          <div class="poster-header">
-            <span class="poster-badge" id="posterBadge">⚽ أهم مباريات اليوم</span>
-            <h2 class="poster-title">مواعيد مباريات اليوم</h2>
-            <div class="poster-date" id="posterDateDisplay"></div>
+        <div id=\"exportArea\" class=\"theme-ucl\">
+          <div class=\"poster-header\">
+            <span class=\"poster-badge\" id=\"posterBadge\">⚽ أهم مباريات اليوم</span>
+            <h2 class=\"poster-title\">مواعيد مباريات اليوم</h2>
+            <div class=\"poster-date\" id=\"posterDateDisplay\"></div>
           </div>
 
-          <div class="poster-body">
-            <div id="matchesContainer"></div>
+          <div class=\"poster-body\">
+            <div id=\"matchesContainer\"></div>
           </div>
 
-          <div class="poster-footer">
+          <div class=\"poster-footer\">
             برعاية: شبكة يمن ستلايت | jedwal.yemensat.com
           </div>
         </div>
@@ -765,102 +792,101 @@
   </div>
 
   <!-- نافذة تعديل المباراة -->
-  <div class="modal-overlay" id="editModal">
-    <div class="modal-content">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-        <h3 style="margin:0; font-size:16px;">✏️ تعديل بيانات المباراة</h3>
-        <button type="button" id="closeEditModalBtn" style="background:none; border:none; color:#aaa; font-size:18px; cursor:pointer;">✖</button>
+  <div class=\"modal-overlay\" id=\"editModal\">
+    <div class=\"modal-content\">
+      <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;\">
+        <h3 style=\"margin:0; font-size:16px;\">✏️ تعديل بيانات المباراة</h3>
+        <button type=\"button\" id=\"closeEditModalBtn\" style=\"background:none; border:none; color:#aaa; font-size:18px; cursor:pointer;\">✖</button>
       </div>
 
-      <div class="row">
-        <div style="flex:1;">
+      <div class=\"row\">
+        <div style=\"flex:1;\">
           <label>البطولة / الدوري</label>
-          <select id="editLeagueSelect" style="width:100%;"></select>
+          <select id=\"editLeagueSelect\" style=\"width:100%;\"></select>
         </div>
       </div>
 
-      <div class="row">
-        <div style="flex:1;">
+      <div class=\"row\">
+        <div style=\"flex:1;\">
           <label>الفريق المضيف</label>
-          <div style="display:flex; gap:6px;">
-            <div class="logo-preview" id="editHomePreview">🏠</div>
-            <select id="editHomeTeam" style="flex:1;"></select>
+          <div style=\"display:flex; gap:6px;\">
+            <div class=\"logo-preview\" id=\"editHomePreview\">🏠</div>
+            <select id=\"editHomeTeam\" style=\"flex:1;\"></select>
           </div>
         </div>
-        <div style="flex:1;">
+        <div style=\"flex:1;\">
           <label>الفريق الضيف</label>
-          <div style="display:flex; gap:6px;">
-            <div class="logo-preview" id="editAwayPreview">⚽</div>
-            <select id="editAwayTeam" style="flex:1;"></select>
+          <div style=\"display:flex; gap:6px;\">
+            <div class=\"logo-preview\" id=\"editAwayPreview\">⚽</div>
+            <select id=\"editAwayTeam\" style=\"flex:1;\"></select>
           </div>
         </div>
       </div>
 
-      <div class="row">
-        <div style="flex:1;">
+      <div class=\"row\">
+        <div style=\"flex:1;\">
           <label>وقت المباراة</label>
-          <div style="display:flex; gap:6px;">
-            <input type="time" id="editMatchTime" required>
-            <button type="button" id="editNextDayBtn" class="btn btn-secondary" style="padding:6px 10px; font-size:12px; white-space:nowrap;">
-              <span>+1 يوم</span> <span id="editNextDayState">❌</span>
+          <div style=\"display:flex; gap:6px;\">
+            <input type=\"time\" id=\"editMatchTime\" required>
+            <button type=\"button\" id=\"editNextDayBtn\" class=\"btn btn-secondary\" style=\"padding:6px 10px; font-size:12px; white-space:nowrap;\">
+              <span>+1 يوم</span> <span id=\"editNextDayState\">❌</span>
             </button>
           </div>
         </div>
-        <div style="flex:1;">
+        <div style=\"flex:1;\">
           <label>المعلق الرياضي</label>
-          <select id="editCommentator" style="width:100%;"></select>
+          <select id=\"editCommentator\" style=\"width:100%;\"></select>
         </div>
       </div>
 
-      <div class="row">
-        <div style="flex:1;">
+      <div class=\"row\">
+        <div style=\"flex:1;\">
           <label>القناة الناقلة</label>
-          <select id="editChannel" style="width:100%;"></select>
+          <select id=\"editChannel\" style=\"width:100%;\"></select>
         </div>
       </div>
 
-      <div style="margin-top:16px; display:flex; gap:8px;">
-        <button id="saveEditMatchBtn" class="btn btn-success" style="flex:2;">💾 حفظ التعديلات</button>
-        <button id="cancelEditModalBtn" class="btn btn-secondary" style="flex:1;">إلغاء</button>
+      <div style=\"margin-top:16px; display:flex; gap:8px;\">
+        <button id=\"saveEditMatchBtn\" class=\"btn btn-success\" style=\"flex:2;\">💾 حفظ التعديلات</button>
+        <button id=\"cancelEditModalBtn\" class=\"btn btn-secondary\" style=\"flex:1;\">إلغاء</button>
       </div>
     </div>
   </div>
 
   <!-- نافذة الاستيراد الذكي -->
-  <div class="modal-overlay" id="smartModal">
-    <div class="modal-content" style="max-width:550px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h3 style="margin:0; font-size:16px;">⚡ استيراد ذكي متعدد الدوريات والمباريات</h3>
-        <button type="button" id="closeSmartModalBtn" style="background:none; border:none; color:#aaa; font-size:18px; cursor:pointer;">✖</button>
+  <div class=\"modal-overlay\" id=\"smartModal\">
+    <div class=\"modal-content\" style=\"max-width:550px;\">
+      <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;\">
+        <h3 style=\"margin:0; font-size:16px;\">⚡ استيراد ذكي متعدد الدوريات والمباريات</h3>
+        <button type=\"button\" id=\"closeSmartModalBtn\" style=\"background:none; border:none; color:#aaa; font-size:18px; cursor:pointer;\">✖</button>
       </div>
       
-      <p style="font-size:12.5px; color:#aaa; margin-top:0; margin-bottom:10px; line-height:1.5;">
+      <p style=\"font-size:12.5px; color:#aaa; margin-top:0; margin-bottom:10px; line-height:1.5;\">
         قم بنسخ جدول المباريات من أي موقع رياضي وسيتعرف النظام الذكي تلقائياً على كل دوري، فرقه، توقيته، معلقيه وقنواته دفعة واحدة!
       </p>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:12px; color:#74b9ff; font-weight:bold;">📋 محتوى الجدول المنسوخ:</span>
-        <div style="display:flex; gap:6px;">
-          <button id="pasteClipboardBtn" type="button" class="btn btn-purple" style="font-size:12px; padding:6px 12px; border-radius:6px;">
+      <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;\">
+        <span style=\"font-size:12px; color:#74b9ff; font-weight:bold;\">📋 محتوى الجدول المنسوخ:</span>
+        <div style=\"display:flex; gap:6px;\">
+          <button id=\"pasteClipboardBtn\" type=\"button\" class=\"btn btn-purple\" style=\"font-size:12px; padding:6px 12px; border-radius:6px;\">
             📋 لصق من الحافظة
           </button>
-          <button id="clearPasteBtn" type="button" class="btn btn-secondary" style="font-size:12px; padding:6px 10px; border-radius:6px;" title="تفريغ الحقل">
+          <button id=\"clearPasteBtn\" type=\"button\" class=\"btn btn-secondary\" style=\"font-size:12px; padding:6px 10px; border-radius:6px;\" title=\"تفريغ الحقل\">
             🗑️
           </button>
         </div>
       </div>
 
-      <textarea id="smartPasteInput" rows="7" placeholder="اضغط على زر (📋 لصق من الحافظة) أعلاه أو الصق النص هنا مباشرة..."></textarea>
+      <textarea id=\"smartPasteInput\" rows=\"7\" placeholder=\"اضغط على زر (📋 لصق من الحافظة) أعلاه أو الصق النص هنا مباشرة...\"></textarea>
 
-      <div style="margin-top:12px; display:flex; gap:10px;">
-        <button id="executeSmartImportBtn" type="button" class="btn" style="flex:2; background: linear-gradient(135deg, #0984e3, #00cec9); font-size:15px; padding:11px;">
+      <div style=\"margin-top:12px; display:flex; gap:10px;\">\n        <button id=\"executeSmartImportBtn\" type=\"button\" class=\"btn\" style=\"flex:2; background: linear-gradient(135deg, #0984e3, #00cec9); font-size:15px; padding:11px;\">
           ⚡ فرز وتوليد البطاقات فوراً
         </button>
-        <button id="cancelSmartModalBtn" type="button" class="btn btn-secondary" style="flex:1;">
+        <button id=\"cancelSmartModalBtn\" type=\"button\" class=\"btn btn-secondary\" style=\"flex:1;\">
           إلغاء
         </button>
       </div>
-      <div id="smartImportFeedback" style="font-size:12.5px; text-align:center; margin-top:10px; display:none;"></div>
+      <div id=\"smartImportFeedback\" style=\"font-size:12.5px; text-align:center; margin-top:10px; display:none;\"></div>
     </div>
   </div>
 
@@ -912,6 +938,19 @@
       exportArea.className = theme;
       localStorage.setItem('selectedTheme', theme);
     });
+
+    // === خيار طريقة عرض القناة (أيقونة / نص) ===
+    const channelDisplayModeSelect = document.getElementById('channelDisplayModeSelect');
+    let channelDisplayMode = localStorage.getItem('channelDisplayMode') || 'logo';
+
+    if (channelDisplayModeSelect) {
+      channelDisplayModeSelect.value = channelDisplayMode;
+      channelDisplayModeSelect.addEventListener('change', (e) => {
+        channelDisplayMode = e.target.value;
+        localStorage.setItem('channelDisplayMode', channelDisplayMode);
+        render();
+      });
+    }
 
     function getLeagueTheme(leagueCode) {
       if (!leagueCode || leagueCode === 'all') {
@@ -1692,11 +1731,17 @@
 
           let bottomHTML = '';
           if (m.comm || m.chanLogo || m.chan) {
+            let channelMarkup = '';
+            // التحقق من خيار عرض القناة: شعار أم نص
+            if (channelDisplayMode === 'text' || !m.chanLogo) {
+              channelMarkup = m.chan ? `<span class="channel-text-badge">📺 ${m.chan}</span>` : '';
+            } else {
+              channelMarkup = `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:24px; max-width:70px; object-fit:contain;" alt="${m.chan || ''}">`;
+            }
+
             bottomHTML = `
               <div class="meta">
-                ${m.chanLogo 
-                  ? `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:24px; max-width:70px; object-fit:contain;" alt="${m.chan || ''}">` 
-                  : (m.chan ? `<span style="position:absolute; left:6px; font-size:11.5px; font-weight:700; color:#00e5ff;">📺 ${m.chan}</span>` : '')}
+                ${channelMarkup}
                 ${m.comm ? `<div style="flex:1; text-align:center; font-size:12.5px; font-weight:600; color:#ddd;">🎙️ ${m.comm}</div>` : ''}
               </div>
             `;
@@ -1847,7 +1892,7 @@
       // العداد التنازلي بكافة أشكاله
       if (/^متبقي(\s+على\s+المباراة)?/i.test(s)) return true;
       if (/^(تنازلي|باقي)/i.test(s)) return true;
-      if (/^\d+$/.test(s)) return true; // أرقام العداد مثل "38", "21"
+      if (/^\d+$/.test(s)) return true;
       if (/^(دقيقة|دقائق|ثانية|ثواني|ساعة|ساعات|يوم|أيام)$/i.test(s)) return true;
       if (/^\d+\s*(دقيقة|دقائق|ثانية|ثواني|ساعة|ساعات|يوم|أيام)$/i.test(s)) return true;
 
@@ -2014,12 +2059,10 @@
               }
             }
 
-            // تخطي التواقيت المكررة أو الأسطر غير المكتملة
             if (!home || !away || home === away) {
               continue;
             }
 
-            // الآن نبحث للأمام عن القناة والمعلق التابعين لهذه المباراة
             let chan = "";
             let comm = "";
             let chanObj = null;
@@ -2029,10 +2072,8 @@
               const fLine = lines[k];
               if (!fLine) continue;
 
-              // التوقف إذا وصلنا لدوري جديد
               if (detectLeagueFromHeader(fLine)) break;
 
-              // التوقف إذا بدأت مباراة جديدة تالية
               const nextTime = fLine.match(timeRegex);
               if (nextTime) {
                 const prevF = lines[k - 1];
@@ -2042,13 +2083,11 @@
                 }
               }
 
-              // كشف القناة
               if (!chan && isChannelLine(fLine)) {
                 const rawChan = fLine.replace(/^(القناة|القناه)\s*[:：]\s*/i, '').trim();
                 chanObj = findChannelObject(rawChan);
                 chan = chanObj ? chanObj.name : rawChan;
 
-                // السطر الذي يلي القناة مباشرة في jdwel.com هو دائماً المعلق
                 const nextAfterChan = lines[k + 1];
                 if (!comm && nextAfterChan && !nextAfterChan.match(timeRegex) && !isNoiseLine(nextAfterChan) && !isChannelLine(nextAfterChan)) {
                   comm = findCommentatorName(nextAfterChan);
@@ -2057,7 +2096,6 @@
                 continue;
               }
 
-              // كشف المعلق
               if (!comm && isCommentatorLine(fLine)) {
                 comm = findCommentatorName(fLine);
                 continue;
@@ -2180,12 +2218,12 @@
         let fileSuffix = 'اليوم';
         if (currentFilter !== 'all') {
           const l = leagues.find(item => item.code === currentFilter);
-          fileSuffix = l ? l.name.replace(/\s+/g, '_') : currentFilter;
+          fileSuffix = l ? l.name.replace(/\\s+/g, '_') : currentFilter;
         } else {
           const activeLeagues = [...new Set(matches.map(m => m.league))];
           if (activeLeagues.length === 1) {
             const l = leagues.find(item => item.code === activeLeagues[0]);
-            if (l) fileSuffix = l.name.replace(/\s+/g, '_');
+            if (l) fileSuffix = l.name.replace(/\\s+/g, '_');
           }
         }
 
