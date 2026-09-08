@@ -807,7 +807,6 @@
             
             <!-- ✨ الهيدر الجمالي داخل الصورة الملتقطة ✨ -->
             <div class="poster-header">
-              <!-- الشارة العلوية ثابتة دائماً لمنع أي تكرار مع شريط الدوري بالأسفل -->
               <span class="poster-badge" id="posterBadge">⚽ أهم مباريات اليوم</span>
               <div class="poster-date" id="posterDateDisplay"></div>
             </div>
@@ -927,8 +926,8 @@
       </div>
       
       <p style="font-size:13px; color:#bbb; margin-top:0; line-height:1.5;">
-        1. افتح صفحة <a href="https://jdwel.com/today/" target="_blank" style="color:#74b9ff; font-weight:bold;">jdwel.com/today</a> وانسخ مباريات كل الدوريات معاً (<kbd>Ctrl+C</kbd>).<br>
-        2. الصق النص وسيقوم النظام بفرز كل مباراة في دوريها تلقائياً:
+        1. انسخ جدول المباريات من <a href="https://jdwel.com/today/" target="_blank" style="color:#74b9ff; font-weight:bold;">jdwel.com</a> بجميع تفاصيلها.<br>
+        2. الصق النص أدناه وسيتولى المحرك الذكي استخراج الفرق، التوقيت، القناة، المعلق، والدوري وتصفية كافة الكلمات الزائدة تلقائياً:
       </p>
 
       <!-- شريط أدوات الحافظة الأنيق -->
@@ -1172,7 +1171,6 @@
       });
     }
 
-    // تحويل الصور إلى Base64 مع مهلة زمنية قصوى (Timeout) لضمان عدم التعليق أبداً
     function toBase64(url, timeoutMs = 2500) {
       return new Promise((resolve) => {
         if (!url || url.startsWith('data:')) {
@@ -1548,7 +1546,6 @@
     const pasteClipboardBtn = document.getElementById('pasteClipboardBtn');
     const clearPasteBtn = document.getElementById('clearPasteBtn');
 
-    // دالة حاسمة لإعادة زر الفرز لوضعه الطبيعي ومنع أي تعليق
     function resetSmartImportButton() {
       executeSmartImportBtn.disabled = false;
       executeSmartImportBtn.innerHTML = '⚡ فرز وتوليد البطاقات فوراً';
@@ -1649,13 +1646,11 @@
 
     // =========================================================
     // 🎯 فلترة التصدير والتحويل التلقائي لثيم الدوري المختار
-    // (تم ضبطها بحيث تمنع أي تكرار لاسم الدوري مع القسم بالأسفل)
     // =========================================================
     function applyLeagueFilter() {
       const filter = exportLeagueSelect.value;
       const sections = exportArea.querySelectorAll('.matches-section');
 
-      // 👈 الشارة العلوية تبقى دائماً عبارة الهيدر الاحترافية الثابتة منعاً للتكرار
       if (posterBadge) {
         posterBadge.textContent = '⚽ أهم مباريات اليوم';
       }
@@ -1672,7 +1667,6 @@
           exportArea.className = themeSelect.value;
         }
       } else {
-        // إظهار مباريات الدوري المختار فقط
         sections.forEach(s => {
           if (s.dataset.league === filter) {
             s.style.display = 'block';
@@ -1681,7 +1675,6 @@
           }
         });
 
-        // تفعيل ثيم الدوري المختار تلقائياً
         const targetTheme = getLeagueTheme(filter);
         exportArea.className = targetTheme;
         themeSelect.value = targetTheme;
@@ -1801,14 +1794,107 @@
     }
 
     // =========================================================
-    // 📋 كلمات مفتاحية وكشف الدوريات الذكي المحدث
+    // 🧠 المحرك الذكي المتقدم لتنقية وفلترة سطور jdwel.com
     // =========================================================
     function cleanHeaderLine(line) {
       return line
-        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1 ')
         .replace(/https?:\/\/\S+/gi, '')
-        .replace(/[\[\]()#*_]/g, ' ')
+        .replace(/[\[\]()#*_|]/g, ' ')
+        .replace(/\s+/g, ' ')
         .trim();
+    }
+
+    // فحص واستبعاد الأسطر الزائدة غير المفيدة
+    function isNoiseLine(line) {
+      if (!line) return true;
+      const clean = line.trim();
+
+      if (/^https?:\/\//i.test(clean)) return true;
+
+      // كلمات التنقل في المواقع الرياضية
+      if (/^(?:الترتيب|الهدافين|المباريات|جدول الترتيب|قائمة الهدافين|نتائج المباريات|مواعيد المباريات|تفاصيل المباراة)$/i.test(clean)) return true;
+
+      // العداد التنازلي وحالة المباراة
+      if (/^(?:متبقي على المباراة|متبقي|انتهت|جارية الآن|مباشر|شوط أول|شوط ثاني|استراحة|لم تبدأ|تأجلت|ملغاة)$/i.test(clean)) return true;
+      if (/^\d+\s*(?:دقيقة|دقائق|ثانية|ثواني|ساعة|ساعات|يوم|أيام)$/i.test(clean)) return true;
+
+      // تفاصيل الملعب، الجولة، الحكم، والمرحلة
+      if (/^(?:الملعب|الجولة|المرحلة|الحكم|المجموعة|ذهاب|إياب)\s*[:：]/i.test(clean)) return true;
+
+      return false;
+    }
+
+    // التعرف التلقائي على شبكات وأسماء القنوات الرياضية
+    function detectChannel(str) {
+      if (!str) return null;
+      const s = str.trim();
+
+      // 1. فحص القنوات المحملة من channels.csv
+      for (const c of channels) {
+        if (!c.name) continue;
+        const normC = normalizeArabic(c.name);
+        const normS = normalizeArabic(s);
+        if (normS === normC || normS.includes(normC) || normC.includes(normS)) {
+          return c.name;
+        }
+      }
+
+      // 2. أنماط القنوات الرياضية العالمية والعربية الشائعة
+      const channelPatterns = [
+        /\bbeIN\s*SPORTS?\s*(?:AFC|XTRA|\d+)?(?:\s*(?:HD|PREMIUM|EN|FR))?\b/i,
+        /\bSSC\s*(?:EXTRA)?\s*\d*(?:\s*HD)?\b/i,
+        /\b(?:الكأس|الكاس|قناة الكأس)\s*\d*(?:\s*HD)?\b/i,
+        /\b(?:أبوظبي|ابوظبي)\s*الرياضية\s*\d*(?:\s*HD)?\b/i,
+        /\b(?:دبي|الشارقة|عمان|الكويت|البحرين|العراقية)\s*الرياضية\s*\d*\b/i,
+        /\b(?:أون تايم سبورت|ON Time Sports)\s*\d*\b/i,
+        /\b(?:الرياضية المغربية|الجزائرية السادسة|الشبابية|تطبيق شاهد|TOD|Starzplay)\b/i
+      ];
+
+      for (const pat of channelPatterns) {
+        const m = s.match(pat);
+        if (m) return m[0].trim();
+      }
+
+      return null;
+    }
+
+    // التعرف التلقائي على المعلقين
+    function detectCommentator(str) {
+      if (!str) return null;
+      let s = str.trim();
+
+      if (/^(?:المعلق|تعليق|بصوت المعلق)\s*[:：]/i.test(s)) {
+        s = s.replace(/^(?:المعلق|تعليق|بصوت المعلق)\s*[:：]\s*/i, '').trim();
+      }
+
+      // مطابقة المعلقين من ملف commentators.csv
+      for (const c of commentators) {
+        if (!c.name) continue;
+        const normC = normalizeArabic(c.name);
+        const normS = normalizeArabic(s);
+        if (normS === normC || normS.includes(normC)) {
+          return c.name;
+        }
+      }
+
+      // فحص اسم شخصي (اسم ثنائي أو ثلاثي عربي خالٍ من الأرقام والكلمات المحظورة)
+      if (
+        !/\d/.test(s) &&
+        !isNoiseLine(s) &&
+        !detectChannel(s) &&
+        !detectLeagueFromHeader(s)
+      ) {
+        const words = s.split(/\s+/);
+        if (words.length >= 2 && words.length <= 4) {
+          const invalidWords = ['الملعب', 'الجولة', 'المرحلة', 'المجموعة', 'الحكم', 'دقيقة', 'ثانية', 'ساعة', 'مباراة', 'دوري', 'كأس'];
+          if (!invalidWords.some(w => s.includes(w))) {
+            return s;
+          }
+        }
+      }
+
+      return null;
     }
 
     const leagueKeywords = [
@@ -1829,9 +1915,6 @@
     function detectLeagueFromHeader(rawLine) {
       const cleanLine = cleanHeaderLine(rawLine);
       if (!cleanLine) return null;
-
-      const navWords = ['الترتيب', 'الهدافين', 'المباريات', 'جدول الترتيب', 'قائمة الهدافين'];
-      if (navWords.some(w => cleanLine === w)) return null;
 
       const normLine = normalizeArabic(cleanLine);
 
@@ -1897,7 +1980,40 @@
       return bestCode;
     }
 
-    // معالجة الفرز الذكي المحمية بالكامل من التعليق
+    // تنظيف أسماء الفرق من الرموز والكلمات الشائعة
+    function cleanTeamString(str) {
+      return str
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/https?:\/\/\S+/gi, '')
+        .replace(/[-–—|•:0-9]|نادي\s+|فريق\s+|مباشر|جارية|انتهت/gi, '')
+        .replace(/[\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF\uDC00-\uDFFF]/g, '') // حذف الإيموجي
+        .trim();
+    }
+
+    function findTeamLogo(teamName, leagueCode) {
+      if (!teamName) return 'img/jedwal000.png';
+      const normInput = normalizeArabic(teamName);
+
+      if (teams[leagueCode]) {
+        const match = teams[leagueCode].find(t => {
+          const normT = normalizeArabic(t.name);
+          return normT === normInput || normInput.includes(normT) || normT.includes(normInput);
+        });
+        if (match && match.img) return match.img;
+      }
+      for (const l in teams) {
+        const match = teams[l].find(t => {
+          const normT = normalizeArabic(t.name);
+          return normT === normInput || normInput.includes(normT) || normT.includes(normInput);
+        });
+        if (match && match.img) return match.img;
+      }
+      return 'img/jedwal000.png';
+    }
+
+    // =========================================================
+    // ⚡ معالجة الفرز والاستيراد الذكي المحدثة بالكامل
+    // =========================================================
     executeSmartImportBtn.onclick = async () => {
       const rawText = smartPasteInput.value.trim();
       if (!rawText) {
@@ -1906,93 +2022,138 @@
       }
 
       executeSmartImportBtn.disabled = true;
-      executeSmartImportBtn.innerHTML = '⏳ جاري تحليل وتصنيف المباريات...';
+      executeSmartImportBtn.innerHTML = '⏳ جاري استخراج وتصنيف المباريات...';
       smartImportFeedback.style.display = 'none';
 
       try {
         await Promise.all(leagues.map(l => loadTeams(l.code, false)));
 
-        const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+        const rawLines = rawText
+          .replace(/\u00A0/g, ' ')
+          .split('\n')
+          .map(l => l.trim())
+          .filter(Boolean);
+
         const timeRegex = /(\b\d{1,2}:\d{2}\b)(?:\s*(ص|م|AM|PM))?/i;
 
         let currentLeagueCode = document.getElementById('leagueSelect').value || (leagues[0] ? leagues[0].code : 'pl');
-        let hasExplicitLeagueHeader = false;
+        let currentLeagueExplicit = false;
         let extractedList = [];
 
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
+        let i = 0;
+        while (i < rawLines.length) {
+          const line = rawLines[i];
 
+          // 1. التحقق من ترويسة الدوري
           const headerLeague = detectLeagueFromHeader(line);
           if (headerLeague && !line.match(timeRegex)) {
             currentLeagueCode = headerLeague;
-            hasExplicitLeagueHeader = true;
+            currentLeagueExplicit = true;
+            i++;
             continue;
           }
 
-          const timeMatch = line.match(timeRegex);
-          if (timeMatch) {
-            let timeStr = timeMatch[1];
-            const period = timeMatch[2];
+          // 2. تخطي السطور غير المفيدة (عداد، ملعب، جولة، إلخ)
+          if (isNoiseLine(line)) {
+            i++;
+            continue;
+          }
 
-            if (period) {
-              let [h, m] = timeStr.split(':').map(Number);
-              if ((period === 'م' || period.toUpperCase() === 'PM') && h < 12) h += 12;
-              if ((period === 'ص' || period.toUpperCase() === 'AM') && h === 12) h = 0;
-              timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-            }
-
-            let home = "", away = "";
-            const parts = line.split(timeRegex);
-            const before = (parts[0] || '').trim();
-            const after = (parts[parts.length - 1] || '').trim();
-
-            if (before && after) {
-              home = cleanTeamString(before);
-              away = cleanTeamString(after);
-            } else if (before && (before.includes('-') || before.includes('ضد') || before.includes('vs'))) {
-              const splitT = before.split(/[-–—]|ضد|\bvs\b/i);
-              if (splitT.length >= 2) {
-                home = cleanTeamString(splitT[0]);
-                away = cleanTeamString(splitT[1]);
-              }
-            } else {
-              const prev = lines[i - 1] || '';
-              const next = lines[i + 1] || '';
-              if (prev && next && !prev.match(timeRegex) && !next.match(timeRegex)) {
-                home = cleanTeamString(prev);
-                away = cleanTeamString(next);
-              }
-            }
-
-            let chan = channels[0]?.name || "beIN Sports 1";
-            let comm = "سيحدد لاحقاً";
-
-            for (let j = 1; j <= 3; j++) {
-              const checkLine = lines[i + j];
-              if (!checkLine || checkLine.match(timeRegex)) break;
-
-              const foundChan = channels.find(c => checkLine.includes(c.name) || (c.name.includes('beIN') && checkLine.includes('beIN')) || (c.name.includes('SSC') && checkLine.includes('SSC')));
-              if (foundChan) {
-                chan = foundChan.name;
-              } else if (checkLine.includes('المعلق') || checkLine.includes('تعليق')) {
-                comm = checkLine.replace(/المعلق\s*:\s*|تعليق\s*:\s*/g, '').trim();
-              }
-            }
+          // 3. فحص هيكل بطاقة المباراة: [فريق مضيف] -> [وقت] -> [فريق ضيف]
+          if (
+            i + 2 < rawLines.length &&
+            rawLines[i + 1].match(timeRegex) &&
+            !isNoiseLine(rawLines[i]) &&
+            !isNoiseLine(rawLines[i + 2])
+          ) {
+            const home = cleanTeamString(rawLines[i]);
+            const timeMatch = rawLines[i + 1].match(timeRegex);
+            const away = cleanTeamString(rawLines[i + 2]);
 
             if (home && away && home !== away) {
+              let timeStr = timeMatch[1];
+              const period = timeMatch[2];
+
+              if (period) {
+                let [h, m] = timeStr.split(':').map(Number);
+                if ((period === 'م' || period.toUpperCase() === 'PM') && h < 12) h += 12;
+                if ((period === 'ص' || period.toUpperCase() === 'AM') && h === 12) h = 0;
+                timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+              }
+
+              // مسح السطور التالية لاستخراج القناة والمعلق مع استبعاد الملعب والتوقيت المكرر
+              let channel = "";
+              let commentator = "";
+              i += 3; // تخطينا الفريق 1، الوقت، الفريق 2
+
+              while (i < rawLines.length) {
+                const subLine = rawLines[i];
+
+                // إذا وصلنا إلى دوري جديد أو بداية مباراة تالية نتوقف
+                if (detectLeagueFromHeader(subLine) && !subLine.match(timeRegex)) {
+                  break;
+                }
+                if (
+                  i + 1 < rawLines.length &&
+                  rawLines[i + 1].match(timeRegex) &&
+                  !isNoiseLine(subLine)
+                ) {
+                  break;
+                }
+
+                // استخراج القناة
+                if (!channel) {
+                  const foundChan = detectChannel(subLine);
+                  if (foundChan) {
+                    channel = foundChan;
+                    i++;
+                    continue;
+                  }
+                }
+
+                // استخراج المعلق
+                if (!commentator) {
+                  const foundComm = detectCommentator(subLine);
+                  if (foundComm) {
+                    commentator = foundComm;
+                    i++;
+                    continue;
+                  }
+                }
+
+                i++;
+
+                // إذا حصلنا على القناة والمعلق ننتقل للمباراة التالية
+                if (channel && commentator) {
+                  break;
+                }
+              }
+
               let finalLeague = currentLeagueCode;
-              if (!hasExplicitLeagueHeader) {
+              if (!currentLeagueExplicit) {
                 const inferred = detectLeagueFromTeams(home, away);
                 if (inferred) finalLeague = inferred;
               }
-              extractedList.push({ home, away, time: timeStr, chan, comm, league: finalLeague });
+
+              extractedList.push({
+                home,
+                away,
+                time: timeStr,
+                chan: channel || channels[0]?.name || "beIN Sports 1",
+                comm: commentator || "سيحدد لاحقاً",
+                league: finalLeague
+              });
+
+              continue;
             }
           }
+
+          i++;
         }
 
         if (extractedList.length === 0) {
           smartImportFeedback.style.display = 'block';
-          smartImportFeedback.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">⚠️ لم يتم العثور على أوقات ومباريات واضحة في النص. تأكد من تحديد جدول المباريات ونسخه بدقة.</span>`;
+          smartImportFeedback.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">⚠️ لم يتم العثور على مباريات مطابقة في النص. تأكد من نسخ جدول المباريات من صفحة اليوم.</span>`;
           resetSmartImportButton();
           return;
         }
@@ -2031,7 +2192,7 @@
         render();
 
         smartImportFeedback.style.display = 'block';
-        smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف ${added} مباراة بنجاح في فئاتها الصحيحة!</span>`;
+        smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف (${added}) مباراة بنجاح بدقة كاملة!</span>`;
         resetSmartImportButton();
 
         setTimeout(() => {
@@ -2045,34 +2206,6 @@
         resetSmartImportButton();
       }
     };
-
-    function cleanTeamString(str) {
-      return str
-        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-        .replace(/[-–—|•:0-9]|نادي\s+|فريق\s+|مباشر|جارية|انتهت/gi, '')
-        .trim();
-    }
-
-    function findTeamLogo(teamName, leagueCode) {
-      if (!teamName) return 'img/jedwal000.png';
-      const normInput = normalizeArabic(teamName);
-
-      if (teams[leagueCode]) {
-        const match = teams[leagueCode].find(t => {
-          const normT = normalizeArabic(t.name);
-          return normT === normInput || normInput.includes(normT) || normT.includes(normInput);
-        });
-        if (match && match.img) return match.img;
-      }
-      for (const l in teams) {
-        const match = teams[l].find(t => {
-          const normT = normalizeArabic(t.name);
-          return normT === normInput || normInput.includes(normT) || normT.includes(normInput);
-        });
-        if (match && match.img) return match.img;
-      }
-      return 'img/jedwal000.png';
-    }
 
     // === تحميل الجدول كصورة Full HD ===
     document.getElementById('downloadTable').addEventListener('click', async () => {
