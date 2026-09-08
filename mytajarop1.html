@@ -557,7 +557,6 @@
       height: 26px !important;
     }
 
-    /* شاشات منبثقة */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -590,7 +589,6 @@
       border: 1px dashed #333;
     }
 
-    /* تخصيص Select2 للوضع الداكن */
     .select2-container--default .select2-selection--single {
       background-color: #282828 !important;
       border: 1px solid #3d3d3d !important;
@@ -623,12 +621,11 @@
 </head>
 <body>
 
-  <!-- شاشة البداية (Splash Screen) -->
+  <!-- شاشة البداية -->
   <div id="splash" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#070607;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.6s ease;">
     <img src="https://raw.githubusercontent.com/falahsab/jedwal/refs/heads/main/img/yemen-sat.png" alt="يمن ستلايت" style="width:130px;height:auto;filter:drop-shadow(0 4px 15px rgba(0,0,0,0.8));">
   </div>
 
-  <!-- ترويسة الموقع -->
   <header class="site-header">
     <div style="display:flex; align-items:center; gap:10px;">
       <img src="img/yemen-sat-white.png" alt="Logo" style="height:32px; object-fit:contain;" onerror="this.src='img/jedwal000.png';">
@@ -682,7 +679,7 @@
               <label>وقت المباراة</label>
               <div style="display:flex; gap:6px;">
                 <input type="time" id="matchTime" required>
-                <button type="button" id="nextDayBtn" class="btn btn-secondary" style="padding:6px 10px; font-size:12px; white-space:nowrap;" title="تحديد إذا كانت المباراة فجر اليوم التالي">
+                <button type="button" id="nextDayBtn" class="btn btn-secondary" style="padding:6px 10px; font-size:12px; white-space:nowrap;">
                   <span>+1 يوم</span> <span id="nextDayState">❌</span>
                 </button>
               </div>
@@ -710,7 +707,6 @@
           <button id="addMatch" class="btn" style="width:100%; margin-top:8px; padding:11px;">➕ إضافة المباراة إلى الجدول</button>
         </div>
 
-        <!-- أزرار الإجراءات والتخصيص -->
         <div class="card" style="margin-top:14px;">
           <div class="row" style="margin-bottom:8px;">
             <div style="flex:1;">
@@ -747,22 +743,19 @@
         </div>
       </div>
 
-      <!-- البوستر المخصص للتصدير (Export Area) -->
+      <!-- البوستر المخصص للتصدير -->
       <div>
         <div id="exportArea" class="theme-ucl">
-          <!-- هيدر البوستر -->
           <div class="poster-header">
             <span class="poster-badge" id="posterBadge">⚽ أهم مباريات اليوم</span>
             <h2 class="poster-title">مواعيد مباريات اليوم</h2>
             <div class="poster-date" id="posterDateDisplay"></div>
           </div>
 
-          <!-- حاوية مباريات البوستر -->
           <div class="poster-body">
             <div id="matchesContainer"></div>
           </div>
 
-          <!-- فوتر البوستر -->
           <div class="poster-footer">
             برعاية: شبكة يمن ستلايت | jedwal.yemensat.com
           </div>
@@ -771,7 +764,7 @@
     </div>
   </div>
 
-  <!-- نافذة منبثقة لتعديل المباراة -->
+  <!-- نافذة تعديل المباراة -->
   <div class="modal-overlay" id="editModal">
     <div class="modal-content">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
@@ -833,7 +826,7 @@
     </div>
   </div>
 
-  <!-- نافذة الاستيراد الذكي المتعدد -->
+  <!-- نافذة الاستيراد الذكي -->
   <div class="modal-overlay" id="smartModal">
     <div class="modal-content" style="max-width:550px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -842,7 +835,7 @@
       </div>
       
       <p style="font-size:12.5px; color:#aaa; margin-top:0; margin-bottom:10px; line-height:1.5;">
-        قم بنسخ جدول المباريات من أي موقع رياضي (مثل <b>jdwel.com</b>) وسيتعرف النظام الذكي تلقائياً على كل دوري، فرقه، توقيته، معلقيه وقنواته دون أي عناء!
+        قم بنسخ جدول المباريات من أي موقع رياضي وسيتعرف النظام الذكي تلقائياً على كل دوري، فرقه، توقيته، معلقيه وقنواته دفعة واحدة!
       </p>
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -920,7 +913,6 @@
       localStorage.setItem('selectedTheme', theme);
     });
 
-    // المحرك الذكي لاستخراج الثيم الرسمي لأي دوري
     function getLeagueTheme(leagueCode) {
       if (!leagueCode || leagueCode === 'all') {
         return themeSelect.value || 'theme-ucl';
@@ -1002,7 +994,6 @@
       });
     }
 
-    // تحويل الصور إلى Base64 مع مهلة زمنية قصوى لضمان عدم التعليق
     function toBase64(url, timeoutMs = 2500) {
       return new Promise((resolve) => {
         if (!url || url.startsWith('data:')) {
@@ -1124,14 +1115,14 @@
     }
 
     // =========================================================
-    // 📺 المحرك الذكي لكشف القنوات الرياضية وشعاراتها (Smart Channel Finder)
+    // 📺 المحرك الذكي لكشف القنوات الرياضية وشعاراتها
     // =========================================================
     function findChannelObject(inputChanName) {
       if (!inputChanName || !channels || channels.length === 0) return null;
       const raw = inputChanName.trim();
       const lower = raw.toLowerCase();
 
-      // 1. تطابق مباشر دقيق (بدون حساسية للأحرف الكبيرة/الصغيرة)
+      // 1. تطابق مباشر دقيق
       let found = channels.find(c => c.name && c.name.trim().toLowerCase() === lower);
       if (found) return found;
 
@@ -1144,7 +1135,7 @@
       });
       if (found) return found;
 
-      // 3. مطابقة رقم القناة وهوية الشبكة (مثلاً beIN SPORTS 4 تطابق beIN Sports 4 HD)
+      // 3. مطابقة رقم القناة وشبكتها (beIN SPORTS 4 تطابق beIN Sports 4 HD)
       const numMatch = raw.match(/\b(\d+)\b/);
       const num = numMatch ? numMatch[1] : null;
 
@@ -1197,7 +1188,7 @@
         const found = commentators.find(c => {
           if (!c.name) return false;
           const normC = normalizeArabic(c.name);
-          return normC === normInput || normInput.includes(normC) || normC.includes(normInput);
+          return normC === normInput || (normC.length >= 5 && normInput.includes(normC));
         });
         if (found && found.name) return found.name;
       }
@@ -1225,7 +1216,6 @@
         loadCSV(extraLogosCSV)
       ]);
 
-      // توحيد مسميات الأعمدة للحماية من أي أخطاء هيدر في CSV
       leagues = leaguesData.map(l => ({
         code: l.code || l.Code || '',
         name: l.name || l.league || l.League || '',
@@ -1364,7 +1354,7 @@
     };
 
     // =========================================================
-    // ✏️ إدارة نافذة التعديل المنبثقة الذكية (Edit Modal)
+    // ✏️ إدارة نافذة التعديل المنبثقة الذكية
     // =========================================================
     const editModal = document.getElementById('editModal');
     const closeEditModalBtn = document.getElementById('closeEditModalBtn');
@@ -1389,7 +1379,6 @@
       $('#editHomeTeam').val(match.home).trigger('change');
       $('#editAwayTeam').val(match.away).trigger('change');
 
-      // ضمان وجود المعلق في القائمة المنسدلة
       if (match.comm && match.comm !== 'سيحدد لاحقاً') {
         if (!$('#editCommentator option[value="' + match.comm + '"]').length) {
           $('#editCommentator').append(new Option(match.comm, match.comm, true, true));
@@ -1397,7 +1386,6 @@
       }
       $('#editCommentator').val(match.comm).trigger('change');
 
-      // ضمان تحديد القناة بدقة
       if (match.chan) {
         let chanVal = match.chan;
         const resolved = findChannelObject(match.chan);
@@ -1490,7 +1478,7 @@
     };
 
     // =========================================================
-    // 📋 إدارة نافذة الاستيراد وزر اللصق وإعادة الضبط التلقائي
+    // 📋 إدارة نافذة الاستيراد وزر اللصق
     // =========================================================
     const smartModal = document.getElementById('smartModal');
     const openSmartModalBtn = document.getElementById('openSmartModalBtn');
@@ -1602,7 +1590,6 @@
 
     // =========================================================
     // 🎯 فلترة التصدير والتحويل التلقائي لثيم الدوري المختار
-    // (ثابتة تماماً وتمنع أي تكرار لاسم الدوري مع القسم)
     // =========================================================
     function applyLeagueFilter() {
       const filter = exportLeagueSelect.value;
@@ -1850,18 +1837,27 @@
     }
 
     // دوال الفلترة والتعرف على الأسطر في الاستيراد الذكي
-    function isNoiseLine(str) {
+    function isNoiseLine(str, prevLine = '') {
       if (!str) return true;
       const s = str.trim();
       if (!s) return true;
 
       if (/^\[?(الترتيب|الهدافين|المباريات|جدول الترتيب|قائمة الهدافين)\]?(\([^)]*\))?$/i.test(s)) return true;
-      if (/متبقي|متبقيه|تنازلي|باقي|دقائق|دقيقة|ثواني|ثانية|ساعات|ساعة|أيام|يوم/i.test(s) && (/\d/i.test(s) || /مباراة/i.test(s))) return true;
-      if (/^متبقي\s+على\s+المباراة/i.test(s)) return true;
+
+      // العداد التنازلي بكافة أشكاله
+      if (/^متبقي(\s+على\s+المباراة)?/i.test(s)) return true;
+      if (/^(تنازلي|باقي)/i.test(s)) return true;
+      if (/^\d+$/.test(s)) return true; // أرقام العداد مثل "38", "21"
+      if (/^(دقيقة|دقائق|ثانية|ثواني|ساعة|ساعات|يوم|أيام)$/i.test(s)) return true;
       if (/^\d+\s*(دقيقة|دقائق|ثانية|ثواني|ساعة|ساعات|يوم|أيام)$/i.test(s)) return true;
 
-      if (/^(الملعب|الجولة|المرحلة|الحكم|المجموعة|ذهاب|إياب)\s*[:：]/i.test(s)) return true;
+      // الملاعب وتفاصيل المباريات
+      if (/^(الملعب|الجولة|المرحلة|الحكم|المجموعة|الأسبوع|الاسبوع)\s*[:：]?/i.test(s)) return true;
+      if (prevLine && /^الملعب\s*[:：]?$/i.test(prevLine.trim())) return true;
+      if (/^(ملعب|استاد)\s+/i.test(s)) return true;
       if (/^(ذهاب|إياب|مرحلة الدوري|دور المجموعات|دور الـ|ربع النهائي|نصف النهائي|النهائي)$/i.test(s)) return true;
+
+      // حالات المباريات
       if (/^(لم تبدأ|جارية الآن|جارية الان|انتهت|الشوط الأول|الشوط الثاني|استراحة|وقت إضافي|ركلات ترجيح|تأجلت|ملغاة)$/i.test(s)) return true;
       if (/^\d+\s*[-–—:]\s*\d+$/.test(s)) return true;
 
@@ -1910,33 +1906,18 @@
         return commentators.some(c => {
           if (!c.name) return false;
           const normC = normalizeArabic(c.name);
-          return normC === norm || norm.includes(normC) || normC.includes(norm);
+          // تطابق كامل أو السطر يحتوي اسم المعلق كاملاً (وليس العكس منعاً لتشابه اسم فريق مثل ليل مع خليل)
+          return norm === normC || (normC.length >= 5 && norm.includes(normC));
         });
       }
 
       return false;
     }
 
-    function isPotentialCommentatorName(str) {
-      if (!str) return false;
-      const s = str.trim().replace(/^(المعلق|معلق|تعليق)\s*[:：]\s*/i, '');
-      if (isNoiseLine(s)) return false;
-      if (isChannelLine(s)) return false;
-      if (detectLeagueFromHeader(s)) return false;
-
-      if (/[\d:/\\]/.test(s)) return false;
-      if (/https?:/i.test(s)) return false;
-
-      const arabicOnly = s.replace(/[\u0600-\u06FF\s]/g, '').trim();
-      if (arabicOnly.length > 0) return false;
-
-      const words = s.split(/\s+/).filter(Boolean);
-      return words.length >= 2 && words.length <= 4;
-    }
-
     function cleanTeamString(str) {
       return str
         .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
         .replace(/[-–—|•:0-9]|نادي\s+|فريق\s+|مباشر|جارية|انتهت/gi, '')
         .trim();
     }
@@ -1963,7 +1944,7 @@
     }
 
     // =========================================================
-    // ⚡ خوارزمية الفرز والاستيراد الذكي المتقدمة
+    // ⚡ خوارزمية الفرز والاستيراد الذكي المحدثة
     // =========================================================
     executeSmartImportBtn.onclick = async () => {
       const rawText = smartPasteInput.value.trim();
@@ -2025,13 +2006,15 @@
             } else {
               const prev = lines[i - 1] || '';
               const next = lines[i + 1] || '';
-              if (prev && next && !isNoiseLine(prev) && !isNoiseLine(next) && !isChannelLine(prev) && !isCommentatorLine(prev)) {
+              const prevPrev = lines[i - 2] || '';
+
+              if (prev && next && !isNoiseLine(prev, prevPrev) && !isNoiseLine(next, prev) && !isChannelLine(prev) && !isCommentatorLine(prev)) {
                 home = cleanTeamString(prev);
                 away = cleanTeamString(next);
               }
             }
 
-            // إذا لم يتم استخراج الفريقين (مثلاً توقيت مكرر في تفاصيل المباراة)، نتخطاه
+            // تخطي التواقيت المكررة أو الأسطر غير المكتملة
             if (!home || !away || home === away) {
               continue;
             }
@@ -2041,7 +2024,7 @@
             let comm = "";
             let chanObj = null;
 
-            const scanLimit = Math.min(lines.length, i + 20);
+            const scanLimit = Math.min(lines.length, i + 25);
             for (let k = (before && after ? i + 1 : i + 2); k < scanLimit; k++) {
               const fLine = lines[k];
               if (!fLine) continue;
@@ -2065,9 +2048,9 @@
                 chanObj = findChannelObject(rawChan);
                 chan = chanObj ? chanObj.name : rawChan;
 
-                // فحص السطر التالي مباشرة لاحتمال وجود اسم المعلق بعد القناة مباشرة
+                // السطر الذي يلي القناة مباشرة في jdwel.com هو دائماً المعلق
                 const nextAfterChan = lines[k + 1];
-                if (!comm && nextAfterChan && (isCommentatorLine(nextAfterChan) || isPotentialCommentatorName(nextAfterChan))) {
+                if (!comm && nextAfterChan && !nextAfterChan.match(timeRegex) && !isNoiseLine(nextAfterChan) && !isChannelLine(nextAfterChan)) {
                   comm = findCommentatorName(nextAfterChan);
                   k++;
                 }
@@ -2075,7 +2058,7 @@
               }
 
               // كشف المعلق
-              if (!comm && (isCommentatorLine(fLine) || isPotentialCommentatorName(fLine))) {
+              if (!comm && isCommentatorLine(fLine)) {
                 comm = findCommentatorName(fLine);
                 continue;
               }
@@ -2117,7 +2100,6 @@
             chanLogoRaw = resolved?.logo || channels.find(c => c.name === item.chan)?.logo || '';
           }
 
-          // محاولة جلب شعار بديل للشبكة إذا كانت القناة معروفة
           if (!chanLogoRaw) {
             const lower = item.chan.toLowerCase();
             const fallbackChan = channels.find(c => {
@@ -2159,7 +2141,7 @@
         render();
 
         smartImportFeedback.style.display = 'block';
-        smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف ${added} مباراة بنجاح مع القنوات والمعلقين!</span>`;
+        smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف جميع المباريات (${added}) بنجاح مع القنوات والمعلقين!</span>`;
         resetSmartImportButton();
 
         setTimeout(() => {
