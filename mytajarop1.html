@@ -347,18 +347,6 @@
       letter-spacing: 0.5px;
     }
 
-    .poster-title {
-      margin: 0;
-      font-size: 23px;
-      font-weight: 900;
-      color: #ffffff;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
     .poster-date {
       font-size: 14.5px;
       font-weight: 700;
@@ -785,7 +773,6 @@
         <div id="exportArea" class="theme-ucl">
           <div class="poster-header">
             <span class="poster-badge" id="posterBadge">⚽ أهم مباريات اليوم</span>
-            <h2 class="poster-title">مواعيد مباريات اليوم</h2>
             <div class="poster-date" id="posterDateDisplay"></div>
           </div>
 
@@ -794,7 +781,7 @@
           </div>
 
           <div class="poster-footer">
-            برعاية: شبكة يمن ستلايت | jedwal.yemensat.com
+            يمن ستلايت | 738092209 | VIP
           </div>
         </div>
       </div>
@@ -1099,7 +1086,7 @@
     const extraLogosCSV = 'csv/extra_logos.csv';
     const watermarkPath = 'img/yemen-sat-white.png';
 
-    // قاموس البطولات والدوريات المعروفة المتوافقة مع ملفات الفرق في مشروعك
+    // قاموس البطولات المعروفة المتوافقة مع ملفات الفرق في مشروعك
     const KNOWN_LEAGUES_DEF = {
       'ArabGulfCup': { name: 'كأس الخليج العربي', logo: 'teams_images/ArabGulfCup.png', color: '#0c2438', theme: 'theme-asian-cup' },
       'AsianCup': { name: 'كأس آسيا', logo: 'teams_images/AsianCup.png', color: '#240c12', theme: 'theme-asian-cup' },
@@ -1401,7 +1388,7 @@
         extraLogo: l.extraLogo || l.extra_logo || l.ExtraLogo || ''
       })).filter(l => l.code);
 
-      // التأكد من توفر كأس الخليج والبطولات الأخرى كخيارات أساسية
+      // التأكد من توفر كأس الخليج والبطولات الهامة
       ensureLeagueExists('ArabGulfCup', 'كأس الخليج العربي');
 
       commentators = commsData.map(c => ({
@@ -1796,7 +1783,7 @@
         if (activeLeagues.length === 1) {
           const l = leagues.find(item => item.code === activeLeagues[0]);
           if (l && posterBadge) {
-            posterBadge.textContent = '🏆 مباريات ' + l.name;
+            posterBadge.textContent = '⚽ أهم مباريات اليوم';
           }
           const autoTheme = getLeagueTheme(activeLeagues[0]);
           exportArea.className = autoTheme;
@@ -1813,6 +1800,7 @@
         sections.forEach(s => {
           if (s.dataset.league === filter) {
             s.style.display = 'block';
+            // إخفاء ترويسة الدوري الداخلية لمنع التكرار
             const hdr = s.querySelector('.section-header');
             if (hdr) hdr.style.display = 'none';
           } else {
@@ -2124,6 +2112,7 @@
       return bestCode;
     }
 
+    // دوال الفلترة والتعرف على الأسطر في الاستيراد الذكي
     function isNoiseLine(str, prevLine = '') {
       if (!str) return true;
       const s = str.trim();
@@ -2131,21 +2120,31 @@
 
       if (/^\[?(الترتيب|الهدافين|المباريات|جدول الترتيب|قائمة الهدافين)\]?(\([^)]*\))?$/i.test(s)) return true;
 
+      // العداد التنازلي بكافة أشكاله
       if (/^متبقي(\s+على\s+المباراة)?/i.test(s)) return true;
       if (/^(تنازلي|باقي)/i.test(s)) return true;
-      if (/^\d+$/.test(s)) return true;
+      if (/^\d+$/.test(s)) return true; // أرقام العداد مثل "38", "21"
       if (/^(دقيقة|دقائق|ثانية|ثواني|ساعة|ساعات|يوم|أيام)$/i.test(s)) return true;
       if (/^\d+\s*(دقيقة|دقائق|ثانية|ثواني|ساعة|ساعات|يوم|أيام)$/i.test(s)) return true;
 
+      // الملاعب وتفاصيل المباريات
       if (/^(الملعب|الجولة|المرحلة|الحكم|المجموعة|الأسبوع|الاسبوع)\s*[:：]?/i.test(s)) return true;
       if (prevLine && /^الملعب\s*[:：]?$/i.test(prevLine.trim())) return true;
       if (/^(ملعب|استاد)\s+/i.test(s)) return true;
-      if (/^(ذهاب|إياب|مرحلة الدوري|دور المجموعات|دور الـ|ربع النهائي|نصف النهائي|النهائي)$/i.test(s)) return true;
+      if (/^(ذهاب|إياب|اياب|مباراة الذهاب|مباراة الإياب|مباراة اياب|مرحلة الدوري|دور المجموعات|دور الـ|ربع النهائي|نصف النهائي|النهائي)$/i.test(s)) return true;
 
+      // حالات المباريات
       if (/^(لم تبدأ|جارية الآن|جارية الان|انتهت|الشوط الأول|الشوط الثاني|استراحة|وقت إضافي|ركلات ترجيح|تأجلت|ملغاة)$/i.test(s)) return true;
       if (/^\d+\s*[-–—:]\s*\d+$/.test(s)) return true;
 
       return false;
+    }
+
+    // التحقق الدقيق مما إذا كانت المباراة تمثل مباراة إياب
+    function isSecondLegText(str) {
+      if (!str) return false;
+      const s = str.trim();
+      return /مباراة\s*(ال)?(إياب|اياب)|لقاء\s*(ال)?(إياب|اياب)|دور\s*.*(إياب|اياب)|مرحلة\s*.*(إياب|اياب)|مباراة\s*(ال)?عودة|لقاء\s*(ال)?عودة|(\(|\[)\s*(ال)?(إياب|اياب)\s*(\)|\])|(^|\s)(ال)?(إياب|اياب)($|\s)/i.test(s);
     }
 
     function isChannelLine(str) {
@@ -2288,7 +2287,13 @@
           if (parsed) {
             const { home, away, time } = parsed;
 
-            // البحث للأمام عن القناة والمعلق
+            // 🛑 فحص هل المباراة تمثل "مباراة الإياب" لاستبعادها
+            let isSecondLeg = false;
+            if (isSecondLegText(line)) isSecondLeg = true;
+            if (i > 0 && isSecondLegText(lines[i - 1])) isSecondLeg = true;
+            if (i > 1 && isSecondLegText(lines[i - 2])) isSecondLeg = true;
+
+            // البحث للأمام عن القناة والمعلق وأي إشارة للإياب
             let chan = "";
             let comm = "";
             let chanObj = null;
@@ -2308,6 +2313,11 @@
                 }
               }
 
+              // التحقق من وجود إشارة لمباراة الإياب في تفاصيل المباراة
+              if (isSecondLegText(fLine)) {
+                isSecondLeg = true;
+              }
+
               if (!chan && isChannelLine(fLine)) {
                 const rawChan = fLine.replace(/^(القناة|القناه)\s*[:：]\s*/i, '').trim();
                 chanObj = findChannelObject(rawChan);
@@ -2325,6 +2335,12 @@
                 comm = findCommentatorName(fLine);
                 continue;
               }
+            }
+
+            // إذا كانت المباراة مباراة إياب يتم استبعادها فوراً
+            if (isSecondLeg) {
+              console.log('تم استبعاد مباراة الإياب:', home, 'ضد', away);
+              continue;
             }
 
             // إذا كان هناك ترويسة صريحة في الأعلى نلتزم بها تماماً ولا نغير الدوري
@@ -2348,7 +2364,7 @@
 
         if (extractedList.length === 0) {
           smartImportFeedback.style.display = 'block';
-          smartImportFeedback.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">⚠️ لم يتم العثور على أوقات ومباريات واضحة في النص. تأكد من تحديد جدول المباريات ونسخه بدقة.</span>`;
+          smartImportFeedback.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">⚠️ لم يتم العثور على مباريات صالحة للإدراج (أو تم استبعاد مباريات الإياب إن وجدت).</span>`;
           resetSmartImportButton();
           return;
         }
@@ -2405,7 +2421,7 @@
         render();
 
         smartImportFeedback.style.display = 'block';
-        smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف جميع المباريات (${added}) بنجاح داخل بطولاتها الصحيحة!</span>`;
+        smartImportFeedback.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">🎉 رائع! تم استيراد وتصنيف جميع المباريات (${added}) بنجاح داخل بطولاتها الصحيحة مع استبعاد مباريات الإياب!</span>`;
         resetSmartImportButton();
 
         setTimeout(() => {
