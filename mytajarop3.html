@@ -938,7 +938,7 @@
       </div>
       
       <p style="font-size:13px; color:#bbb; margin-top:0; line-height:1.5;">
-        الصق جدول المباريات بأي صيغة (سواء بنظام النقاط والأنابيب مثل: <code>• جورجيا × أوكرانيا | ⏰ 7:00 م | 📺 beIN SPORTS 1 | 🎙️ محمد بركات</code> أو النسخ المباشر من المواقع مثل jdwel.com)، وسيتعرف النظام الذكي تلقائياً على كل دوري ومبارياته بدقة متناهية:
+        الصق جدول المباريات بأي صيغة (سواء بنظام النقاط والأنابيب مثل: <code>• جورجيا ✘ أوكرانيا | ⏰ 7:00 م | 📺 beIN SPORTS 1 | 🎙️ محمد بركات</code> أو النسخ المباشر من المواقع مثل jdwel.com)، وسيتعرف النظام الذكي تلقائياً على كل دوري ومبارياته بدقة متناهية:
       </p>
 
       <!-- شريط أدوات الحافظة الأنيق -->
@@ -1041,6 +1041,15 @@
     function getChannelBadgeStyle(chanName) {
       if (!chanName) return { bg: 'rgba(0,0,0,0.55)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.18)' };
       const lower = chanName.toLowerCase().trim();
+
+      // تنسيق القنوات غير المحددة
+      if (/غير\s*محدد/i.test(lower)) {
+        return {
+          bg: 'rgba(255, 255, 255, 0.08)',
+          color: '#cbd5e1',
+          border: '1px solid rgba(255, 255, 255, 0.15)'
+        };
+      }
 
       // beIN SPORTS -> بنفسجي فاخر
       if (/bein|بي\s*ان/i.test(lower)) {
@@ -1365,6 +1374,7 @@
     // مطابقة القنوات بذكاء وسرعة
     function findChannelObject(rawName) {
       if (!rawName) return null;
+      if (/غير\s*محدد/i.test(rawName)) return null;
       const lower = rawName.toLowerCase().trim();
 
       // 1. مطابقة مباشرة
@@ -1413,6 +1423,7 @@
         .replace(/المعلق\s*[:：]\s*|تعليق\s*[:：]\s*|🎙️|🎙/g, '')
         .trim();
       if (!clean) return "سيحدد لاحقاً";
+      if (/غير\s*محدد/i.test(clean) || clean === 'سيحدد لاحقاً') return clean;
 
       const normInput = normalizeArabic(clean);
 
@@ -2028,6 +2039,7 @@
         .replace(/[🏆⭐⚽🦁🌴🥇🥈🥉🏅🎖️]/gu, ' ')
         .replace(/^[#*\-•>\s]+/, '')
         .replace(/[#*\-•<\s]+$/, '')
+        .replace(/[:：\s]+$/, '')
         .trim();
     }
 
@@ -2141,7 +2153,7 @@
       if (isChannelLine(line) || isCommentatorLine(line) || /(\b\d{1,2}:\d{2}\b)/.test(line)) {
         return null;
       }
-      if (line.includes('×') || line.includes(' vs ') || line.includes(' - ') || line.includes(' ضد ')) {
+      if (line.includes('×') || line.includes(' vs ') || line.includes(' - ') || line.includes(' ضد ') || /[✘✕✖✗]/.test(line)) {
         return null;
       }
 
@@ -2185,11 +2197,12 @@
     function cleanTeamName(name) {
       if (!name) return '';
       return name
-        .replace(/^[•*\-\s]+/, '')
-        .replace(/[•*\-\s]+$/, '')
+        .replace(/^[•*\-\s✘✕✖✗>]+/u, '')
+        .replace(/[•*\-\s✘✕✖✗<]+$/u, '')
         .replace(/\[([^\]]+)\](?:\([^)]*\))?/g, '$1')
         .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
-        .replace(/[-–—|•:0-9]|نادي\s+|فريق\s+|مباشر|جارية|انتهت/gi, '')
+        .replace(/^[•*\-\s]+|[•*\-\s]+$/g, '')
+        .replace(/مباشر|جارية|انتهت/gi, '')
         .trim();
     }
 
@@ -2264,15 +2277,15 @@
           }
 
           // 1. فحص سطر مباراة بنظام الأنابيب (Pipe-delimited) مثل:
-          // • جورجيا × أوكرانيا | ⏰ 7:00 م | 📺 beIN SPORTS 1 | 🎙️ محمد بركات
+          // • جورجيا ✘ أوكرانيا | ⏰ 7:00 م | 📺 beIN SPORTS 1 | 🎙️ محمد بركات
           if (line.includes('|')) {
             const parts = line.split('|').map(p => p.trim());
             let home = '', away = '', time = '', chan = '', comm = '';
 
             for (const part of parts) {
-              // جزء الفرق: يحوي علامة × أو x أو - أو ضد أو vs
-              if (/[×xX]|[-–—]|ضد|\bvs\b/.test(part) && !timeRegex.test(part) && !part.includes('📺') && !part.includes('🎙')) {
-                const splitTeams = part.split(/[×xX]|[-–—]|ضد|\bvs\b/);
+              // جزء الفرق: يدعم ✘ و ✕ و × و x و - و ضد
+              if (/[×xX✘✕✖✗]|[-–—]|ضد|\bvs\b/i.test(part) && !timeRegex.test(part) && !part.includes('📺') && !part.includes('🎙')) {
+                const splitTeams = part.split(/[×xX✘✕✖✗]|[-–—]|ضد|\bvs\b/i);
                 if (splitTeams.length >= 2) {
                   home = cleanTeamName(splitTeams[0]);
                   away = cleanTeamName(splitTeams[1]);
@@ -2340,9 +2353,9 @@
               home = cleanTeamName(beforeTime);
               away = cleanTeamName(afterTime);
             }
-            // الحالة الثانية: الفريقان قبل الوقت مفصولان بـ (ضد أو × أو - أو vs)
-            else if (beforeTime && (/[×xX]|[-–—]|ضد|\bvs\b/.test(beforeTime))) {
-              const splitT = beforeTime.split(/[×xX]|[-–—]|ضد|\bvs\b/);
+            // الحالة الثانية: الفريقان قبل الوقت مفصولان بـ (ضد أو × أو ✘ أو - أو vs)
+            else if (beforeTime && (/[×xX✘✕✖✗]|[-–—]|ضد|\bvs\b/i.test(beforeTime))) {
+              const splitT = beforeTime.split(/[×xX✘✕✖✗]|[-–—]|ضد|\bvs\b/i);
               home = cleanTeamName(splitT[0]);
               away = cleanTeamName(splitT[1]);
             }
@@ -2391,7 +2404,7 @@
               if (nextTimeMatch) {
                 if (fLine.includes('|')) break;
                 const cleanF = fLine.replace(/\[([^\]]+)\](?:\([^)]*\))?/g, '$1');
-                if (/[×xX]|[-–—]|ضد|\bvs\b/.test(cleanF)) break;
+                if (/[×xX✘✕✖✗]|[-–—]|ضد|\bvs\b/i.test(cleanF)) break;
                 const prevF = lines[k - 1];
                 const nextF = lines[k + 1];
                 if (prevF && nextF && !isNoiseLine(prevF) && !isNoiseLine(nextF) && !isChannelLine(prevF) && !isCommentatorLine(prevF)) {
@@ -2447,12 +2460,14 @@
           const awayImgRaw = findTeamLogo(item.away, item.league);
           
           let chanLogoRaw = '';
-          const resolved = findChannelObject(item.chan);
-          if (resolved && resolved.logo) {
-            chanLogoRaw = resolved.logo;
-          } else {
-            const chMatch = channels.find(c => c.name === item.chan);
-            if (chMatch && chMatch.logo) chanLogoRaw = chMatch.logo;
+          if (item.chan && !/غير\s*محدد/i.test(item.chan)) {
+            const resolved = findChannelObject(item.chan);
+            if (resolved && resolved.logo) {
+              chanLogoRaw = resolved.logo;
+            } else {
+              const chMatch = channels.find(c => c.name === item.chan);
+              if (chMatch && chMatch.logo) chanLogoRaw = chMatch.logo;
+            }
           }
 
           const [homeImg, awayImg, chanLogo] = await Promise.all([
