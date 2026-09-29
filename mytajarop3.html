@@ -1042,15 +1042,6 @@
       if (!chanName) return { bg: 'rgba(0,0,0,0.55)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.18)' };
       const lower = chanName.toLowerCase().trim();
 
-      // تنسيق القنوات غير المحددة
-      if (/غير\s*محدد/i.test(lower)) {
-        return {
-          bg: 'rgba(255, 255, 255, 0.08)',
-          color: '#cbd5e1',
-          border: '1px solid rgba(255, 255, 255, 0.15)'
-        };
-      }
-
       // beIN SPORTS -> بنفسجي فاخر
       if (/bein|بي\s*ان/i.test(lower)) {
         return {
@@ -1371,10 +1362,10 @@
       return l.code;
     }
 
-    // مطابقة القنوات بذكاء وسرعة
+    // مطابقة القنوات بذكاء وسرعة مع تجاهل "غير محدد" و "لم يحدد"
     function findChannelObject(rawName) {
       if (!rawName) return null;
-      if (/غير\s*محدد/i.test(rawName)) return null;
+      if (/^(غير\s*محدد|غير\s*محددة|لم\s*يحدد|لم\s*تحدد)$/i.test(rawName.trim())) return null;
       const lower = rawName.toLowerCase().trim();
 
       // 1. مطابقة مباشرة
@@ -1423,7 +1414,7 @@
         .replace(/المعلق\s*[:：]\s*|تعليق\s*[:：]\s*|🎙️|🎙/g, '')
         .trim();
       if (!clean) return "سيحدد لاحقاً";
-      if (/غير\s*محدد/i.test(clean) || clean === 'سيحدد لاحقاً') return clean;
+      if (/^(غير\s*محدد|غير\s*محددة|لم\s*يحدد|لم\s*تحدد|سيحدد\s*لاحق[ااً])$/i.test(clean)) return clean;
 
       const normInput = normalizeArabic(clean);
 
@@ -1972,22 +1963,31 @@
           const ampm = displayHours >= 12 ? 'م' : 'ص';
           displayHours = displayHours % 12 || 12;
 
+          // فحص ما إذا كانت القناة أو المعلق غير محدد
+          const isUnspecified = (val) => {
+            if (!val) return true;
+            return /^(غير\s*محدد|غير\s*محددة|لم\s*يحدد|لم\s*تحدد)$/i.test(val.trim());
+          };
+
+          const showChan = m.chan && !isUnspecified(m.chan);
+          const showComm = m.comm && !isUnspecified(m.comm);
+
           let bottomHTML = '';
-          if (m.comm || m.chanLogo || m.chan) {
+          if (showChan || showComm) {
             let chanMarkup = '';
-            if (channelDisplayMode === 'text' || !m.chanLogo) {
-              if (m.chan) {
+            if (showChan) {
+              if (channelDisplayMode === 'text' || !m.chanLogo) {
                 const badgeStyle = getChannelBadgeStyle(m.chan);
                 chanMarkup = `<span class="channel-badge-text" style="position:absolute; left:6px; font-size:11px; font-weight:800; color:${badgeStyle.color}; background:${badgeStyle.bg}; border:${badgeStyle.border}; padding:3px 8px; border-radius:5px; max-width:130px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 5px rgba(0,0,0,0.3);" title="${m.chan}">📺 ${m.chan}</span>`;
+              } else {
+                chanMarkup = `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:24px; max-width:70px; object-fit:contain;" alt="${m.chan || ''}" onerror="this.style.display='none'">`;
               }
-            } else {
-              chanMarkup = `<img src="${m.chanLogo}" style="position:absolute; left:6px; height:24px; max-width:70px; object-fit:contain;" alt="${m.chan || ''}" onerror="this.style.display='none'">`;
             }
 
             bottomHTML = `
               <div class="meta">
                 ${chanMarkup}
-                ${m.comm ? `<div style="flex:1; text-align:center; font-size:12.5px; font-weight:600; color:#ddd;">🎙️ ${m.comm}</div>` : ''}
+                ${showComm ? `<div style="flex:1; text-align:center; font-size:12.5px; font-weight:600; color:#ddd;">🎙️ ${m.comm}</div>` : ''}
               </div>
             `;
           }
@@ -2315,8 +2315,8 @@
             if (home && away && home !== away && time) {
               extractedList.push({
                 home, away, time,
-                chan: chan || 'beIN SPORTS 1',
-                comm: comm || 'سيحدد لاحقاً',
+                chan: chan || '',
+                comm: comm || '',
                 league: currentLeagueCode
               });
               continue;
@@ -2440,8 +2440,8 @@
               home,
               away,
               time: timeStr,
-              chan: chan || 'beIN SPORTS 1',
-              comm: comm || 'سيحدد لاحقاً',
+              chan: chan || '',
+              comm: comm || '',
               league: currentLeagueCode
             });
           }
@@ -2460,7 +2460,7 @@
           const awayImgRaw = findTeamLogo(item.away, item.league);
           
           let chanLogoRaw = '';
-          if (item.chan && !/غير\s*محدد/i.test(item.chan)) {
+          if (item.chan && !/^(غير\s*محدد|غير\s*محددة|لم\s*يحدد|لم\s*تحدد)$/i.test(item.chan.trim())) {
             const resolved = findChannelObject(item.chan);
             if (resolved && resolved.logo) {
               chanLogoRaw = resolved.logo;
